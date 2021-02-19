@@ -10,6 +10,12 @@
     <Filter Include="Src\Log">
       <UniqueIdentifier>{5EF9E709-CAD8-66A5-D3F0-F17B3F4FCD06}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\RHI">
+      <UniqueIdentifier>{BF0DE809-2BED-66A5-3405-F27BA063CD06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Renderer">
+      <UniqueIdentifier>{532574A1-3F88-0346-E80D-3CFCD44FCFC8}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Src\Utils">
       <UniqueIdentifier>{2D7A7124-99E4-259B-E222-D7404ECC03F0}</UniqueIdentifier>
     </Filter>
@@ -65,6 +71,12 @@
     </ClInclude>
     <ClInclude Include="Src\Log\Log.h">
       <Filter>Src\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\RHI\RHIViewport.h">
+      <Filter>Src\RHI</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Renderer\Renderer.h">
+      <Filter>Src\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Src\Utils\FileUtils.h">
       <Filter>Src\Utils</Filter>
@@ -1311,7 +1323,16 @@
     <ClInclude Include="ThirdParty\std_image\std_image.h">
       <Filter>ThirdParty\std_image</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Renderer\Renderer.h" />
+    <ClInclude Include="Src\RHI\DynamicRHI.h" />
+    <ClInclude Include="Src\RHI\RHI.h" />
+    <ClInclude Include="Src\RHI\D3D11\D3D11DynamicRHI.h" />
+    <ClInclude Include="Src\RHI\RHIDeviceAdapter.h" />
+    <ClInclude Include="Src\RHI\D3D11\D3D11Helpers.h" />
+    <ClInclude Include="Src\RHI\D3D11\D3D11RHI.h" />
+    <ClInclude Include="Src\RHI\RHISwapChain.h" />
+    <ClInclude Include="Src\RHI\RHIResources.h" />
+    <ClInclude Include="Src\RHI\D3D11\D3D11SwapChain.h" />
+    <ClInclude Include="Src\RHI\RHICommandList.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Core\Engine.cpp">
@@ -1329,12 +1350,22 @@
     <ClCompile Include="Src\Log\Log.cpp">
       <Filter>Src\Log</Filter>
     </ClCompile>
+    <ClCompile Include="Src\RHI\RHIViewport.cpp">
+      <Filter>Src\RHI</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Renderer\Renderer.cpp">
+      <Filter>Src\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="Src\Utils\FileUtils.cpp">
       <Filter>Src\Utils</Filter>
     </ClCompile>
     <ClCompile Include="ThirdParty\std_image\std_image.cpp">
       <Filter>ThirdParty\std_image</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Renderer\Renderer.cpp" />
+    <ClCompile Include="Src\RHI\DynamicRHI.cpp" />
+    <ClCompile Include="Src\RHI\RHI.cpp" />
+    <ClCompile Include="Src\RHI\D3D11\D3D11DynamicRHI.cpp" />
+    <ClCompile Include="Src\RHI\D3D11\D3D11SwapChain.cpp" />
+    <ClCompile Include="Src\RHI\RHICommandList.cpp" />
   </ItemGroup>
 </Project>

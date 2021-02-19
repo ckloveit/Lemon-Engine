@@ -80,7 +80,7 @@ project "Lemon"
 			"LEMON_PLATFORM_WINDOW",
 			"LEMON_BUILD_DLL",
 			"GLFW_INCLUDE_NONE",
-			"LEMON_GRAPHICS_OPENGL"
+			"LEMON_GRAPHICS_D3D11"
 		}
 
 	--	postbuildcommands

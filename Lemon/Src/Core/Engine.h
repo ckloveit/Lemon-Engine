@@ -29,6 +29,8 @@ namespace Lemon
 		// Performs a simulation cycle
 		void Tick() const;
 
+		// WindowData
+		const WindowData& GetWindowData() const { return m_WindowData; }
 		void SetWindowData(WindowData& window_data);
 
 	private:
