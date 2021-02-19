@@ -19,7 +19,7 @@ namespace Lemon
 		m_SystemManager = CreateRef<SystemManager>();
 
 		//Register System
-		m_SystemManager->RegisterSystem<Timer>(); // must be first so it ticks first
+		m_SystemManager->RegisterSystem<Timer>(this); // must be first so it ticks first
 
 		//Initialize Systems
 		m_SystemManager->Initialize();

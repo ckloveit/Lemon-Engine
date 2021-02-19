@@ -8,7 +8,7 @@ namespace Lemon
 	class LEMON_API Timer : public ISystem
 	{
 	public:
-		Timer(SystemManager* systemManager);
+		Timer(Engine* engine);
 		~Timer() = default;
 
 		void Tick(float deltaTime) override;

@@ -4,12 +4,12 @@
 
 namespace Lemon
 {
-	class SystemManager;
+	class Engine;
 
 	class LEMON_API ISystem : public std::enable_shared_from_this<ISystem>
 	{
 	public:
-		ISystem(SystemManager* systemManager) :m_SystemManager(systemManager)
+		ISystem(Engine* engine) :m_Engine(engine)
 		{}
 		virtual ~ISystem() = default;
 
@@ -20,7 +20,7 @@ namespace Lemon
 		Ref<T> GetRefPtr() { return dynamic_pointer_cast<T>(shared_from_this()); }
 
 	protected:
-		SystemManager* m_SystemManager;
+		Engine* m_Engine;
 	};
 
 	template<typename T>

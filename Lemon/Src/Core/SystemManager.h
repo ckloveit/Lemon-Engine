@@ -12,10 +12,10 @@ namespace Lemon
 
 		//Register System
 		template <class T>
-		void RegisterSystem()
+		void RegisterSystem(Engine* engine)
 		{
 			ValidateSystemType<T>();
-			m_Systems.emplace_back(CreateRef<T>(this));
+			m_Systems.emplace_back(CreateRef<T>(engine));
 		}
 
 		// Initialize subsystems

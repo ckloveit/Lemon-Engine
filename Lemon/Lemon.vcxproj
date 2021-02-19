@@ -147,6 +147,7 @@
     <ClInclude Include="Src\Lemon.h" />
     <ClInclude Include="Src\LemonPCH.h" />
     <ClInclude Include="Src\Log\Log.h" />
+    <ClInclude Include="Src\Renderer\Renderer.h" />
     <ClInclude Include="Src\Utils\FileUtils.h" />
     <ClInclude Include="ThirdParty\glm\glm\common.hpp" />
     <ClInclude Include="ThirdParty\glm\glm\detail\_features.hpp" />
@@ -571,6 +572,7 @@
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Src\Log\Log.cpp" />
+    <ClCompile Include="Src\Renderer\Renderer.cpp" />
     <ClCompile Include="Src\Utils\FileUtils.cpp" />
     <ClCompile Include="ThirdParty\std_image\std_image.cpp" />
   </ItemGroup>

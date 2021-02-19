@@ -5,8 +5,8 @@ using namespace std;
 
 namespace Lemon
 {
-	Timer::Timer(SystemManager* systemManager)
-		:ISystem(systemManager)
+	Timer::Timer(Engine* engine)
+		:ISystem(engine)
 	{
 		m_CurrentFrameTime = chrono::high_resolution_clock::now();
 		m_LastFrameTime = chrono::high_resolution_clock::now();
