@@ -138,8 +138,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Core\Core.h" />
+    <ClInclude Include="Src\Core\Engine.h" />
+    <ClInclude Include="Src\Core\ISystem.h" />
+    <ClInclude Include="Src\Core\PlatformDetection.h" />
+    <ClInclude Include="Src\Core\SystemManager.h" />
+    <ClInclude Include="Src\Core\Timer.h" />
     <ClInclude Include="Src\Lemon.h" />
     <ClInclude Include="Src\LemonPCH.h" />
+    <ClInclude Include="Src\Log\Log.h" />
+    <ClInclude Include="Src\Utils\FileUtils.h" />
     <ClInclude Include="ThirdParty\glm\glm\common.hpp" />
     <ClInclude Include="ThirdParty\glm\glm\detail\_features.hpp" />
     <ClInclude Include="ThirdParty\glm\glm\detail\_fixes.hpp" />
@@ -556,9 +564,14 @@
     <ClInclude Include="ThirdParty\std_image\std_image.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Core\Engine.cpp" />
+    <ClCompile Include="Src\Core\SystemManager.cpp" />
+    <ClCompile Include="Src\Core\Timer.cpp" />
     <ClCompile Include="Src\LemonPCH.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Src\Log\Log.cpp" />
+    <ClCompile Include="Src\Utils\FileUtils.cpp" />
     <ClCompile Include="ThirdParty\std_image\std_image.cpp" />
   </ItemGroup>
   <ItemGroup>
