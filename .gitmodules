@@ -1,0 +1,9 @@
+[submodule "Lemon/ThirdParty/spdlog"]
+	path = Lemon/ThirdParty/spdlog
+	url = https://github.com.cnpmjs.org/gabime/spdlog.git
+[submodule "Lemon/ThirdParty/imgui"]
+	path = Lemon/ThirdParty/imgui
+	url = https://github.com.cnpmjs.org/TheCherno/imgui.git
+[submodule "Lemon/ThirdParty/glm"]
+	path = Lemon/ThirdParty/glm
+	url = https://github.com.cnpmjs.org/g-truc/glm.git
