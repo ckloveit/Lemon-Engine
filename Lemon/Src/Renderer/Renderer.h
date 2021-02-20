@@ -1,3 +1,4 @@
+#pragma once
 #include "Core/Core.h"
 #include "Core/ISystem.h"
 
@@ -21,9 +22,13 @@ namespace Lemon
 		void Tick(float deltaTime) override;
 
 
+		//====SwapChain=============================//
+		const auto& GetSwapChain() const { return m_RHISwapChain; }
+
+
 	private:
 		RHIViewport m_Viewport = { 0, 0, 1920, 1080 };
-		Ref<RHISwapChain> m_SwapChain;
+		Ref<RHISwapChain> m_RHISwapChain;
 
 	};
 }

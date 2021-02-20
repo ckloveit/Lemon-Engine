@@ -157,7 +157,7 @@ namespace Lemon::D3D11
 		};
 
 		// Get display modes and set primary adapter
-		for (uint32_t deviceIndex = 0; deviceIndex < g_DynamicRHI->GetDeviceAdapters().size(); deviceIndex++)
+		for (uint32_t deviceIndex = 0; deviceIndex < (uint32_t)g_DynamicRHI->GetDeviceAdapters().size(); deviceIndex++)
 		{
 			const RHIDeviceAdapter& deviceAdapter = g_DynamicRHI->GetDeviceAdapters()[deviceIndex];
 			const auto dx_adapter = static_cast<IDXGIAdapter*>(deviceAdapter.GetAdapter());

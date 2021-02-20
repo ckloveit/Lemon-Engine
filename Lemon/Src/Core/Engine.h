@@ -1,11 +1,12 @@
 #pragma once
 
-#include "Core.h"
+constexpr auto EngineVersion = "LemonEngineV01";
 
+#include "Core.h"
+#include "SystemManager.h"
 
 namespace Lemon
 {
-	class SystemManager;
 	class Timer;
 
 	struct WindowData
@@ -32,6 +33,12 @@ namespace Lemon
 		// WindowData
 		const WindowData& GetWindowData() const { return m_WindowData; }
 		void SetWindowData(WindowData& window_data);
+
+		template<typename T>
+		T* GetSystem() const
+		{
+			return m_SystemManager->GetSystem<T>();
+		}
 
 	private:
 		WindowData m_WindowData;

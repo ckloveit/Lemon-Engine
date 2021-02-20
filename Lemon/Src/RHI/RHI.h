@@ -8,11 +8,7 @@ namespace Lemon
 
 	class RHISwapChain;
 
-
-
 	///RHI Data Type
-
-
 	enum ERHIFormat : uint32_t // gets serialized so better be explicit
 	{
 		// R
@@ -40,6 +36,4 @@ namespace Lemon
 
 		RHI_Format_Undefined
 	};
-
-
 }

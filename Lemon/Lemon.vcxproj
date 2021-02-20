@@ -77,7 +77,7 @@
       <PrecompiledHeaderFile>LemonPCH.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;LEMON_PLATFORM_WINDOW;LEMON_BUILD_DLL;GLFW_INCLUDE_NONE;LEMON_GRAPHICS_D3D11;LEMON_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Src;ThirdParty\spdlog\include;ThirdParty\imgui;ThirdParty\glm;ThirdParty\std_image;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Src;ThirdParty\spdlog\include;ThirdParty;ThirdParty\glm;ThirdParty\std_image;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
@@ -97,7 +97,7 @@
       <PrecompiledHeaderFile>LemonPCH.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;LEMON_PLATFORM_WINDOW;LEMON_BUILD_DLL;GLFW_INCLUDE_NONE;LEMON_GRAPHICS_D3D11;LEMON_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Src;ThirdParty\spdlog\include;ThirdParty\imgui;ThirdParty\glm;ThirdParty\std_image;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Src;ThirdParty\spdlog\include;ThirdParty;ThirdParty\glm;ThirdParty\std_image;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -120,7 +120,7 @@
       <PrecompiledHeaderFile>LemonPCH.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;LEMON_PLATFORM_WINDOW;LEMON_BUILD_DLL;GLFW_INCLUDE_NONE;LEMON_GRAPHICS_D3D11;LEMON_SHIPPING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>Src;ThirdParty\spdlog\include;ThirdParty\imgui;ThirdParty\glm;ThirdParty\std_image;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Src;ThirdParty\spdlog\include;ThirdParty;ThirdParty\glm;ThirdParty\std_image;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -152,9 +152,9 @@
     <ClInclude Include="Src\RHI\D3D11\D3D11RHI.h" />
     <ClInclude Include="Src\RHI\D3D11\D3D11SwapChain.h" />
     <ClInclude Include="Src\RHI\DynamicRHI.h" />
+    <ClInclude Include="Src\RHI\RHI.h" />
     <ClInclude Include="Src\RHI\RHICommandList.h" />
     <ClInclude Include="Src\RHI\RHIDeviceAdapter.h" />
-    <ClInclude Include="Src\RHI\RHI.h" />
     <ClInclude Include="Src\RHI\RHIResources.h" />
     <ClInclude Include="Src\RHI\RHISwapChain.h" />
     <ClInclude Include="Src\RHI\RHIViewport.h" />

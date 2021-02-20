@@ -8,10 +8,10 @@ using namespace std;
 
 namespace Lemon
 {
-	Engine::Engine(const WindowData& window_data)
+	Engine::Engine(const WindowData& windowData)
 	{
 		// Window
-		m_WindowData = window_data;
+		m_WindowData = windowData;
 
 		// Initialize Logger
 		Lemon::Logger::Init();

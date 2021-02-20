@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <memory>
-
+#include "Widgets/Widget.h"
 #include <Core/Engine.h>
 
 namespace Lemon
@@ -21,8 +21,19 @@ public:
 	void OnTick();
 
 private:
+	void InitImGui(const Lemon::WindowData& windowData);
+
+private:
+	void SetDarkThemeColors();
+	void WidgetsTick();
+	void WidgetsCreate();
+	void BeginDockSpace();
+	void EndDockSpace();
+
+private:
 	bool m_Initialized = false;
 
 	std::unique_ptr<Lemon::Engine> m_Engine;
+	std::vector<std::unique_ptr<Widget>> m_Widgets;
 };
 

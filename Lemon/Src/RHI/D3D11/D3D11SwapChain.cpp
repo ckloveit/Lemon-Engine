@@ -4,11 +4,9 @@
 
 namespace Lemon
 {
-	D3D11SwapChain::D3D11SwapChain(D3D11DynamicRHI* D3D11RHI, void* windowHandle, const uint32_t width, const uint32_t height, const ERHIFormat format):
+	D3D11SwapChain::D3D11SwapChain(D3D11DynamicRHI* D3D11RHI, void* windowHandle, const uint32_t width, const uint32_t height, const ERHIFormat format)
+		:RHISwapChain(width,height,format),
 		m_D3DRHI(D3D11RHI),
-		m_Width(width),
-		m_Height(height),
-		m_PixelFormat(format),
 		m_BackBufferCount(1)
 	{
 		if (!D3D11RHI || !D3D11RHI->GetDevice())
@@ -87,6 +85,8 @@ namespace Lemon
 
 	D3D11SwapChain::~D3D11SwapChain()
 	{
+		D3D11::SafeRelease(m_SwapChain);
+		D3D11::SafeRelease(m_RenderTargetView);
 
 	}
 
@@ -96,15 +96,64 @@ namespace Lemon
 		return true;
 	}
 
+	bool D3D11SwapChain::ReSize(uint32_t width, uint32_t height)
+	{
+		if (!m_SwapChain)
+		{
+			LEMON_CORE_ERROR("Invalid D3D11SwapChain Parameters.");
+			return false;
+		}
+		// Store
+		m_Width = width;
+		m_Height = height;
+
+		if (width < 0 || height < 0)
+		{
+			// Return true as when minimizing, a resolution
+			// of 0,0 can be passed in, and this is fine.
+			return true;
+		}
+
+		// Release previous stuff
+		D3D11::SafeRelease(m_RenderTargetView);
+
+
+		// Resize SwapChain buffers
+		const UINT d3d11SwapChainFlags = 0;
+		auto result = m_SwapChain->ResizeBuffers(m_BackBufferCount, static_cast<UINT>(width), static_cast<UINT>(height), D3D11::D3D11Format[m_PixelFormat], d3d11SwapChainFlags);
+		if (FAILED(result))
+		{
+			LEMON_CORE_ERROR("Failed to resize swapchain buffers, {0}.", D3D11::DXGIErrorToString(result));
+			return false;
+		}
+		// Get SwapChain back-buffer
+		ID3D11Texture2D* backbuffer = nullptr;
+		result = m_SwapChain->GetBuffer(0, IID_PPV_ARGS(&backbuffer));
+		if (FAILED(result))
+		{
+			LEMON_CORE_ERROR("Failed to get swapchain buffer, {0}.", D3D11::DXGIErrorToString(result));
+			return false;
+		}
+
+		// Create render target view
+		result = m_D3DRHI->GetDevice()->CreateRenderTargetView(backbuffer, nullptr, &m_RenderTargetView);
+		D3D11::SafeRelease(backbuffer);
+		if (FAILED(result))
+		{
+			LEMON_CORE_ERROR("Failed to create render target view, {0}.", D3D11::DXGIErrorToString(result));
+			return false;
+		}
+		return true;
+	}
+
 
 	void* D3D11SwapChain::GetRHISwapChain()
 	{
-		return (void*)m_SwapChain.Get();
+		return (void*)m_SwapChain;
 
 	}
 	void* D3D11SwapChain::GetRHIRenderTargetView()
 	{
-		return (void*)m_RenderTargetView.Get();
-
+		return (void*)m_RenderTargetView;
 	}
 }

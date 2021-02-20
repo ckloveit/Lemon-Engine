@@ -1,7 +1,6 @@
 #pragma once
 #include <Windows.h>
 #include <functional>
-
 #include <Core/Engine.h>
 #include <Utils/FileUtils.h>
 

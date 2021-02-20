@@ -62,9 +62,9 @@ project "Lemon"
 	{
 		"%{prj.location}/Src",
 		"%{prj.location}/ThirdParty/spdlog/include",
+		"%{prj.location}/ThirdParty",
 		"%{ThirdPartyIncludeDir.GLFW}",
 		"%{ThirdPartyIncludeDir.GLAD}",
-		"%{ThirdPartyIncludeDir.imgui}",
 		"%{ThirdPartyIncludeDir.glm}",
 		"%{ThirdPartyIncludeDir.std_image}",
 		"%{ThirdPartyIncludeDir.entt}",
@@ -135,6 +135,7 @@ project "Editor"
 		defines
 		{
 			"LEMON_PLATFORM_WINDOW",
+			"LEMON_GRAPHICS_D3D11"
 		}
 
 	filter "configurations:Debug"

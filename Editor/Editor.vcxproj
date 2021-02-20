@@ -78,7 +78,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>LEMON_PLATFORM_WINDOW;LEMON_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>LEMON_PLATFORM_WINDOW;LEMON_GRAPHICS_D3D11;LEMON_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\Lemon\ThirdParty\spdlog\include;..\Lemon\Src;..\Lemon\ThirdParty\glm;..\Lemon\ThirdParty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
@@ -97,7 +97,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>LEMON_PLATFORM_WINDOW;LEMON_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>LEMON_PLATFORM_WINDOW;LEMON_GRAPHICS_D3D11;LEMON_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\Lemon\ThirdParty\spdlog\include;..\Lemon\Src;..\Lemon\ThirdParty\glm;..\Lemon\ThirdParty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -119,7 +119,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>LEMON_PLATFORM_WINDOW;LEMON_SHIPPING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>LEMON_PLATFORM_WINDOW;LEMON_GRAPHICS_D3D11;LEMON_SHIPPING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\Lemon\ThirdParty\spdlog\include;..\Lemon\Src;..\Lemon\ThirdParty\glm;..\Lemon\ThirdParty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -139,10 +139,26 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Editor.h" />
+    <ClInclude Include="Src\ImGuiRHI\ImGuiExtension.h" />
+    <ClInclude Include="src\ImGuiRHI\ImGuiRHI.h" />
+    <ClInclude Include="Src\ImGuiRHI\Implementation\imgui_impl_dx11.h" />
+    <ClInclude Include="Src\ImGuiRHI\Implementation\imgui_impl_win32.h" />
+    <ClInclude Include="src\Widgets\Widget.h" />
+    <ClInclude Include="Src\Widgets\WidgetMenuBar.h" />
+    <ClInclude Include="src\Widgets\WidgetProperties.h" />
+    <ClInclude Include="src\Widgets\WidgetSceneHierachy.h" />
+    <ClInclude Include="src\Widgets\WidgetViewport.h" />
     <ClInclude Include="src\Window.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Editor.cpp" />
+    <ClCompile Include="src\ImGuiRHI\ImGuiRHI.cpp" />
+    <ClCompile Include="Src\ImGuiRHI\Implementation\imgui_impl_dx11.cpp" />
+    <ClCompile Include="Src\ImGuiRHI\Implementation\imgui_impl_win32.cpp" />
+    <ClCompile Include="Src\Widgets\WidgetMenuBar.cpp" />
+    <ClCompile Include="src\Widgets\WidgetProperties.cpp" />
+    <ClCompile Include="src\Widgets\WidgetSceneHierachy.cpp" />
+    <ClCompile Include="src\Widgets\WidgetViewport.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>

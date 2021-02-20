@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ImGuiRHI">
+      <UniqueIdentifier>{234E234F-0F1B-7E5A-3834-6C022460B3E8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets">
+      <UniqueIdentifier>{7CB70329-E896-82C4-F1AE-0D9B5D0DE925}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Editor.h" />
+    <ClInclude Include="src\ImGuiRHI\ImGuiRHI.h">
+      <Filter>ImGuiRHI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Widgets\Widget.h">
+      <Filter>Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Widgets\WidgetProperties.h">
+      <Filter>Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Widgets\WidgetSceneHierachy.h">
+      <Filter>Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Widgets\WidgetViewport.h">
+      <Filter>Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Window.h" />
+    <ClInclude Include="Src\ImGuiRHI\Implementation\imgui_impl_dx11.h">
+      <Filter>ImGuiRHI</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\ImGuiRHI\Implementation\imgui_impl_win32.h">
+      <Filter>ImGuiRHI</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Widgets\WidgetMenuBar.h" />
+    <ClInclude Include="Src\ImGuiRHI\ImGuiExtension.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Editor.cpp" />
+    <ClCompile Include="src\ImGuiRHI\ImGuiRHI.cpp">
+      <Filter>ImGuiRHI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Widgets\WidgetProperties.cpp">
+      <Filter>Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Widgets\WidgetSceneHierachy.cpp">
+      <Filter>Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Widgets\WidgetViewport.cpp">
+      <Filter>Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="Src\ImGuiRHI\Implementation\imgui_impl_dx11.cpp">
+      <Filter>ImGuiRHI</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\ImGuiRHI\Implementation\imgui_impl_win32.cpp">
+      <Filter>ImGuiRHI</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Widgets\WidgetMenuBar.cpp" />
+  </ItemGroup>
+</Project>

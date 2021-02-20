@@ -13,18 +13,20 @@ namespace Lemon
 		D3D11SwapChain(D3D11DynamicRHI* D3DRHI, void* windowHandle, const uint32_t width, const uint32_t height, const ERHIFormat format);
 		virtual ~D3D11SwapChain();
 
-		virtual void* GetRHISwapChain() override;
-		virtual void* GetRHIRenderTargetView() override;
+		virtual bool ReSize(uint32_t width, uint32_t height) override;
 
 		virtual bool Present() override;
+
+		//=========RHI Resource====================
+		virtual void* GetRHISwapChain() override;
+		virtual void* GetRHIRenderTargetView() override;
+		//=========================================
+
 	private:
-		ComPtr<IDXGISwapChain> m_SwapChain;
-		ComPtr<ID3D11RenderTargetView> m_RenderTargetView;
+		IDXGISwapChain* m_SwapChain;
+		ID3D11RenderTargetView* m_RenderTargetView;
 
 		D3D11DynamicRHI* m_D3DRHI;
-		uint32_t m_Width;
-		uint32_t m_Height;
 		uint32_t m_BackBufferCount;
-		ERHIFormat m_PixelFormat;
 	};
 }
