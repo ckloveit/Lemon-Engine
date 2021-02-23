@@ -6,10 +6,13 @@
 
 namespace Lemon
 {
+	class Renderer;
 
 	class D3D11DynamicRHI : public DynamicRHI
 	{
 	public:
+		D3D11DynamicRHI();
+
 		virtual void Init() override;
 
 		/** Shutdown the RHI; handle shutdown and resource destruction before the RHI's actual destructor is called (so that all resources of the RHI are still available for shutdown). */
@@ -17,7 +20,12 @@ namespace Lemon
 
 
 		//===================Begin RHI Methods ==================//
-		virtual Ref<RHISwapChain> RHICreateSwapChain(void* windowHandle, const uint32_t width, const uint32_t height, const ERHIFormat format) override;
+		virtual Ref<RHICommandList> RHICreateCommandList(Renderer* renderer) override;
+		
+
+		virtual Ref<RHISwapChain> RHICreateSwapChain(void* windowHandle, const uint32_t width, const uint32_t height, const ERHIPixelFormat format) override;
+
+		virtual Ref<RHITexture2D> RHICreateTexture2D(uint32_t sizeX, uint32_t sizeY, ERHIPixelFormat format, uint32_t numMips, uint32_t flags, RHIResourceCreateInfo& CreateInfo) override;
 
 
 		//========Just Debug
@@ -39,4 +47,5 @@ namespace Lemon
 
 
 	};
+
 }

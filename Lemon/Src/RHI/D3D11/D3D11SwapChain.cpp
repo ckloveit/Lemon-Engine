@@ -4,7 +4,7 @@
 
 namespace Lemon
 {
-	D3D11SwapChain::D3D11SwapChain(D3D11DynamicRHI* D3D11RHI, void* windowHandle, const uint32_t width, const uint32_t height, const ERHIFormat format)
+	D3D11SwapChain::D3D11SwapChain(D3D11DynamicRHI* D3D11RHI, void* windowHandle, const uint32_t width, const uint32_t height, const ERHIPixelFormat format)
 		:RHISwapChain(width,height,format),
 		m_D3DRHI(D3D11RHI),
 		m_BackBufferCount(1)

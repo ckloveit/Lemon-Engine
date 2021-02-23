@@ -10,7 +10,7 @@ namespace Lemon
 	class LEMON_API D3D11SwapChain : public RHISwapChain
 	{
 	public:
-		D3D11SwapChain(D3D11DynamicRHI* D3DRHI, void* windowHandle, const uint32_t width, const uint32_t height, const ERHIFormat format);
+		D3D11SwapChain(D3D11DynamicRHI* D3DRHI, void* windowHandle, const uint32_t width, const uint32_t height, const ERHIPixelFormat format);
 		virtual ~D3D11SwapChain();
 
 		virtual bool ReSize(uint32_t width, uint32_t height) override;

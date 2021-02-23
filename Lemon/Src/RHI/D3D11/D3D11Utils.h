@@ -7,8 +7,15 @@
 #include "RHI/RHI.h"
 #include "RHI/D3D11/D3D11RHI.h"
 
+namespace Lemon
+{
+	class D3D11Texture2D;
+	class D3D11DynamicRHI;
+}
+
 namespace Lemon::D3D11
 {
+
 	template <typename T>
 	constexpr void SafeRelease(T*& ptr)
 	{
@@ -132,7 +139,7 @@ namespace Lemon::D3D11
 			}
 		}
 		// DISPLAY MODES
-		const auto GetDisplayModes = [](IDXGIAdapter* adapter, ERHIFormat format)
+		const auto GetDisplayModes = [](IDXGIAdapter* adapter, ERHIPixelFormat format)
 		{
 			// Enumerate the primary adapter output (monitor).
 			IDXGIOutput* adapterOutput = nullptr;
@@ -163,7 +170,7 @@ namespace Lemon::D3D11
 			const auto dx_adapter = static_cast<IDXGIAdapter*>(deviceAdapter.GetAdapter());
 
 			// Adapters are ordered by memory (descending), so stop on the first success
-			const auto format = RHI_Format_R8G8B8A8_Unorm; // TODO: This must come from the swapchain
+			const auto format = RHI_PF_R8G8B8A8_Unorm; // TODO: This must come from the swapchain
 			if (GetDisplayModes(dx_adapter, format))
 			{
 				g_DynamicRHI->SetMainDeviceAdapter(deviceIndex);
@@ -177,4 +184,94 @@ namespace Lemon::D3D11
 
 	}
 
+	inline UINT GetD3D11TextureResourceBindFlags(uint16_t createFlags)
+	{
+		UINT D3D11Flags = 0;
+
+		D3D11Flags |= (createFlags & RHI_TexCreate_ShaderResource) ? D3D11_BIND_SHADER_RESOURCE : 0;
+		D3D11Flags |= (createFlags & RHI_TexCreate_UnorderedAccessView) ? D3D11_BIND_UNORDERED_ACCESS : 0;
+		D3D11Flags |= (createFlags & RHI_TexCreate_DepthStencilTargetable) ? D3D11_BIND_DEPTH_STENCIL : 0;
+		D3D11Flags |= (createFlags & RHI_TexCreate_RenderTargetable) ? D3D11_BIND_RENDER_TARGET : 0;
+
+		return D3D11Flags;
+	}
+
+	inline DXGI_FORMAT GetD3D11TextureFormat(ERHIPixelFormat format)
+	{
+		if (format == RHI_PF_D32_Float_S8X24_Uint)
+		{
+			return DXGI_FORMAT_R32G8X24_TYPELESS;
+		}
+		else if (format == RHI_PF_D32_Float)
+		{
+			return DXGI_FORMAT_R32_TYPELESS;
+		}
+
+		return D3D11::D3D11Format[format];
+	}
+
+	inline DXGI_FORMAT GetD3D11TextureFormatDSV(ERHIPixelFormat format)
+	{
+		if (format == RHI_PF_D32_Float_S8X24_Uint)
+		{
+			return DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
+		}
+		else if (format == RHI_PF_D32_Float)
+		{
+			return DXGI_FORMAT_D32_FLOAT;
+		}
+
+		return D3D11::D3D11Format[format];
+	}
+
+	inline DXGI_FORMAT GetD3D11TextureFormatSRV(ERHIPixelFormat format)
+	{
+		if (format == RHI_PF_D32_Float_S8X24_Uint)
+		{
+			return DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS;
+		}
+		else if (format == RHI_PF_D32_Float)
+		{
+			return DXGI_FORMAT_R32_FLOAT;
+		}
+
+		return D3D11::D3D11Format[format];
+	}
+
+	//================TextureUtils=============================
+	bool CreateTexture2D(D3D11DynamicRHI* D3D11RHI,
+		const uint32_t width,
+		const uint32_t height,
+		const uint32_t channelCount,
+		const uint32_t bitsPerChannel,
+		const uint8_t numMips,
+		const uint32_t arraySize,
+		const DXGI_FORMAT format,
+		const UINT bindFlags,
+		std::vector<std::vector<std::byte>>& data,
+		ID3D11Texture2D*& outTexture);
+
+	bool CreateRenderTargetView2D(D3D11DynamicRHI* D3D11RHI,
+		ID3D11Texture2D* texture,
+		const uint32_t arraySize,
+		const DXGI_FORMAT format,
+		std::vector<ID3D11RenderTargetView*>& outRTVs);
+
+	bool CreateShaderResourceView2D(D3D11DynamicRHI* D3D11RHI,
+		ID3D11Texture2D* texture,
+		const uint32_t arraySize,
+		const uint8_t numMips,
+		const DXGI_FORMAT format,
+		ID3D11ShaderResourceView*& outSRV);
+
+	bool CreateDepthStencilView2D(D3D11DynamicRHI* D3D11RHI,
+		ID3D11Texture2D* texture,
+		const uint32_t arraySize,
+		const uint8_t numMips,
+		const DXGI_FORMAT format,
+		ID3D11DepthStencilView*& outDSV);
+
+
+
+	//=========================================================
 }

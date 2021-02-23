@@ -17,4 +17,5 @@ public:
 private:
 	Lemon::Renderer* m_Renderer = nullptr;
 
+	glm::vec2 m_ViewportSize;
 };

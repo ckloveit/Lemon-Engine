@@ -6,7 +6,10 @@
 
 namespace Lemon
 {
-	
+	class RHITexture2D;
+	class RHICommandList;
+	class Renderer;
+
 	class LEMON_API DynamicRHI
 	{
 	public:
@@ -19,9 +22,11 @@ namespace Lemon
 		virtual void Shutdown() = 0;
 
 		//===================Begin RHI Methods ==================//
-		virtual Ref<RHISwapChain> RHICreateSwapChain(void* windowHandle, const uint32_t width, const uint32_t height, const ERHIFormat format) = 0;
+		virtual Ref<RHICommandList> RHICreateCommandList(Renderer* renderer) = 0;
 
+		virtual Ref<RHISwapChain> RHICreateSwapChain(void* windowHandle, const uint32_t width, const uint32_t height, const ERHIPixelFormat format) = 0;
 
+		virtual Ref<RHITexture2D> RHICreateTexture2D(uint32_t sizeX, uint32_t sizeY, ERHIPixelFormat format, uint32_t numMips, uint32_t flags, RHIResourceCreateInfo& CreateInfo) = 0;
 
 		//========Just Debug
 		virtual void RHIClearRenderTarget(Ref<RHISwapChain> swapChain, glm::vec4 backgroundColor) = 0;
@@ -51,9 +56,20 @@ namespace Lemon
 	DynamicRHI* PlatformCreateDynamicRHI();
 
 	//===================================RHI Resource Create Helper function==================================//
-	FORCEINLINE Ref<RHISwapChain> RHICreateSwapChain(void* windowHandle, const uint32_t width, const uint32_t height, const ERHIFormat format)
+
+	FORCEINLINE Ref<RHICommandList> RHICreateCommandList(Renderer* renderer)
+	{
+		return g_DynamicRHI->RHICreateCommandList(renderer);
+	}
+
+	FORCEINLINE Ref<RHISwapChain> RHICreateSwapChain(void* windowHandle, const uint32_t width, const uint32_t height, const ERHIPixelFormat format)
 	{
 		return g_DynamicRHI->RHICreateSwapChain(windowHandle, width, height, format);
+	}
+
+	FORCEINLINE Ref<RHITexture2D> RHICreateTexture2D(uint32_t sizeX, uint32_t sizeY, ERHIPixelFormat format, uint32_t numMips, uint32_t createFlags, RHIResourceCreateInfo& CreateInfo)
+	{
+		return g_DynamicRHI->RHICreateTexture2D(sizeX, sizeY, format, numMips, createFlags, CreateInfo);
 	}
 
 	FORCEINLINE void RHIClearRenderTarget(Ref<RHISwapChain> swapChain, glm::vec4 backgroundColor)

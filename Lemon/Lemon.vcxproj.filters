@@ -78,9 +78,6 @@
     <ClInclude Include="Src\RHI\D3D11\D3D11DynamicRHI.h">
       <Filter>Src\RHI\D3D11</Filter>
     </ClInclude>
-    <ClInclude Include="Src\RHI\D3D11\D3D11Helpers.h">
-      <Filter>Src\RHI\D3D11</Filter>
-    </ClInclude>
     <ClInclude Include="Src\RHI\D3D11\D3D11RHI.h">
       <Filter>Src\RHI\D3D11</Filter>
     </ClInclude>
@@ -1356,6 +1353,15 @@
     <ClInclude Include="ThirdParty\std_image\std_image.h">
       <Filter>ThirdParty\std_image</Filter>
     </ClInclude>
+    <ClInclude Include="Src\RHI\RHITexture.h" />
+    <ClInclude Include="Src\RHI\D3D11\D3D11Texture.h" />
+    <ClInclude Include="Src\RHI\D3D11\D3D11Utils.h">
+      <Filter>Src\RHI\D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\RenderCore\RenderUtils.h" />
+    <ClInclude Include="Src\Renderer\SceneRendering.h" />
+    <ClInclude Include="Src\Renderer\SceneRenderTargets.h" />
+    <ClInclude Include="Src\RHI\D3D11\D3D11CommandList.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Core\Engine.cpp">
@@ -1400,5 +1406,11 @@
     <ClCompile Include="ThirdParty\std_image\std_image.cpp">
       <Filter>ThirdParty\std_image</Filter>
     </ClCompile>
+    <ClCompile Include="Src\RHI\D3D11\D3D11Texture.cpp" />
+    <ClCompile Include="Src\RenderCore\RenderUtils.cpp" />
+    <ClCompile Include="Src\Renderer\SceneRendering.cpp" />
+    <ClCompile Include="Src\Renderer\SceneRenderTargets.cpp" />
+    <ClCompile Include="Src\RHI\D3D11\D3D11Utils.cpp" />
+    <ClCompile Include="Src\RHI\D3D11\D3D11CommandList.cpp" />
   </ItemGroup>
 </Project>

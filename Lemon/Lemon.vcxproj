@@ -147,16 +147,22 @@
     <ClInclude Include="Src\Lemon.h" />
     <ClInclude Include="Src\LemonPCH.h" />
     <ClInclude Include="Src\Log\Log.h" />
+    <ClInclude Include="Src\RenderCore\RenderUtils.h" />
+    <ClInclude Include="Src\Renderer\SceneRendering.h" />
+    <ClInclude Include="Src\Renderer\SceneRenderTargets.h" />
+    <ClInclude Include="Src\RHI\D3D11\D3D11CommandList.h" />
     <ClInclude Include="Src\RHI\D3D11\D3D11DynamicRHI.h" />
-    <ClInclude Include="Src\RHI\D3D11\D3D11Helpers.h" />
+    <ClInclude Include="Src\RHI\D3D11\D3D11Utils.h" />
     <ClInclude Include="Src\RHI\D3D11\D3D11RHI.h" />
     <ClInclude Include="Src\RHI\D3D11\D3D11SwapChain.h" />
+    <ClInclude Include="Src\RHI\D3D11\D3D11Texture.h" />
     <ClInclude Include="Src\RHI\DynamicRHI.h" />
     <ClInclude Include="Src\RHI\RHI.h" />
     <ClInclude Include="Src\RHI\RHICommandList.h" />
     <ClInclude Include="Src\RHI\RHIDeviceAdapter.h" />
     <ClInclude Include="Src\RHI\RHIResources.h" />
     <ClInclude Include="Src\RHI\RHISwapChain.h" />
+    <ClInclude Include="Src\RHI\RHITexture.h" />
     <ClInclude Include="Src\RHI\RHIViewport.h" />
     <ClInclude Include="Src\Renderer\Renderer.h" />
     <ClInclude Include="Src\Utils\FileUtils.h" />
@@ -583,8 +589,14 @@
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Src\Log\Log.cpp" />
+    <ClCompile Include="Src\RenderCore\RenderUtils.cpp" />
+    <ClCompile Include="Src\Renderer\SceneRendering.cpp" />
+    <ClCompile Include="Src\Renderer\SceneRenderTargets.cpp" />
+    <ClCompile Include="Src\RHI\D3D11\D3D11CommandList.cpp" />
     <ClCompile Include="Src\RHI\D3D11\D3D11DynamicRHI.cpp" />
     <ClCompile Include="Src\RHI\D3D11\D3D11SwapChain.cpp" />
+    <ClCompile Include="Src\RHI\D3D11\D3D11Texture.cpp" />
+    <ClCompile Include="Src\RHI\D3D11\D3D11Utils.cpp" />
     <ClCompile Include="Src\RHI\DynamicRHI.cpp" />
     <ClCompile Include="Src\RHI\RHI.cpp" />
     <ClCompile Include="Src\RHI\RHICommandList.cpp" />

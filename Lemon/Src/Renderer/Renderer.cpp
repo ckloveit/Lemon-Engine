@@ -33,7 +33,7 @@ namespace Lemon
 		m_RHISwapChain = RHICreateSwapChain(windowData.Handle,
 			static_cast<uint32_t>(m_Viewport.Width),
 			static_cast<uint32_t>(m_Viewport.Height),
-			RHI_Format_R8G8B8A8_Unorm);
+			RHI_PF_R8G8B8A8_Unorm);
 
 		if (!m_RHISwapChain)
 		{
@@ -41,16 +41,25 @@ namespace Lemon
 			return false;
 		}
 
+		// Create RHICommandList
+		m_RHICommandList = RHICreateCommandList(this);
+		// Create RenderTargetTextures
+		m_SceneRenderTargets = CreateRef<SceneRenderTargets>(m_Viewport.Width, m_Viewport.Height);
+		m_SceneRenderTargets->Allocate(m_RHICommandList);
+
 		return true;
 	}
 
 
 	void Renderer::Tick(float deltaTime)
 	{
+		m_RHICommandList->RHIClearRenderTarget(GetSceneRenderTargets()->GetSceneColorTexture(), glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+		/*
 		if (m_RHISwapChain)
 		{
 			RHIClearRenderTarget(m_RHISwapChain, { 1.0f, 1.0f, 0.0f, 1.0f });
-		}
+		}*/
+
 	}
 
 }

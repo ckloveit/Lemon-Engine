@@ -38,11 +38,10 @@ namespace Lemon::D3D11
 		DXGI_FORMAT_D32_FLOAT,
 		DXGI_FORMAT_D32_FLOAT_S8X24_UINT,
 
-		DXGI_FORMAT_UNKNOWN
+		DXGI_FORMAT_UNKNOWN,
 	};
 
 
 }
-
-#include "D3D11Helpers.h"
+#include "D3D11Utils.h"
 
