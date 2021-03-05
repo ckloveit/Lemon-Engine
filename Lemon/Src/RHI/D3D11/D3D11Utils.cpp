@@ -41,10 +41,10 @@ namespace Lemon::D3D11
 		{
 			for (uint8_t i = 0; i < numMips; i++)
 			{
-				D3D11_SUBRESOURCE_DATA& subresource_data = subresourceDatas.emplace_back(D3D11_SUBRESOURCE_DATA{});
-				subresource_data.pSysMem = i < data.size() ? data[i].data() : nullptr;        // Data pointer
-				subresource_data.SysMemPitch = (width >> i) * channelCount * (bitsPerChannel / 8); // Line width in bytes
-				subresource_data.SysMemSlicePitch = 0;  // This is only used for 3D textures
+				D3D11_SUBRESOURCE_DATA& subresourceData = subresourceDatas.emplace_back(D3D11_SUBRESOURCE_DATA{});
+				subresourceData.pSysMem = i < data.size() ? data[i].data() : nullptr;        // Data pointer
+				subresourceData.SysMemPitch = (width >> i) * channelCount * (bitsPerChannel / 8); // Line width in bytes
+				subresourceData.SysMemSlicePitch = 0;  // This is only used for 3D textures
 			}
 		}
 		return DXGIErrorCheck(D3D11RHI->GetDevice()->CreateTexture2D(&textureDesc, subresourceDatas.data(), reinterpret_cast<ID3D11Texture2D * *>(&outTexture)));

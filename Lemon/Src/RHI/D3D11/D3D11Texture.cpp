@@ -1,6 +1,6 @@
 #include "LemonPCH.h"
 #include "RenderCore/RenderUtils.h"
-#include "D3D11Texture.h"
+#include "D3D11Resources.h"
 #include "D3D11DynamicRHI.h"
 
 namespace Lemon
@@ -29,7 +29,7 @@ namespace Lemon
 		bool bRTVResult = true;
 		bool bDSVResult = true;
 		ID3D11Texture2D* texture = nullptr;
-		bTexResult = D3D11::CreateTexture2D(this, sizeX, sizeY, channelCount, perChannelBits, numMips, 1, D3Dformat, bindFlags, createInfo.RawDatas, texture);
+		bTexResult = D3D11::CreateTexture2D(this, sizeX, sizeY, channelCount, perChannelBits, numMips, 1, D3Dformat, bindFlags, createInfo.RawTextureDatas, texture);
 
 		ID3D11ShaderResourceView* textureSRV = nullptr;
 		if (IsShaderResource(createFlags))

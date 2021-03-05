@@ -81,7 +81,6 @@ void Editor::OnTick()
 {
 	// Engine - tick
 	m_Engine->Tick();
-
 	//Editor Tick
 	{
 		// ImGui - start frame

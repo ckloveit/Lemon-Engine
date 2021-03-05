@@ -96,13 +96,7 @@
     <ClInclude Include="Src\RHI\RHIDeviceAdapter.h">
       <Filter>Src\RHI</Filter>
     </ClInclude>
-    <ClInclude Include="Src\RHI\RHIResources.h">
-      <Filter>Src\RHI</Filter>
-    </ClInclude>
     <ClInclude Include="Src\RHI\RHISwapChain.h">
-      <Filter>Src\RHI</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\RHI\RHIViewport.h">
       <Filter>Src\RHI</Filter>
     </ClInclude>
     <ClInclude Include="Src\Renderer\Renderer.h">
@@ -1353,7 +1347,6 @@
     <ClInclude Include="ThirdParty\std_image\std_image.h">
       <Filter>ThirdParty\std_image</Filter>
     </ClInclude>
-    <ClInclude Include="Src\RHI\RHITexture.h" />
     <ClInclude Include="Src\RHI\D3D11\D3D11Texture.h" />
     <ClInclude Include="Src\RHI\D3D11\D3D11Utils.h">
       <Filter>Src\RHI\D3D11</Filter>
@@ -1362,6 +1355,14 @@
     <ClInclude Include="Src\Renderer\SceneRendering.h" />
     <ClInclude Include="Src\Renderer\SceneRenderTargets.h" />
     <ClInclude Include="Src\RHI\D3D11\D3D11CommandList.h" />
+    <ClInclude Include="Src\Containers\DynamicRHIResourceArray.h" />
+    <ClInclude Include="Src\Containers\ResourceArray.h" />
+    <ClInclude Include="Src\RHI\RHIResources.h" />
+    <ClInclude Include="Src\RHI\D3D11\D3D11Resources.h" />
+    <ClInclude Include="Src\RHI\RHIDefinitions.h" />
+    <ClInclude Include="Src\RenderCore\Viewport.h">
+      <Filter>Src\RHI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Core\Engine.cpp">
@@ -1394,9 +1395,6 @@
     <ClCompile Include="Src\RHI\RHICommandList.cpp">
       <Filter>Src\RHI</Filter>
     </ClCompile>
-    <ClCompile Include="Src\RHI\RHIViewport.cpp">
-      <Filter>Src\RHI</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Renderer\Renderer.cpp">
       <Filter>Src\Renderer</Filter>
     </ClCompile>
@@ -1412,5 +1410,12 @@
     <ClCompile Include="Src\Renderer\SceneRenderTargets.cpp" />
     <ClCompile Include="Src\RHI\D3D11\D3D11Utils.cpp" />
     <ClCompile Include="Src\RHI\D3D11\D3D11CommandList.cpp" />
+    <ClCompile Include="Src\RHI\D3D11\D3D11VertexBuffer.cpp" />
+    <ClCompile Include="Src\RHI\D3D11\D3D11IndexBuffer.cpp" />
+    <ClCompile Include="Src\RHI\D3D11\D3D11Shader.cpp" />
+    <ClCompile Include="Src\RHI\D3D11\D3D11VertexDeclaration.cpp" />
+    <ClCompile Include="Src\RenderCore\Viewport.cpp">
+      <Filter>Src\RHI</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

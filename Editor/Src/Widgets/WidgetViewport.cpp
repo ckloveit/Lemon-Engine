@@ -1,7 +1,7 @@
 #include "WidgetViewport.h"
 #include "Renderer/Renderer.h"
 #include "Renderer/SceneRenderTargets.h"
-#include "RHI/RHITexture.h"
+#include "RHI/RHIResources.h"
 
 using namespace Lemon;
 
@@ -25,6 +25,8 @@ void WidgetViewport::Tick()
 	ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
 	m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
 	ImTextureID textureID = m_Renderer->GetSceneRenderTargets()->GetSceneColorTexture()->GetNativeShaderResourceView();
-	ImGui::Image(textureID, ImVec2(m_ViewportSize.x, m_ViewportSize.y), ImVec2(0, 0), ImVec2(1, 0));
+	// fuck!!!
+	// ImGui::Image uv1 should (1,1).otherwise it will cause our render result failed....
+	ImGui::Image(textureID, ImVec2(m_ViewportSize.x, m_ViewportSize.y), ImVec2(0, 0), ImVec2(1, 1));
 }
 

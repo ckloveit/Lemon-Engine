@@ -9,6 +9,13 @@ namespace Lemon
 	class RHITexture2D;
 	class RHICommandList;
 	class Renderer;
+	class RHIVertexBuffer;
+	class RHIIndexBuffer;
+	class RHIVertexShader;
+	class RHIPixelShader;
+	class RHIVertexDeclaration;
+	class RHIBoundShaderState;
+	class RHICommandContext;
 
 	class LEMON_API DynamicRHI
 	{
@@ -27,10 +34,22 @@ namespace Lemon
 		virtual Ref<RHISwapChain> RHICreateSwapChain(void* windowHandle, const uint32_t width, const uint32_t height, const ERHIPixelFormat format) = 0;
 
 		virtual Ref<RHITexture2D> RHICreateTexture2D(uint32_t sizeX, uint32_t sizeY, ERHIPixelFormat format, uint32_t numMips, uint32_t flags, RHIResourceCreateInfo& CreateInfo) = 0;
+		
+		//=========Buffers========//
+		virtual Ref<RHIVertexBuffer> RHICreateVertexBuffer(uint32_t size, uint32_t usage, RHIResourceCreateInfo& createInfo) = 0;
+
+		virtual Ref<RHIIndexBuffer> RHICreateIndexBuffer(uint32_t size, uint32_t usage, RHIResourceCreateInfo& createInfo) = 0;
+
+		//=========Shaders=========//
+		virtual Ref<RHIVertexShader> RHICreateVertexShader(const std::string& filePath, const std::string& entryPoint,RHIShaderCreateInfo& createInfo) = 0;
+
+		virtual Ref<RHIPixelShader> RHICreatePixelShader(const std::string& filePath, const std::string& entryPoint, RHIShaderCreateInfo& createInfo) = 0;
+
+		//=========Shaders Binds=========//
+		virtual Ref<RHIVertexDeclaration> RHICreateVertexDeclaration(Ref<RHIVertexShader> vertexShader, const VertexDeclarationElementList& Elements) = 0;
 
 		//========Just Debug
 		virtual void RHIClearRenderTarget(Ref<RHISwapChain> swapChain, glm::vec4 backgroundColor) = 0;
-
 		//===================End RHI Methods ==================//
 
 	public:
@@ -40,11 +59,11 @@ namespace Lemon
 		void SetMainDeviceAdapter(const uint32_t index);
 		const std::vector<RHIDeviceAdapter>& GetDeviceAdapters() const { return m_DeviceAdapters; }
 		//===================End Device Adapter========================//
-
+		RHICommandContext& GetCommandContext() const { return *m_CommandContext; }
 	protected:
 		std::vector<RHIDeviceAdapter> m_DeviceAdapters;
 		uint32_t m_MainDeviceAdapterIndex = 0;
-
+		Ref<RHICommandContext> m_CommandContext;
 	};
 
 	extern LEMON_API DynamicRHI* g_DynamicRHI;
@@ -70,6 +89,31 @@ namespace Lemon
 	FORCEINLINE Ref<RHITexture2D> RHICreateTexture2D(uint32_t sizeX, uint32_t sizeY, ERHIPixelFormat format, uint32_t numMips, uint32_t createFlags, RHIResourceCreateInfo& CreateInfo)
 	{
 		return g_DynamicRHI->RHICreateTexture2D(sizeX, sizeY, format, numMips, createFlags, CreateInfo);
+	}
+
+	FORCEINLINE Ref<RHIVertexBuffer> RHICreateVertexBuffer(uint32_t size, uint32_t usage, RHIResourceCreateInfo& createInfo)
+	{
+		return g_DynamicRHI->RHICreateVertexBuffer(size, usage, createInfo);
+	}
+
+	FORCEINLINE Ref<RHIIndexBuffer> RHICreateIndexBuffer(uint32_t size, uint32_t usage, RHIResourceCreateInfo& createInfo)
+	{
+		return g_DynamicRHI->RHICreateIndexBuffer(size, usage, createInfo);
+	}
+
+	FORCEINLINE Ref<RHIVertexShader> RHICreateVertexShader(const std::string& filePath, const std::string& entryPoint, RHIShaderCreateInfo& createInfo)
+	{
+		return g_DynamicRHI->RHICreateVertexShader(filePath, entryPoint, createInfo);
+	}
+
+	FORCEINLINE Ref<RHIPixelShader> RHICreatePixelShader(const std::string& filePath, const std::string& entryPoint, RHIShaderCreateInfo& createInfo)
+	{
+		return g_DynamicRHI->RHICreatePixelShader(filePath, entryPoint, createInfo);
+	}
+
+	FORCEINLINE Ref<RHIVertexDeclaration> RHICreateVertexDeclaration(Ref<RHIVertexShader> vertexShader, const VertexDeclarationElementList& Elements)
+	{
+		return g_DynamicRHI->RHICreateVertexDeclaration(vertexShader, Elements);
 	}
 
 	FORCEINLINE void RHIClearRenderTarget(Ref<RHISwapChain> swapChain, glm::vec4 backgroundColor)

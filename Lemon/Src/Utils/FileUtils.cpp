@@ -1,8 +1,28 @@
 #include "LemonPCH.h"
+#include <fstream>
 #include "FileUtils.h"
 
 namespace Lemon
 {
+	std::string FileUtils::ReadFile(const std::string& filepath)
+	{
+		std::string result;
+		std::ifstream in(filepath, std::ios::in, std::ios::binary);
+		if (in)
+		{
+			in.seekg(0, std::ios::end);
+			result.resize(in.tellg());
+			in.seekg(0, std::ios::beg);
+			in.read(&result[0], result.size());
+			in.close();
+		}
+		else
+		{
+			LEMON_CORE_ERROR("Could not open file '{0}'", filepath);
+		}
+		return result;
+	}
+
 	std::wstring FileUtils::StringToWstring(const std::string& str /*= CP_ACP*/)
 	{
 		std::wstring wstr;

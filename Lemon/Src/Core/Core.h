@@ -28,6 +28,10 @@
 	#define LEMON_CLIENT_ASSERT(x, ...)
 #endif
 
+#define Check(x) LEMON_CLIENT_ASSERT(x, "")
+
+#define STRUCT_OFFSET( struc, member )	offsetof(struc, member)
+
 namespace Lemon
 {
 	template<typename T>

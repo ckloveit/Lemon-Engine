@@ -3,10 +3,10 @@
 
 namespace Lemon
 {
-	struct LEMON_API RHIViewport
+	struct LEMON_API Viewport
 	{
 	public:
-		RHIViewport(const float x = 0.0f, const float y = 0.0f, const float width = 0.0f, const float height = 0.0f, const float depthMin = 0.0f, const float depthMax = 1.0f)
+		Viewport(const float x = 0.0f, const float y = 0.0f, const float width = 0.0f, const float height = 0.0f, const float depthMin = 0.0f, const float depthMax = 1.0f)
 		{
 			this->X = x;
 			this->Y = y;
@@ -16,7 +16,7 @@ namespace Lemon
 			this->DepthMax = depthMax;
 		}
 
-		RHIViewport(const RHIViewport& viewport)
+		Viewport(const Viewport& viewport)
 		{
 			X = viewport.X;
 			Y = viewport.Y;
@@ -26,9 +26,9 @@ namespace Lemon
 			DepthMax = viewport.DepthMax;
 		}
 
-		~RHIViewport() = default;
+		~Viewport() = default;
 
-		bool operator==(const RHIViewport& rhs) const
+		bool operator==(const Viewport& rhs) const
 		{
 			return
 				X == rhs.X && Y == rhs.Y &&
@@ -36,7 +36,7 @@ namespace Lemon
 				DepthMin == rhs.DepthMin && DepthMax == rhs.DepthMax;
 		}
 
-		bool operator!=(const RHIViewport& rhs) const
+		bool operator!=(const Viewport& rhs) const
 		{
 			return !(*this == rhs);
 		}
@@ -59,8 +59,8 @@ namespace Lemon
 		float Width = 0.0f;
 		float Height = 0.0f;
 		float DepthMin = 0.0f;
-		float DepthMax = 0.0f;
+		float DepthMax = 1.0f;
 
-		static const RHIViewport Undefined;
+		static const Viewport Undefined;
 	};
 }

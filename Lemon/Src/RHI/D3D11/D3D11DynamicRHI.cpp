@@ -30,6 +30,10 @@ namespace Lemon
 		GPixelFormats[RHI_PF_R32G32B32A32_Float	 ].PlatformFormat		= DXGI_FORMAT_R32G32B32A32_FLOAT;
 		GPixelFormats[RHI_PF_D32_Float			 ].PlatformFormat		= DXGI_FORMAT_D32_FLOAT;
 		GPixelFormats[RHI_PF_D32_Float_S8X24_Uint].PlatformFormat		= DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
+
+		//
+		//m_CommandContext = CreateRef<D3D11CommandContext>(this);
+
 	}
 
 	void D3D11DynamicRHI::Init()

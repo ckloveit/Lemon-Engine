@@ -4,7 +4,7 @@
 
 #include <glm/glm.hpp>
 
-#include "RHI/RHIViewport.h"
+#include "RenderCore/Viewport.h"
 #include "RHI/RHI.h"
 
 #include "SceneRenderTargets.h"
@@ -29,13 +29,22 @@ namespace Lemon
 		const auto& GetSwapChain() const { return m_RHISwapChain; }
 
 		Ref<SceneRenderTargets> GetSceneRenderTargets() const { return m_SceneRenderTargets; }
-
 	private:
-		RHIViewport m_Viewport = { 0, 0, 1920, 1080 };
+		void InitGeometry();
+	private:
+		Viewport m_Viewport = { 0, 0, 1920, 1080 };
 		Ref<RHISwapChain> m_RHISwapChain;
 
 		Ref<RHICommandList> m_RHICommandList;
 		Ref<SceneRenderTargets> m_SceneRenderTargets;
+
+
+		//===============Debug
+		Ref<RHIVertexShader> simpleVertexShader;
+		Ref<RHIPixelShader> simplePixelShader;
+		Ref<RHIVertexBuffer> simpleVertexBuffer;
+		Ref<RHIIndexBuffer> simpleIndexBuffer;
+		Ref<RHIVertexDeclaration> vertexDeclaration;
 
 	};
 }
