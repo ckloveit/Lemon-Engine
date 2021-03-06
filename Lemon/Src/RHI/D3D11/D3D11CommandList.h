@@ -10,13 +10,6 @@ using namespace DirectX;
 
 namespace Lemon
 {
-	struct VertexPosColor
-	{
-		DirectX::XMFLOAT3 pos;
-		DirectX::XMFLOAT4 color;
-		static const D3D11_INPUT_ELEMENT_DESC inputLayout[2];
-	};
-
 	class Renderer;
 	class LEMON_API D3D11CommandList : public RHICommandList
 	{
@@ -42,17 +35,11 @@ namespace Lemon
 
 		virtual void Flush() override;
 
-		virtual void DebugRenderer(Ref<RHITexture2D> colorTarget) override;
 		//=======================================================================================================//
 	private:
 		D3D11DynamicRHI* m_D3D11RHI;
 		GraphicsPipelineStateInitializer m_CurrentGraphicsPipelineState;
 		EPrimitiveType m_CurrentPrimitiveType;
 
-		//
-		ComPtr<ID3D11InputLayout> m_pVertexLayout;	// 顶点输入布局
-		ComPtr<ID3D11Buffer> m_pVertexBuffer;		// 顶点缓冲区
-		ComPtr<ID3D11VertexShader> m_pVertexShader;	// 顶点着色器
-		ComPtr<ID3D11PixelShader> m_pPixelShader;	// 像素着色器
 	};
 }

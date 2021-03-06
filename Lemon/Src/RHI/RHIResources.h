@@ -217,13 +217,17 @@ namespace Lemon
 
 		bool operator==(const GraphicsPipelineStateInitializer& rhs) const 
 		{
-			if (BoundShaderState.PixelShaderRHI == rhs.BoundShaderState.PixelShaderRHI ||
-				BoundShaderState.VertexShaderRHI == rhs.BoundShaderState.VertexShaderRHI ||
+			if (BoundShaderState.PixelShaderRHI == rhs.BoundShaderState.PixelShaderRHI &&
+				BoundShaderState.VertexShaderRHI == rhs.BoundShaderState.VertexShaderRHI &&
 				BoundShaderState.VertexDeclarationRHI == rhs.BoundShaderState.VertexDeclarationRHI)
 			{
-				return false;
+				return true;
 			}
-			return true;
+			return false;
+		}
+		bool operator!=(const GraphicsPipelineStateInitializer& rhs) const 
+		{
+			return !(*this == rhs);
 		}
 	};
 

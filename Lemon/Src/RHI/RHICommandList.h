@@ -40,13 +40,7 @@ namespace Lemon
 
 		virtual void DrawIndexPrimitive(uint32_t VertexOffset, uint32_t IndexOffset, uint32_t NumPrimitives, uint32_t FirstInstance = 0, uint32_t NumInstances = 1) = 0;
 
-
 		virtual void Flush() = 0;
-
-
-		//Debug
-		virtual void DebugRenderer(Ref<RHITexture2D> colorTarget) = 0;
-
 
 		//=======================================================================================================//
 	private:

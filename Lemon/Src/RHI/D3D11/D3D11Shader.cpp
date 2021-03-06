@@ -25,7 +25,7 @@ namespace Lemon
 		// Compile flags
 		uint32_t compileFlags = 0;
 #ifdef LEMON_DEBUG
-		compileFlags |= D3DCOMPILE_DEBUG | D3DCOMPILE_PREFER_FLOW_CONTROL;
+		compileFlags |= D3DCOMPILE_DEBUG | D3DCOMPILE_PREFER_FLOW_CONTROL | D3DCOMPILE_SKIP_OPTIMIZATION;
 #endif
 		// Defines
 		vector<D3D_SHADER_MACRO> defines =
@@ -101,7 +101,7 @@ namespace Lemon
 		// Compile flags
 		uint32_t compileFlags = 0;
 #ifdef LEMON_DEBUG
-		compileFlags |= D3DCOMPILE_DEBUG | D3DCOMPILE_PREFER_FLOW_CONTROL;
+		compileFlags |= D3DCOMPILE_DEBUG | D3DCOMPILE_PREFER_FLOW_CONTROL | D3DCOMPILE_SKIP_OPTIMIZATION;
 #endif
 		// Defines
 		vector<D3D_SHADER_MACRO> defines =
