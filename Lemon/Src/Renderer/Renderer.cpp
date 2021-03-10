@@ -7,7 +7,6 @@
 #include "RHI/RHISwapChain.h"
 #include "Containers/DynamicRHIResourceArray.h"
 
-
 namespace Lemon
 {
 	Renderer::Renderer(Engine* engine)
@@ -59,8 +58,16 @@ namespace Lemon
 		glm::vec4 Color;
 
 	};
+	
 	void Renderer::InitGeometry()
 	{
+		m_Cube = CreateScope<Cube>();
+		m_Cube->CompileShader<SF_Vertex>("Assets/Shaders/SimpleStandardVertex.hlsl", "MainVS");
+		m_Cube->CompileShader<SF_Pixel>("Assets/Shaders/SimpleStandardPixel.hlsl", "MainPS");
+		m_Cube->BuildRHIBuffers();
+
+		return;
+		
 		RHIShaderCreateInfo shaderCreateInfo;
 		simpleVertexShader = RHICreateVertexShader("Assets/Shaders/SimpleColorVertex.hlsl", "MainVS", shaderCreateInfo);
 		simplePixelShader = RHICreatePixelShader("Assets/Shaders/SimpleColorPixel.hlsl", "MainPS", shaderCreateInfo);
@@ -79,7 +86,7 @@ namespace Lemon
 		indices.PushBack(0);
 		indices.PushBack(1);
 		indices.PushBack(2);
-
+		  
 		indices.PushBack(0);
 		indices.PushBack(2);
 		indices.PushBack(3);
@@ -100,6 +107,22 @@ namespace Lemon
 		PSOInit.BoundShaderState.VertexDeclarationRHI = vertexDeclaration;
 		PSOInit.PrimitiveType = EPrimitiveType::PT_TriangleList;
 		m_RHICommandList->SetGraphicsPipelineState(PSOInit);
+
+	}
+
+	void Renderer::DrawMeshRenderer(Mesh* mesh) const
+	{
+		GraphicsPipelineStateInitializer PSOInit;
+		PSOInit.BoundShaderState.PixelShaderRHI = mesh->GetPixelShader();
+		PSOInit.BoundShaderState.VertexShaderRHI = mesh->GetVertexShader();
+		PSOInit.BoundShaderState.VertexDeclarationRHI = mesh->GetVertexDeclaration();
+		PSOInit.PrimitiveType = EPrimitiveType::PT_TriangleList;
+		m_RHICommandList->SetGraphicsPipelineState(PSOInit);
+
+		m_RHICommandList->SetIndexBuffer(mesh->GetIndexBuffer());
+		m_RHICommandList->SetVertexBuffer(0, mesh->GetVertexBuffer());
+
+		m_RHICommandList->DrawIndexPrimitive(0, 0, mesh->GetIndexCount() / 3);
 	}
 
 	void Renderer::Tick(float deltaTime)
@@ -108,6 +131,9 @@ namespace Lemon
 		m_RHICommandList->SetRenderTarget(GetSceneRenderTargets()->GetSceneColorTexture());
 		m_RHICommandList->RHIClearRenderTarget(GetSceneRenderTargets()->GetSceneColorTexture(), glm::vec4(0.1f, 0.4f, 0.7f, 1.0f));
 
+		DrawMeshRenderer(m_Cube.get());
+		
+		/*
 		GraphicsPipelineStateInitializer PSOInit;
 		PSOInit.BoundShaderState.PixelShaderRHI = simplePixelShader;
 		PSOInit.BoundShaderState.VertexShaderRHI = simpleVertexShader;
@@ -122,6 +148,7 @@ namespace Lemon
 
 		//m_RHISwapChain->Present();
 		//m_RHICommandList->Flush();
+		*/
 	}
 
 }

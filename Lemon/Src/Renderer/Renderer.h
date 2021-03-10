@@ -9,6 +9,8 @@
 
 #include "SceneRenderTargets.h"
 #include "RHI/RHICommandList.h"
+#include "RenderCore/Mesh.h"
+#include "RenderCore/Geometry/Cube.h"
 
 namespace Lemon
 {
@@ -31,6 +33,9 @@ namespace Lemon
 		Ref<SceneRenderTargets> GetSceneRenderTargets() const { return m_SceneRenderTargets; }
 	private:
 		void InitGeometry();
+
+		void DrawMeshRenderer(Mesh* mesh) const;
+		
 	private:
 		Viewport m_Viewport = { 0, 0, 1920, 1080 };
 		Ref<RHISwapChain> m_RHISwapChain;
@@ -38,6 +43,7 @@ namespace Lemon
 		Ref<RHICommandList> m_RHICommandList;
 		Ref<SceneRenderTargets> m_SceneRenderTargets;
 
+		std::unique_ptr<Cube> m_Cube;
 
 		//===============Debug
 		Ref<RHIVertexShader> simpleVertexShader;
