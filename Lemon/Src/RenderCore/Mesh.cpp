@@ -10,7 +10,7 @@ namespace Lemon
 		m_Indices = indices;
 	}
 
-	void Mesh::BuildRHIBuffers()
+	void Mesh::CreateRHIBuffers()
 	{
 		Check(m_VertexShader && m_PixelShader);
 		RHIResourceCreateInfo vertexCreateInfo;

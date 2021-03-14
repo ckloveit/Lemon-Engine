@@ -115,4 +115,14 @@ namespace Lemon
 		SF_Geometry = 4,
 		SF_Compute = 5,
 	};
+
+	enum EUniformBufferUsageScope : uint8_t
+	{
+		UBUS_Vertex = 1 << 0,
+		UBUS_Pixel = 1 << 1,
+	};
+	using EUniformBufferUsageScopeType = uint8_t;
+
+
+	
 }

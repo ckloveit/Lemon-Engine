@@ -42,6 +42,9 @@ namespace Lemon
 
 		virtual void Flush() = 0;
 
+		// ConstantBuffer
+		virtual void SetUniformBuffer(uint32_t slot, EUniformBufferUsageScopeType scopeType, const RHIUniformBufferBaseRef& uniformBuffer) = 0;
+
 		//=======================================================================================================//
 	private:
 		static RHICommandList* s_Instance;

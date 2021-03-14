@@ -19,6 +19,19 @@ namespace Lemon
 			RHI_TexCreate_ShaderResource | RHI_TexCreate_RenderTargetable,
 			createInfo);
 	}
+	
+	void SceneRenderTargets::OnResize(uint32_t newSizeX, uint32_t newSizeY)
+	{
+		m_SizeX = newSizeX;
+		m_SizeY = newSizeY;
+		
+		//Recreate texture
+		RHIResourceCreateInfo createInfo;
+		m_SceneColorTex = RHICreateTexture2D(m_SizeX, m_SizeY, GetSceneColorFormat(), 1, 
+            RHI_TexCreate_ShaderResource | RHI_TexCreate_RenderTargetable,
+            createInfo);
+
+	}
 	SceneRenderTargets::~SceneRenderTargets()
 	{
 

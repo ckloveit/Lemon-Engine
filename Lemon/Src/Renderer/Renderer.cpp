@@ -6,6 +6,9 @@
 #include "Log/Log.h"
 #include "RHI/RHISwapChain.h"
 #include "Containers/DynamicRHIResourceArray.h"
+#include <glm/gtc/random.hpp>
+
+#include "Core/Timer.h"
 
 namespace Lemon
 {
@@ -47,6 +50,8 @@ namespace Lemon
 		// Create RenderTargetTextures
 		m_SceneRenderTargets = CreateRef<SceneRenderTargets>(m_Viewport.Width, m_Viewport.Height);
 		m_SceneRenderTargets->Allocate(m_RHICommandList);
+
+		m_SceneUniformBuffers = CreateRef<SceneUniformBuffers>();
 		
 		// Init Others
 		InitGeometry();
@@ -62,9 +67,9 @@ namespace Lemon
 	void Renderer::InitGeometry()
 	{
 		m_Cube = CreateScope<Cube>();
-		m_Cube->CompileShader<SF_Vertex>("Assets/Shaders/SimpleStandardVertex.hlsl", "MainVS");
-		m_Cube->CompileShader<SF_Pixel>("Assets/Shaders/SimpleStandardPixel.hlsl", "MainPS");
-		m_Cube->BuildRHIBuffers();
+		m_Cube->CreateShader<SF_Vertex>("Assets/Shaders/SimpleStandardVertex.hlsl", "MainVS");
+		m_Cube->CreateShader<SF_Pixel>("Assets/Shaders/SimpleStandardPixel.hlsl", "MainPS");
+		m_Cube->CreateRHIBuffers();
 
 		return;
 		
@@ -125,12 +130,22 @@ namespace Lemon
 		m_RHICommandList->DrawIndexPrimitive(0, 0, mesh->GetIndexCount() / 3);
 	}
 
+	void Renderer::OnResize(uint32_t newWidth, uint32_t newHeight)
+	{
+		m_Viewport.Width = newWidth;
+		m_Viewport.Height = newHeight;
+		
+		m_SceneRenderTargets->OnResize(newWidth, newHeight);
+		
+	}
 	void Renderer::Tick(float deltaTime)
 	{
 		m_RHICommandList->SetViewport(m_Viewport);
 		m_RHICommandList->SetRenderTarget(GetSceneRenderTargets()->GetSceneColorTexture());
 		m_RHICommandList->RHIClearRenderTarget(GetSceneRenderTargets()->GetSceneColorTexture(), glm::vec4(0.1f, 0.4f, 0.7f, 1.0f));
 
+		UpdateViewUniformBuffer();
+		
 		DrawMeshRenderer(m_Cube.get());
 		
 		/*
@@ -151,4 +166,26 @@ namespace Lemon
 		*/
 	}
 
+	void Renderer::UpdateViewUniformBuffer() const
+	{
+		m_RHICommandList->SetUniformBuffer(0,
+			EUniformBufferUsageScope::UBUS_Vertex | EUniformBufferUsageScope::UBUS_Pixel,
+			m_SceneUniformBuffers->ViewUniformBuffer->UniformBuffer());
+		ViewUniformParameters parameters;
+		static float accTime = 0;
+		static float preRColorValue = 1.0f;
+		static float preGColorValue = 0.0f;
+		static float preBColorValue = 0.0f;
+		accTime += m_Engine->GetSystem<Timer>()->GetDeltaTimeSec();
+		if(accTime > 1.0f)
+		{
+			accTime = 0;
+			preRColorValue = glm::linearRand(0, 1);
+		}
+		parameters.WorldToProjection = glm::mat4();
+		parameters.TestColor = glm::vec3(preRColorValue,accTime,accTime);
+		
+		m_SceneUniformBuffers->ViewUniformBuffer->UpdateUniformBufferImmediate(parameters);
+		
+	}
 }

@@ -2,6 +2,7 @@
 #include "Core/Core.h"
 #include "RHIDeviceAdapter.h"
 #include "RHI.h"
+#include "RHIResources.h"
 #include "glm/glm.hpp"
 
 namespace Lemon
@@ -40,6 +41,8 @@ namespace Lemon
 
 		virtual Ref<RHIIndexBuffer> RHICreateIndexBuffer(uint32_t size, uint32_t usage, RHIResourceCreateInfo& createInfo) = 0;
 
+		virtual Ref<RHIUniformBufferBase> RHICreateUniformBuffer(uint32_t size, const std::string& uniformBufferName) = 0;
+		
 		//=========Shaders=========//
 		virtual Ref<RHIVertexShader> RHICreateVertexShader(const std::string& filePath, const std::string& entryPoint,RHIShaderCreateInfo& createInfo) = 0;
 
@@ -121,7 +124,12 @@ namespace Lemon
 		return g_DynamicRHI->RHIClearRenderTarget(swapChain, backgroundColor);
 	}
 
-
+	template<typename T>
+	Ref<RHIUniformBufferBase> RHICreateUniformBuffer(const std::string& uniformBufferName)
+	{
+		uint32_t size = GetValidateUniformBufferSize(static_cast<uint32_t>(sizeof(T)));
+		return g_DynamicRHI->RHICreateUniformBuffer(size, uniformBufferName);
+	}
 
 }
 

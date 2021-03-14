@@ -27,6 +27,9 @@ namespace EditorGlobal
 	Lemon::Renderer* g_Renderer = nullptr;
 
 	const char* g_DockspaceName = "EditorDockspace";
+
+	WidgetViewport* g_EditorViewport = nullptr;
+	
 }
 
 
@@ -79,6 +82,17 @@ void Editor::OnWindowMessage(WindowData& windowData)
 }
 void Editor::OnTick()
 {
+	// Check if OnResize
+	Lemon::Viewport viewport = m_Engine->GetSystem<Renderer>()->GetViewport();
+	glm::vec2 editorViewportSize = EditorGlobal::g_EditorViewport->GetViewportSize();
+	
+	if((viewport.Width > 0.0f && viewport.Height > 0.0f && editorViewportSize.x > 0.0f && editorViewportSize.y > 0.0f) &&  // zero sized framebuffer is invalid
+	   (viewport.Width != EditorGlobal::g_EditorViewport->GetViewportSize().x ||
+		viewport.Height != EditorGlobal::g_EditorViewport->GetViewportSize().y))
+	{
+		EditorGlobal::g_Renderer->OnResize(EditorGlobal::g_EditorViewport->GetViewportSize().x, EditorGlobal::g_EditorViewport->GetViewportSize().y);
+	}
+	
 	// Engine - tick
 	m_Engine->Tick();
 	//Editor Tick
@@ -144,7 +158,10 @@ void Editor::InitImGui(const WindowData& windowData)
 void Editor::WidgetsCreate()
 {
 	m_Widgets.emplace_back(make_unique<WidgetMenuBar>(m_Engine.get()));
+	
 	m_Widgets.emplace_back(make_unique<WidgetViewport>(m_Engine.get()));
+	EditorGlobal::g_EditorViewport = static_cast<WidgetViewport*>(m_Widgets.back().get());
+	
 	m_Widgets.emplace_back(make_unique<WidgetSceneHierachy>(m_Engine.get()));
 	m_Widgets.emplace_back(make_unique<WidgetProperties>(m_Engine.get()));
 }

@@ -157,6 +157,28 @@ namespace Lemon
 		D3D11DynamicRHI* m_D3DRHI;
 	};
 
+	class D3D11UniformBuffer : public RHIUniformBufferBase
+	{
+	public:
+		D3D11UniformBuffer(D3D11DynamicRHI* D3D11RHI, ID3D11Buffer* buffer, uint32_t size)
+		: RHIUniformBufferBase(size)
+		, m_D3DRHI(D3D11RHI)
+        , m_Buffer(buffer)
+		{
+			
+		}
+		virtual ~D3D11UniformBuffer();
+
+		// @return we want Update Buffer address
+		virtual void* Lock() const override;
+		// close the Update Buffer address
+		virtual bool UnLock() const override;
+	
+		virtual void* GetNativeResource() const override { return m_Buffer; }
+	private:
+		ID3D11Buffer* m_Buffer;
+		D3D11DynamicRHI* m_D3DRHI;
+	};
 	//===========================================================//
 
 

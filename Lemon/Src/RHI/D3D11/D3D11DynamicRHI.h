@@ -35,6 +35,8 @@ namespace Lemon
 		virtual Ref<RHIVertexBuffer> RHICreateVertexBuffer(uint32_t size, uint32_t usage, RHIResourceCreateInfo& createInfo) override;
 
 		virtual Ref<RHIIndexBuffer> RHICreateIndexBuffer(uint32_t size, uint32_t usage, RHIResourceCreateInfo& createInfo) override;
+		
+		virtual Ref<RHIUniformBufferBase> RHICreateUniformBuffer(uint32_t size, const std::string& uniformBufferName) override;
 
 		virtual Ref<RHIVertexShader> RHICreateVertexShader(const std::string& filePath, const std::string& entryPoint, RHIShaderCreateInfo& createInfo) override;
 

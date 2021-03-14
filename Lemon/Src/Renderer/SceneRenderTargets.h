@@ -16,6 +16,8 @@ namespace Lemon
 	public:
 		void Allocate(Ref<RHICommandList> RHICmdList);
 
+		void OnResize(uint32_t newSizeX, uint32_t newSizeY);
+
 		ERHIPixelFormat GetSceneColorFormat() const;
 		Ref<RHITexture2D> GetSceneColorTexture() const { return m_SceneColorTex; }
 

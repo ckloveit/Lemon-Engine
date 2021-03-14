@@ -39,7 +39,7 @@ namespace Lemon
 		void BuileMesh(const std::vector<StandardMeshVertex>& vertices, const std::vector<uint32_t>& indices);
 
 		template<EShaderFrequency ShaderType>
-		void CompileShader(const std::string& shaderPath, const std::string& entryPoint)
+		void CreateShader(const std::string& shaderPath, const std::string& entryPoint)
 		{
 			RHIShaderCreateInfo shaderCreateInfo;
 			if(ShaderType == EShaderFrequency::SF_Vertex)
@@ -52,7 +52,7 @@ namespace Lemon
 			}
 		}
 		
-		void BuildRHIBuffers();
+		void CreateRHIBuffers();
 
 		//=== Draw Data Getter
 		const std::shared_ptr<RHIVertexBuffer>& GetVertexBuffer() const { return m_VertexBuffer; }

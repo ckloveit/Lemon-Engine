@@ -13,6 +13,7 @@ struct VertexOutput
 	float4 Position : SV_POSITION;
 	float4 Color 	: COLOR;
 };
+
 VertexOutput MainVS(VertexInput Input)
 {
 	VertexOutput Output;

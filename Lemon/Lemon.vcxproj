@@ -154,6 +154,7 @@
     <ClInclude Include="Src\RenderCore\RenderUtils.h" />
     <ClInclude Include="Src\Renderer\SceneRendering.h" />
     <ClInclude Include="Src\Renderer\SceneRenderTargets.h" />
+    <ClInclude Include="Src\Renderer\SceneUniformBuffers.h" />
     <ClInclude Include="Src\RHI\D3D11\D3D11CommandList.h" />
     <ClInclude Include="Src\RHI\D3D11\D3D11DynamicRHI.h" />
     <ClInclude Include="Src\RHI\D3D11\D3D11Resources.h" />
@@ -599,6 +600,7 @@
     <ClCompile Include="Src\RenderCore\RenderUtils.cpp" />
     <ClCompile Include="Src\Renderer\SceneRendering.cpp" />
     <ClCompile Include="Src\Renderer\SceneRenderTargets.cpp" />
+    <ClCompile Include="Src\Renderer\SceneUniformBuffers.cpp" />
     <ClCompile Include="Src\RHI\D3D11\D3D11CommandList.cpp" />
     <ClCompile Include="Src\RHI\D3D11\D3D11DynamicRHI.cpp" />
     <ClCompile Include="Src\RHI\D3D11\D3D11IndexBuffer.cpp" />
@@ -620,6 +622,9 @@
     <ProjectReference Include="ThirdParty\imgui\ImGui.vcxproj">
       <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Src\RHI\D3D11\D3D11UniformBuffer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

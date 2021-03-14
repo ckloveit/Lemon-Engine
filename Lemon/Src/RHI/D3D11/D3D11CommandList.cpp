@@ -165,6 +165,31 @@ namespace Lemon
 			m_D3D11RHI->GetDeviceContext()->DrawIndexed(indexCount, IndexOffset, VertexOffset);
 		}
 	}
+
+	void D3D11CommandList::SetUniformBuffer(uint32_t slot, EUniformBufferUsageScopeType scopeType, const RHIUniformBufferBaseRef& uniformBuffer)
+	{
+		void* resource = uniformBuffer ? uniformBuffer->GetNativeResource() : nullptr;
+		const void* resourceArray[1] = { resource };
+		uint32_t resourceCount = 1;
+
+		if (scopeType & EUniformBufferUsageScope::UBUS_Vertex)
+		{
+			m_D3D11RHI->GetDeviceContext()->VSSetConstantBuffers(
+                static_cast<UINT>(slot),
+                static_cast<UINT>(resourceCount),
+                reinterpret_cast<ID3D11Buffer *const*>(resourceCount > 1 ? resource : &resourceArray)
+            );
+		}
+		if (scopeType & EUniformBufferUsageScope::UBUS_Pixel)
+		{
+			m_D3D11RHI->GetDeviceContext()->PSSetConstantBuffers(
+                static_cast<UINT>(slot),
+                static_cast<UINT>(resourceCount),
+                reinterpret_cast<ID3D11Buffer * const*>(resourceCount > 1 ? resource : &resourceArray)
+            );
+		}
+	}
+	
 	void D3D11CommandList::Flush()
 	{
 		m_D3D11RHI->GetDeviceContext()->Flush();

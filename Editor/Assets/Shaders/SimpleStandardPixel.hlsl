@@ -1,3 +1,4 @@
+#include "Common.hlsl"
 struct PixelInput
 {
 	float4 Position : SV_POSITION;
@@ -6,5 +7,5 @@ struct PixelInput
 
 float4 MainPS(PixelInput Input) : SV_TARGET
 {
-	return Input.Color;
+	return float4(g_TestColor, 1.0f);//Input.Color;
 }

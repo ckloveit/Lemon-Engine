@@ -2,6 +2,7 @@
 #include "Renderer/Renderer.h"
 #include "Renderer/SceneRenderTargets.h"
 #include "RHI/RHIResources.h"
+#include "RenderCore/Viewport.h"
 
 using namespace Lemon;
 
@@ -24,6 +25,7 @@ void WidgetViewport::Tick()
 	// Draw our render result texture into ImGuiViewport
 	ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
 	m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
+	
 	ImTextureID textureID = m_Renderer->GetSceneRenderTargets()->GetSceneColorTexture()->GetNativeShaderResourceView();
 	// fuck!!!
 	// ImGui::Image uv1 should (1,1).otherwise it will cause our render result failed....

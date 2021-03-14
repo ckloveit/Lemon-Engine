@@ -63,5 +63,7 @@ namespace Lemon
 		uint32_t Offset = 0;// (PrimitiveType == PT_TriangleStrip) ? 2 : 0;
 		return NumPrimitives * Factor + Offset;
 	}
-
+	//Uniform Buffer will has valid size
+	inline uint32_t GetValidateUniformBufferSize(uint32_t num) { return num + (16 - num % 16); }
+	
 }

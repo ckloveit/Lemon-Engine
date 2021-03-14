@@ -34,6 +34,8 @@ namespace Lemon
 		virtual void DrawIndexPrimitive(uint32_t VertexOffset, uint32_t IndexOffset, uint32_t NumPrimitives, uint32_t FirstInstance = 0, uint32_t NumInstances = 1) override;
 
 		virtual void Flush() override;
+		
+		virtual void SetUniformBuffer(uint32_t slot, EUniformBufferUsageScopeType scopeType, const RHIUniformBufferBaseRef& uniformBuffer) override;
 
 		//=======================================================================================================//
 	private:

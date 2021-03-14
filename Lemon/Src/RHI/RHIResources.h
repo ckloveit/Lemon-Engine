@@ -80,6 +80,22 @@ namespace Lemon
 		uint32_t m_Usage;
 	};
 
+	class RHIUniformBufferBase : public RHIResource
+	{
+	public:
+		RHIUniformBufferBase(uint32_t size)
+			:m_Size(size)
+		{}
+		// @return we want Update Buffer address
+		virtual void* Lock() const = 0;
+		// close the Update Buffer address
+		virtual bool UnLock() const = 0;
+
+		virtual void* GetNativeResource() const = 0;
+	private:
+		uint32_t m_Size;
+	};
+
 	//
 	// Shaders
 	//
@@ -241,6 +257,11 @@ namespace Lemon
 		GraphicsPipelineStateInitializer m_PSOInitializer;
 	};
 
-	
 
+	//
+	typedef Ref<RHIIndexBuffer> RHIIndexBufferRef;
+	typedef Ref<RHIVertexBuffer> RHIVertexBufferRef;
+	typedef Ref<RHIUniformBufferBase> RHIUniformBufferBaseRef;
+
+	
 }
