@@ -4,6 +4,9 @@
     <Filter Include="Src">
       <UniqueIdentifier>{0D23880B-792C-887C-02A8-9E7C6EB0937C}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Containers">
+      <UniqueIdentifier>{72C301E5-5E91-F5EA-4725-66113392D14F}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Src\Core">
       <UniqueIdentifier>{8537E246-7104-3D52-9A1D-2BFA864972E0}</UniqueIdentifier>
     </Filter>
@@ -16,14 +19,32 @@
     <Filter Include="Src\RHI\D3D11">
       <UniqueIdentifier>{EB373F6E-57F8-BAA4-2033-04228CB2FF80}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\RenderCore">
+      <UniqueIdentifier>{852300CF-71F1-F3D4-5A85-64FB46F2CF39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\RenderCore\Geometry">
+      <UniqueIdentifier>{8016048D-EC4D-4C24-F557-B047610E731D}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Src\Renderer">
       <UniqueIdentifier>{532574A1-3F88-0346-E80D-3CFCD44FCFC8}</UniqueIdentifier>
     </Filter>
     <Filter Include="Src\Utils">
       <UniqueIdentifier>{2D7A7124-99E4-259B-E222-D7404ECC03F0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\World">
+      <UniqueIdentifier>{84139324-F07D-479B-39BC-F840A56525F0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\World\Components">
+      <UniqueIdentifier>{193E4AED-05CD-D3B6-AEEB-E7B19A59E45C}</UniqueIdentifier>
+    </Filter>
     <Filter Include="ThirdParty">
       <UniqueIdentifier>{107145F9-FC28-8746-6530-60A251072237}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty\entt">
+      <UniqueIdentifier>{5A60324C-C6EB-9F10-CFFC-22053B07FC10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty\entt\include">
+      <UniqueIdentifier>{CD41DFF6-3979-278E-4283-8BB1AE394E87}</UniqueIdentifier>
     </Filter>
     <Filter Include="ThirdParty\glm">
       <UniqueIdentifier>{5F03D311-4BD1-C617-3465-373E20D2A27C}</UniqueIdentifier>
@@ -48,6 +69,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Containers\DynamicRHIResourceArray.h">
+      <Filter>Src\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Containers\ResourceArray.h">
+      <Filter>Src\Containers</Filter>
+    </ClInclude>
     <ClInclude Include="Src\Core\Core.h">
       <Filter>Src\Core</Filter>
     </ClInclude>
@@ -75,13 +102,25 @@
     <ClInclude Include="Src\Log\Log.h">
       <Filter>Src\Log</Filter>
     </ClInclude>
+    <ClInclude Include="Src\RHI\D3D11\D3D11CommandList.h">
+      <Filter>Src\RHI\D3D11</Filter>
+    </ClInclude>
     <ClInclude Include="Src\RHI\D3D11\D3D11DynamicRHI.h">
       <Filter>Src\RHI\D3D11</Filter>
     </ClInclude>
     <ClInclude Include="Src\RHI\D3D11\D3D11RHI.h">
       <Filter>Src\RHI\D3D11</Filter>
     </ClInclude>
+    <ClInclude Include="Src\RHI\D3D11\D3D11Resources.h">
+      <Filter>Src\RHI\D3D11</Filter>
+    </ClInclude>
     <ClInclude Include="Src\RHI\D3D11\D3D11SwapChain.h">
+      <Filter>Src\RHI\D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\RHI\D3D11\D3D11Texture.h">
+      <Filter>Src\RHI\D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\RHI\D3D11\D3D11Utils.h">
       <Filter>Src\RHI\D3D11</Filter>
     </ClInclude>
     <ClInclude Include="Src\RHI\DynamicRHI.h">
@@ -93,17 +132,68 @@
     <ClInclude Include="Src\RHI\RHICommandList.h">
       <Filter>Src\RHI</Filter>
     </ClInclude>
+    <ClInclude Include="Src\RHI\RHIDefinitions.h">
+      <Filter>Src\RHI</Filter>
+    </ClInclude>
     <ClInclude Include="Src\RHI\RHIDeviceAdapter.h">
+      <Filter>Src\RHI</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\RHI\RHIResources.h">
       <Filter>Src\RHI</Filter>
     </ClInclude>
     <ClInclude Include="Src\RHI\RHISwapChain.h">
       <Filter>Src\RHI</Filter>
     </ClInclude>
+    <ClInclude Include="Src\RenderCore\Geometry\Cube.h">
+      <Filter>Src\RenderCore\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\RenderCore\Material.h">
+      <Filter>Src\RenderCore</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\RenderCore\Mesh.h">
+      <Filter>Src\RenderCore</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\RenderCore\RenderCore.h">
+      <Filter>Src\RenderCore</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\RenderCore\RenderUtils.h">
+      <Filter>Src\RenderCore</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\RenderCore\Viewport.h">
+      <Filter>Src\RenderCore</Filter>
+    </ClInclude>
     <ClInclude Include="Src\Renderer\Renderer.h">
+      <Filter>Src\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Renderer\SceneRenderTargets.h">
+      <Filter>Src\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Renderer\SceneRendering.h">
+      <Filter>Src\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Renderer\SceneUniformBuffers.h">
       <Filter>Src\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Src\Utils\FileUtils.h">
       <Filter>Src\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\World\Components\CameraComponent.h">
+      <Filter>Src\World\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\World\Components\StaticMeshComponent.h">
+      <Filter>Src\World\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\World\Components\TransformComponent.h">
+      <Filter>Src\World\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\World\Entity.h">
+      <Filter>Src\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\World\World.h">
+      <Filter>Src\World</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\entt\include\entt.hpp">
+      <Filter>ThirdParty\entt\include</Filter>
     </ClInclude>
     <ClInclude Include="ThirdParty\glm\glm\common.hpp">
       <Filter>ThirdParty\glm\glm</Filter>
@@ -1347,22 +1437,7 @@
     <ClInclude Include="ThirdParty\std_image\std_image.h">
       <Filter>ThirdParty\std_image</Filter>
     </ClInclude>
-    <ClInclude Include="Src\RHI\D3D11\D3D11Texture.h" />
-    <ClInclude Include="Src\RHI\D3D11\D3D11Utils.h">
-      <Filter>Src\RHI\D3D11</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\RenderCore\RenderUtils.h" />
-    <ClInclude Include="Src\Renderer\SceneRendering.h" />
-    <ClInclude Include="Src\Renderer\SceneRenderTargets.h" />
-    <ClInclude Include="Src\RHI\D3D11\D3D11CommandList.h" />
-    <ClInclude Include="Src\Containers\DynamicRHIResourceArray.h" />
-    <ClInclude Include="Src\Containers\ResourceArray.h" />
-    <ClInclude Include="Src\RHI\RHIResources.h" />
-    <ClInclude Include="Src\RHI\D3D11\D3D11Resources.h" />
-    <ClInclude Include="Src\RHI\RHIDefinitions.h" />
-    <ClInclude Include="Src\RenderCore\Viewport.h">
-      <Filter>Src\RHI</Filter>
-    </ClInclude>
+    <ClInclude Include="Src\World\Components\IComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Core\Engine.cpp">
@@ -1380,10 +1455,34 @@
     <ClCompile Include="Src\Log\Log.cpp">
       <Filter>Src\Log</Filter>
     </ClCompile>
+    <ClCompile Include="Src\RHI\D3D11\D3D11CommandList.cpp">
+      <Filter>Src\RHI\D3D11</Filter>
+    </ClCompile>
     <ClCompile Include="Src\RHI\D3D11\D3D11DynamicRHI.cpp">
       <Filter>Src\RHI\D3D11</Filter>
     </ClCompile>
+    <ClCompile Include="Src\RHI\D3D11\D3D11IndexBuffer.cpp">
+      <Filter>Src\RHI\D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\RHI\D3D11\D3D11Shader.cpp">
+      <Filter>Src\RHI\D3D11</Filter>
+    </ClCompile>
     <ClCompile Include="Src\RHI\D3D11\D3D11SwapChain.cpp">
+      <Filter>Src\RHI\D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\RHI\D3D11\D3D11Texture.cpp">
+      <Filter>Src\RHI\D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\RHI\D3D11\D3D11UniformBuffer.cpp">
+      <Filter>Src\RHI\D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\RHI\D3D11\D3D11Utils.cpp">
+      <Filter>Src\RHI\D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\RHI\D3D11\D3D11VertexBuffer.cpp">
+      <Filter>Src\RHI\D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\RHI\D3D11\D3D11VertexDeclaration.cpp">
       <Filter>Src\RHI\D3D11</Filter>
     </ClCompile>
     <ClCompile Include="Src\RHI\DynamicRHI.cpp">
@@ -1395,27 +1494,57 @@
     <ClCompile Include="Src\RHI\RHICommandList.cpp">
       <Filter>Src\RHI</Filter>
     </ClCompile>
+    <ClCompile Include="Src\RenderCore\Geometry\Cube.cpp">
+      <Filter>Src\RenderCore\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\RenderCore\Material.cpp">
+      <Filter>Src\RenderCore</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\RenderCore\Mesh.cpp">
+      <Filter>Src\RenderCore</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\RenderCore\RenderCore.cpp">
+      <Filter>Src\RenderCore</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\RenderCore\RenderUtils.cpp">
+      <Filter>Src\RenderCore</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\RenderCore\Viewport.cpp">
+      <Filter>Src\RenderCore</Filter>
+    </ClCompile>
     <ClCompile Include="Src\Renderer\Renderer.cpp">
+      <Filter>Src\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Renderer\SceneRenderTargets.cpp">
+      <Filter>Src\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Renderer\SceneRendering.cpp">
+      <Filter>Src\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Renderer\SceneUniformBuffers.cpp">
       <Filter>Src\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="Src\Utils\FileUtils.cpp">
       <Filter>Src\Utils</Filter>
     </ClCompile>
+    <ClCompile Include="Src\World\Components\CameraComponent.cpp">
+      <Filter>Src\World\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\World\Components\StaticMeshComponent.cpp">
+      <Filter>Src\World\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\World\Components\TransformComponent.cpp">
+      <Filter>Src\World\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\World\Entity.cpp">
+      <Filter>Src\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\World\World.cpp">
+      <Filter>Src\World</Filter>
+    </ClCompile>
     <ClCompile Include="ThirdParty\std_image\std_image.cpp">
       <Filter>ThirdParty\std_image</Filter>
     </ClCompile>
-    <ClCompile Include="Src\RHI\D3D11\D3D11Texture.cpp" />
-    <ClCompile Include="Src\RenderCore\RenderUtils.cpp" />
-    <ClCompile Include="Src\Renderer\SceneRendering.cpp" />
-    <ClCompile Include="Src\Renderer\SceneRenderTargets.cpp" />
-    <ClCompile Include="Src\RHI\D3D11\D3D11Utils.cpp" />
-    <ClCompile Include="Src\RHI\D3D11\D3D11CommandList.cpp" />
-    <ClCompile Include="Src\RHI\D3D11\D3D11VertexBuffer.cpp" />
-    <ClCompile Include="Src\RHI\D3D11\D3D11IndexBuffer.cpp" />
-    <ClCompile Include="Src\RHI\D3D11\D3D11Shader.cpp" />
-    <ClCompile Include="Src\RHI\D3D11\D3D11VertexDeclaration.cpp" />
-    <ClCompile Include="Src\RenderCore\Viewport.cpp">
-      <Filter>Src\RHI</Filter>
-    </ClCompile>
+    <ClCompile Include="Src\World\Components\IComponent.cpp" />
   </ItemGroup>
 </Project>

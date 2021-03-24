@@ -12,6 +12,10 @@ namespace Lemon
 		BuildCube(&vertices, &indices);
 		BuileMesh(vertices, indices);
 
+		// Shader And RHIResouce
+		CreateShader<SF_Vertex>("Assets/Shaders/SimpleStandardVertex.hlsl", "MainVS");
+		CreateShader<SF_Pixel>("Assets/Shaders/SimpleStandardPixel.hlsl", "MainPS");
+		CreateRHIBuffers();
 	}
 
 	void Cube::BuildCube(std::vector<StandardMeshVertex>* vertices, std::vector<uint32_t>* indices)

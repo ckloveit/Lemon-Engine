@@ -149,19 +149,13 @@
     <ClInclude Include="Src\Lemon.h" />
     <ClInclude Include="Src\LemonPCH.h" />
     <ClInclude Include="Src\Log\Log.h" />
-    <ClInclude Include="Src\RenderCore\Geometry\Cube.h" />
-    <ClInclude Include="Src\RenderCore\Mesh.h" />
-    <ClInclude Include="Src\RenderCore\RenderUtils.h" />
-    <ClInclude Include="Src\Renderer\SceneRendering.h" />
-    <ClInclude Include="Src\Renderer\SceneRenderTargets.h" />
-    <ClInclude Include="Src\Renderer\SceneUniformBuffers.h" />
     <ClInclude Include="Src\RHI\D3D11\D3D11CommandList.h" />
     <ClInclude Include="Src\RHI\D3D11\D3D11DynamicRHI.h" />
-    <ClInclude Include="Src\RHI\D3D11\D3D11Resources.h" />
-    <ClInclude Include="Src\RHI\D3D11\D3D11Utils.h" />
     <ClInclude Include="Src\RHI\D3D11\D3D11RHI.h" />
+    <ClInclude Include="Src\RHI\D3D11\D3D11Resources.h" />
     <ClInclude Include="Src\RHI\D3D11\D3D11SwapChain.h" />
     <ClInclude Include="Src\RHI\D3D11\D3D11Texture.h" />
+    <ClInclude Include="Src\RHI\D3D11\D3D11Utils.h" />
     <ClInclude Include="Src\RHI\DynamicRHI.h" />
     <ClInclude Include="Src\RHI\RHI.h" />
     <ClInclude Include="Src\RHI\RHICommandList.h" />
@@ -169,9 +163,24 @@
     <ClInclude Include="Src\RHI\RHIDeviceAdapter.h" />
     <ClInclude Include="Src\RHI\RHIResources.h" />
     <ClInclude Include="Src\RHI\RHISwapChain.h" />
+    <ClInclude Include="Src\RenderCore\Geometry\Cube.h" />
+    <ClInclude Include="Src\RenderCore\Material.h" />
+    <ClInclude Include="Src\RenderCore\Mesh.h" />
+    <ClInclude Include="Src\RenderCore\RenderCore.h" />
+    <ClInclude Include="Src\RenderCore\RenderUtils.h" />
     <ClInclude Include="Src\RenderCore\Viewport.h" />
     <ClInclude Include="Src\Renderer\Renderer.h" />
+    <ClInclude Include="Src\Renderer\SceneRenderTargets.h" />
+    <ClInclude Include="Src\Renderer\SceneRendering.h" />
+    <ClInclude Include="Src\Renderer\SceneUniformBuffers.h" />
     <ClInclude Include="Src\Utils\FileUtils.h" />
+    <ClInclude Include="Src\World\Components\CameraComponent.h" />
+    <ClInclude Include="Src\World\Components\IComponent.h" />
+    <ClInclude Include="Src\World\Components\StaticMeshComponent.h" />
+    <ClInclude Include="Src\World\Components\TransformComponent.h" />
+    <ClInclude Include="Src\World\Entity.h" />
+    <ClInclude Include="Src\World\World.h" />
+    <ClInclude Include="ThirdParty\entt\include\entt.hpp" />
     <ClInclude Include="ThirdParty\glm\glm\common.hpp" />
     <ClInclude Include="ThirdParty\glm\glm\detail\_features.hpp" />
     <ClInclude Include="ThirdParty\glm\glm\detail\_fixes.hpp" />
@@ -595,36 +604,42 @@
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Src\Log\Log.cpp" />
-    <ClCompile Include="Src\RenderCore\Geometry\Cube.cpp" />
-    <ClCompile Include="Src\RenderCore\Mesh.cpp" />
-    <ClCompile Include="Src\RenderCore\RenderUtils.cpp" />
-    <ClCompile Include="Src\Renderer\SceneRendering.cpp" />
-    <ClCompile Include="Src\Renderer\SceneRenderTargets.cpp" />
-    <ClCompile Include="Src\Renderer\SceneUniformBuffers.cpp" />
     <ClCompile Include="Src\RHI\D3D11\D3D11CommandList.cpp" />
     <ClCompile Include="Src\RHI\D3D11\D3D11DynamicRHI.cpp" />
     <ClCompile Include="Src\RHI\D3D11\D3D11IndexBuffer.cpp" />
     <ClCompile Include="Src\RHI\D3D11\D3D11Shader.cpp" />
     <ClCompile Include="Src\RHI\D3D11\D3D11SwapChain.cpp" />
     <ClCompile Include="Src\RHI\D3D11\D3D11Texture.cpp" />
+    <ClCompile Include="Src\RHI\D3D11\D3D11UniformBuffer.cpp" />
     <ClCompile Include="Src\RHI\D3D11\D3D11Utils.cpp" />
     <ClCompile Include="Src\RHI\D3D11\D3D11VertexBuffer.cpp" />
     <ClCompile Include="Src\RHI\D3D11\D3D11VertexDeclaration.cpp" />
     <ClCompile Include="Src\RHI\DynamicRHI.cpp" />
     <ClCompile Include="Src\RHI\RHI.cpp" />
     <ClCompile Include="Src\RHI\RHICommandList.cpp" />
+    <ClCompile Include="Src\RenderCore\Geometry\Cube.cpp" />
+    <ClCompile Include="Src\RenderCore\Material.cpp" />
+    <ClCompile Include="Src\RenderCore\Mesh.cpp" />
+    <ClCompile Include="Src\RenderCore\RenderCore.cpp" />
+    <ClCompile Include="Src\RenderCore\RenderUtils.cpp" />
     <ClCompile Include="Src\RenderCore\Viewport.cpp" />
     <ClCompile Include="Src\Renderer\Renderer.cpp" />
+    <ClCompile Include="Src\Renderer\SceneRenderTargets.cpp" />
+    <ClCompile Include="Src\Renderer\SceneRendering.cpp" />
+    <ClCompile Include="Src\Renderer\SceneUniformBuffers.cpp" />
     <ClCompile Include="Src\Utils\FileUtils.cpp" />
+    <ClCompile Include="Src\World\Components\CameraComponent.cpp" />
+    <ClCompile Include="Src\World\Components\IComponent.cpp" />
+    <ClCompile Include="Src\World\Components\StaticMeshComponent.cpp" />
+    <ClCompile Include="Src\World\Components\TransformComponent.cpp" />
+    <ClCompile Include="Src\World\Entity.cpp" />
+    <ClCompile Include="Src\World\World.cpp" />
     <ClCompile Include="ThirdParty\std_image\std_image.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="ThirdParty\imgui\ImGui.vcxproj">
       <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Src\RHI\D3D11\D3D11UniformBuffer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

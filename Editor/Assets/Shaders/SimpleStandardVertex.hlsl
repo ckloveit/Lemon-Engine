@@ -1,3 +1,4 @@
+#include "Common.hlsl"
 #define MAX_MESH_TEXTURE_COORDS 2
 struct VertexInput
 {
@@ -17,7 +18,10 @@ struct VertexOutput
 VertexOutput MainVS(VertexInput Input)
 {
 	VertexOutput Output;
-	Output.Position = float4(Input.Position, 1.0f);
+	float4 LocalPos = float4(Input.Position, 1.0f);
+	float4 WorldPos = mul(g_LocalToWorldMatrix, LocalPos);
+    Output.Position = mul(g_ViewProjectionMatrix, WorldPos);
+	//Output.Position = mul float4(Input.Position, 1.0f);
 	Output.Color = Output.Position;//Input.Color;
 	return Output;
 }

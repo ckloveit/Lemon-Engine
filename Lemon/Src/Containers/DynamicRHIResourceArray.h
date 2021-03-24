@@ -17,7 +17,7 @@ namespace Lemon
 		/**
 		 * @return size of resource data allocation
 		 */
-		virtual uint32_t GetResourceDataSize() const override { return m_Resource.size(); }
+		virtual uint32_t GetResourceDataSize() const override { return (uint32_t)m_Resource.size(); }
 
 		//============Container function=================//
 		template<typename... Args>

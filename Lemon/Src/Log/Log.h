@@ -20,7 +20,7 @@ namespace Lemon
 		static std::shared_ptr<spdlog::logger> s_CoreLogger;
 		static std::shared_ptr<spdlog::logger> s_ClientLogger;
 	};
-
+#if LEMON_DEBUG1
 	//define Core Some Macro
 #define LEMON_CORE_TRACE(...)    ::Lemon::Logger::GetCoreLogger()->trace(__VA_ARGS__)
 #define LEMON_CORE_INFO(...)     ::Lemon::Logger::GetCoreLogger()->info(__VA_ARGS__)
@@ -33,4 +33,18 @@ namespace Lemon
 #define LEMON_CLIENT_WARN(...)           ::Lemon::Logger::GetClientLogger()->warn(__VA_ARGS__)
 #define LEMON_CLIENT_ERROR(...)          ::Lemon::Logger::GetClientLogger()->error(__VA_ARGS__)
 #define LEMON_CLIENT_FATAL(...)          ::Lemon::Logger::GetClientLogger()->critical(__VA_ARGS__)
+#else
+#define LEMON_CORE_TRACE(...)    
+#define LEMON_CORE_INFO(...)     
+#define LEMON_CORE_WARN(...)     
+#define LEMON_CORE_ERROR(...)    
+#define LEMON_CORE_FATAL(...)    
+
+#define LEMON_CLIENT_TRACE(...)          
+#define LEMON_CLIENT_INFO(...)           
+#define LEMON_CLIENT_WARN(...)           
+#define LEMON_CLIENT_ERROR(...)          
+#define LEMON_CLIENT_FATAL(...)          
+
+#endif
 }

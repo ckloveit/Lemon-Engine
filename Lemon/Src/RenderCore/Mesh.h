@@ -60,7 +60,7 @@ namespace Lemon
 		const std::shared_ptr<RHIVertexShader>& GetVertexShader() const { return m_VertexShader; }
 		const std::shared_ptr<RHIPixelShader>& GetPixelShader() const { return m_PixelShader; }
 		const std::shared_ptr<RHIVertexDeclaration>& GetVertexDeclaration() const { return  m_VertexDeclaration; }
-		uint32_t GetIndexCount() const {return m_Indices.size(); }
+		uint32_t GetIndexCount() const {return (uint32_t)m_Indices.size(); }
 		
 	protected:
 		std::vector<StandardMeshVertex> m_Vertices;
@@ -72,6 +72,5 @@ namespace Lemon
 		std::shared_ptr<RHIVertexDeclaration> m_VertexDeclaration;
 		std::shared_ptr<RHIVertexShader> m_VertexShader;
 		std::shared_ptr<RHIPixelShader> m_PixelShader;
-		
 	};
 }

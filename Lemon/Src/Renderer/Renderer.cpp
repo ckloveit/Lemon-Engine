@@ -7,8 +7,11 @@
 #include "RHI/RHISwapChain.h"
 #include "Containers/DynamicRHIResourceArray.h"
 #include <glm/gtc/random.hpp>
-
 #include "Core/Timer.h"
+#include "World/World.h"
+#include "World/Components/CameraComponent.h"
+#include "World/Components/StaticMeshComponent.h"
+#include "World/Components/TransformComponent.h"
 
 namespace Lemon
 {
@@ -24,6 +27,9 @@ namespace Lemon
 
 	bool Renderer::Initialize()
 	{
+		// Get the World
+		m_World = m_Engine->GetSystem<World>();
+		
 		// Resolution, viewport and swapchain default to whatever the window size is
 		const WindowData& windowData = m_Engine->GetWindowData();
 
@@ -66,13 +72,9 @@ namespace Lemon
 	
 	void Renderer::InitGeometry()
 	{
-		m_Cube = CreateScope<Cube>();
-		m_Cube->CreateShader<SF_Vertex>("Assets/Shaders/SimpleStandardVertex.hlsl", "MainVS");
-		m_Cube->CreateShader<SF_Pixel>("Assets/Shaders/SimpleStandardPixel.hlsl", "MainPS");
-		m_Cube->CreateRHIBuffers();
-
 		return;
-		
+
+#if 0
 		RHIShaderCreateInfo shaderCreateInfo;
 		simpleVertexShader = RHICreateVertexShader("Assets/Shaders/SimpleColorVertex.hlsl", "MainVS", shaderCreateInfo);
 		simplePixelShader = RHICreatePixelShader("Assets/Shaders/SimpleColorPixel.hlsl", "MainPS", shaderCreateInfo);
@@ -112,31 +114,52 @@ namespace Lemon
 		PSOInit.BoundShaderState.VertexDeclarationRHI = vertexDeclaration;
 		PSOInit.PrimitiveType = EPrimitiveType::PT_TriangleList;
 		m_RHICommandList->SetGraphicsPipelineState(PSOInit);
-
+#endif
+		
 	}
 
-	void Renderer::DrawMeshRenderer(Mesh* mesh) const
+	void Renderer::DrawRenderer(Entity entity) const
 	{
+		TransformComponent& transformComp = entity.GetComponent<TransformComponent>();
+		StaticMeshComponent& staticMeshComp = entity.GetComponent<StaticMeshComponent>();
+
+		// Update ObjectBuffer
+		m_RHICommandList->SetUniformBuffer(1,
+            EUniformBufferUsageScope::UBUS_Vertex | EUniformBufferUsageScope::UBUS_Pixel,
+            m_SceneUniformBuffers->ObjectUniformBuffer->UniformBuffer());
+		ObjectUniformParameters parameters;
+		parameters.LocalToWorldMatrix = transformComp.GetTransform();
+		parameters.Color = glm::vec4(1.0f, 1.0f, 0.0f, 1.0f);
+		m_SceneUniformBuffers->ObjectUniformBuffer->UpdateUniformBufferImmediate(parameters);
+
+		// Set PSO
 		GraphicsPipelineStateInitializer PSOInit;
-		PSOInit.BoundShaderState.PixelShaderRHI = mesh->GetPixelShader();
-		PSOInit.BoundShaderState.VertexShaderRHI = mesh->GetVertexShader();
-		PSOInit.BoundShaderState.VertexDeclarationRHI = mesh->GetVertexDeclaration();
+		PSOInit.BoundShaderState.PixelShaderRHI = staticMeshComp.GetRenderMesh()->GetPixelShader();
+		PSOInit.BoundShaderState.VertexShaderRHI = staticMeshComp.GetRenderMesh()->GetVertexShader();
+		PSOInit.BoundShaderState.VertexDeclarationRHI = staticMeshComp.GetRenderMesh()->GetVertexDeclaration();
 		PSOInit.PrimitiveType = EPrimitiveType::PT_TriangleList;
 		m_RHICommandList->SetGraphicsPipelineState(PSOInit);
 
-		m_RHICommandList->SetIndexBuffer(mesh->GetIndexBuffer());
-		m_RHICommandList->SetVertexBuffer(0, mesh->GetVertexBuffer());
+		// Set VertexBuffer and IndexBuffer
+		m_RHICommandList->SetIndexBuffer(staticMeshComp.GetRenderMesh()->GetIndexBuffer());
+		m_RHICommandList->SetVertexBuffer(0, staticMeshComp.GetRenderMesh()->GetVertexBuffer());
 
-		m_RHICommandList->DrawIndexPrimitive(0, 0, mesh->GetIndexCount() / 3);
+		// Draw
+		m_RHICommandList->DrawIndexPrimitive(0, 0, staticMeshComp.GetRenderMesh()->GetIndexCount() / 3);
 	}
 
 	void Renderer::OnResize(uint32_t newWidth, uint32_t newHeight)
 	{
-		m_Viewport.Width = newWidth;
-		m_Viewport.Height = newHeight;
+		m_Viewport.Width = (float)newWidth;
+		m_Viewport.Height = (float)newHeight;
 		
 		m_SceneRenderTargets->OnResize(newWidth, newHeight);
-		
+
+		if(m_World->GetMainCamera())
+		{
+			m_World->GetMainCamera().GetComponent<CameraComponent>().SetViewportSize(newWidth, newHeight);
+		}
+
 	}
 	void Renderer::Tick(float deltaTime)
 	{
@@ -145,25 +168,16 @@ namespace Lemon
 		m_RHICommandList->RHIClearRenderTarget(GetSceneRenderTargets()->GetSceneColorTexture(), glm::vec4(0.1f, 0.4f, 0.7f, 1.0f));
 
 		UpdateViewUniformBuffer();
+
+		std::vector<Entity> entitys = m_World->GetAllEntities();
 		
-		DrawMeshRenderer(m_Cube.get());
-		
-		/*
-		GraphicsPipelineStateInitializer PSOInit;
-		PSOInit.BoundShaderState.PixelShaderRHI = simplePixelShader;
-		PSOInit.BoundShaderState.VertexShaderRHI = simpleVertexShader;
-		PSOInit.BoundShaderState.VertexDeclarationRHI = vertexDeclaration;
-		PSOInit.PrimitiveType = EPrimitiveType::PT_TriangleList;
-		m_RHICommandList->SetGraphicsPipelineState(PSOInit);
-
-		m_RHICommandList->SetIndexBuffer(simpleIndexBuffer);
-		m_RHICommandList->SetVertexBuffer(0, simpleVertexBuffer);
-
-		m_RHICommandList->DrawIndexPrimitive(0, 0, 2);
-
-		//m_RHISwapChain->Present();
-		//m_RHICommandList->Flush();
-		*/
+		for(int i = 0;i < entitys.size(); i++)
+		{
+			if(entitys[i] && entitys[i].HasComponent<StaticMeshComponent>())
+			{
+				DrawRenderer(entitys[i]);
+			}
+		}
 	}
 
 	void Renderer::UpdateViewUniformBuffer() const
@@ -171,6 +185,7 @@ namespace Lemon
 		m_RHICommandList->SetUniformBuffer(0,
 			EUniformBufferUsageScope::UBUS_Vertex | EUniformBufferUsageScope::UBUS_Pixel,
 			m_SceneUniformBuffers->ViewUniformBuffer->UniformBuffer());
+		
 		ViewUniformParameters parameters;
 		static float accTime = 0;
 		static float preRColorValue = 1.0f;
@@ -182,10 +197,20 @@ namespace Lemon
 			accTime = 0;
 			preRColorValue = glm::linearRand(0, 1);
 		}
-		parameters.WorldToProjection = glm::mat4();
+		Entity mainCameraEntity = m_World->GetMainCamera();
+
+		TransformComponent& transformComp = mainCameraEntity.GetComponent<TransformComponent>();
+		CameraComponent& mainCameraComp = mainCameraEntity.GetComponent<CameraComponent>();
+		glm::mat4 cameraTransform = transformComp.GetTransform();
+		parameters.ViewMatrix = mainCameraComp.GetViewMatrix(); //glm::inverse(transformComp.GetTransform());
+		parameters.ProjectionMatrix = mainCameraComp.GetProjectionMatrix();
+		parameters.ViewProjectionMatrix = parameters.ProjectionMatrix * parameters.ViewMatrix;
+
+		//glm::vec4 debugPoint1 = parameters.ViewMatrix * glm::vec4(-0.5f, 0.5f, 1.0f, 1.0f);
+		//glm::vec4 debugPoint = parameters.ProjectionMatrix * debugPoint1;
+
 		parameters.TestColor = glm::vec3(preRColorValue,accTime,accTime);
-		
 		m_SceneUniformBuffers->ViewUniformBuffer->UpdateUniformBufferImmediate(parameters);
-		
 	}
+	
 }

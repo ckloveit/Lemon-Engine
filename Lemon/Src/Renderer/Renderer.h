@@ -12,11 +12,13 @@
 #include "RHI/RHICommandList.h"
 #include "RenderCore/Mesh.h"
 #include "RenderCore/Geometry/Cube.h"
+#include "World/Entity.h"
 
 namespace Lemon
 {
 	class DynamicRHI;
-
+	class World;
+	
 	class LEMON_API Renderer : public ISystem
 	{
 	public:
@@ -44,7 +46,7 @@ namespace Lemon
 	private:
 		void InitGeometry();
 
-		void DrawMeshRenderer(Mesh* mesh) const;
+		void DrawRenderer(Entity entity) const;
 		
 	private:
 		Viewport m_Viewport = { 0, 0, 1920, 1080 };
@@ -54,8 +56,8 @@ namespace Lemon
 		Ref<SceneRenderTargets> m_SceneRenderTargets;
 		Ref<SceneUniformBuffers> m_SceneUniformBuffers;
 
-		std::unique_ptr<Cube> m_Cube;
-
+		World* m_World;
+		
 		//===============Debug
 		Ref<RHIVertexShader> simpleVertexShader;
 		Ref<RHIPixelShader> simplePixelShader;

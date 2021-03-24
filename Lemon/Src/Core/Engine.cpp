@@ -3,6 +3,7 @@
 #include "SystemManager.h"
 #include "Timer.h"
 #include "Renderer/Renderer.h"
+#include "World/World.h"
 
 using namespace std;
 
@@ -21,6 +22,7 @@ namespace Lemon
 
 		//Register System
 		m_SystemManager->RegisterSystem<Timer>(this); // must be first so it ticks first
+		m_SystemManager->RegisterSystem<World>(this);
 		m_SystemManager->RegisterSystem<Renderer>(this);
 
 		//Initialize Systems

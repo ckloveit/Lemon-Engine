@@ -139,12 +139,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Editor.h" />
-    <ClInclude Include="Src\ImGuiRHI\ImGuiExtension.h" />
+    <ClInclude Include="src\ImGuiRHI\ImGuiExtension.h" />
     <ClInclude Include="src\ImGuiRHI\ImGuiRHI.h" />
-    <ClInclude Include="Src\ImGuiRHI\Implementation\imgui_impl_dx11.h" />
-    <ClInclude Include="Src\ImGuiRHI\Implementation\imgui_impl_win32.h" />
+    <ClInclude Include="src\ImGuiRHI\Implementation\imgui_impl_dx11.h" />
+    <ClInclude Include="src\ImGuiRHI\Implementation\imgui_impl_win32.h" />
     <ClInclude Include="src\Widgets\Widget.h" />
-    <ClInclude Include="Src\Widgets\WidgetMenuBar.h" />
+    <ClInclude Include="src\Widgets\WidgetMenuBar.h" />
     <ClInclude Include="src\Widgets\WidgetProperties.h" />
     <ClInclude Include="src\Widgets\WidgetSceneHierachy.h" />
     <ClInclude Include="src\Widgets\WidgetViewport.h" />
@@ -153,9 +153,9 @@
   <ItemGroup>
     <ClCompile Include="src\Editor.cpp" />
     <ClCompile Include="src\ImGuiRHI\ImGuiRHI.cpp" />
-    <ClCompile Include="Src\ImGuiRHI\Implementation\imgui_impl_dx11.cpp" />
-    <ClCompile Include="Src\ImGuiRHI\Implementation\imgui_impl_win32.cpp" />
-    <ClCompile Include="Src\Widgets\WidgetMenuBar.cpp" />
+    <ClCompile Include="src\ImGuiRHI\Implementation\imgui_impl_dx11.cpp" />
+    <ClCompile Include="src\ImGuiRHI\Implementation\imgui_impl_win32.cpp" />
+    <ClCompile Include="src\Widgets\WidgetMenuBar.cpp" />
     <ClCompile Include="src\Widgets\WidgetProperties.cpp" />
     <ClCompile Include="src\Widgets\WidgetSceneHierachy.cpp" />
     <ClCompile Include="src\Widgets\WidgetViewport.cpp" />

@@ -37,9 +37,10 @@ namespace Window
 			windowData.Width = static_cast<float>(lParam & 0xffff);
 			windowData.Height = static_cast<float>((lParam >> 16) & 0xffff);
 		}
-		else if (msg == WM_CLOSE)
+		else if (msg == WM_CLOSE || msg == WM_DESTROY)
 		{
 			PostQuitMessage(0);
+			return result;
 		}
 		else
 		{
