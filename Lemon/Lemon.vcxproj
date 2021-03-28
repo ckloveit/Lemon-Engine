@@ -141,11 +141,14 @@
     <ClInclude Include="Src\Containers\DynamicRHIResourceArray.h" />
     <ClInclude Include="Src\Containers\ResourceArray.h" />
     <ClInclude Include="Src\Core\Core.h" />
+    <ClInclude Include="Src\Core\Delegate.h" />
     <ClInclude Include="Src\Core\Engine.h" />
     <ClInclude Include="Src\Core\ISystem.h" />
     <ClInclude Include="Src\Core\PlatformDetection.h" />
     <ClInclude Include="Src\Core\SystemManager.h" />
     <ClInclude Include="Src\Core\Timer.h" />
+    <ClInclude Include="Src\Input\InputSystem.h" />
+    <ClInclude Include="Src\Input\Input.h" />
     <ClInclude Include="Src\Lemon.h" />
     <ClInclude Include="Src\LemonPCH.h" />
     <ClInclude Include="Src\Log\Log.h" />
@@ -600,6 +603,7 @@
     <ClCompile Include="Src\Core\Engine.cpp" />
     <ClCompile Include="Src\Core\SystemManager.cpp" />
     <ClCompile Include="Src\Core\Timer.cpp" />
+    <ClCompile Include="Src\Input\Windows\WindowsInputSystem.cpp" />
     <ClCompile Include="Src\LemonPCH.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>

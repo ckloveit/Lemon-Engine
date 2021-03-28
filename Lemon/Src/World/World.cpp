@@ -61,6 +61,11 @@ namespace Lemon
         {
             //cubeEntity.GetComponent<TransformComponent>().Rotation += glm::vec3(0.0f, 0.0f, 1.0f);          
         }
+
+		if (MainCameraEntity)
+		{
+			MainCameraEntity.GetComponent<CameraComponent>().ProcessInputSystem(deltaTime);
+		}
     }
     
     void World::CreateMainCamera()

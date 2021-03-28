@@ -20,7 +20,8 @@ namespace Lemon
 		static std::shared_ptr<spdlog::logger> s_CoreLogger;
 		static std::shared_ptr<spdlog::logger> s_ClientLogger;
 	};
-#if LEMON_DEBUG1
+
+#if LEMON_DEBUG
 	//define Core Some Macro
 #define LEMON_CORE_TRACE(...)    ::Lemon::Logger::GetCoreLogger()->trace(__VA_ARGS__)
 #define LEMON_CORE_INFO(...)     ::Lemon::Logger::GetCoreLogger()->info(__VA_ARGS__)

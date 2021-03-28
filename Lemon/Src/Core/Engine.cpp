@@ -4,6 +4,7 @@
 #include "Timer.h"
 #include "Renderer/Renderer.h"
 #include "World/World.h"
+#include "Input/InputSystem.h"
 
 using namespace std;
 
@@ -22,6 +23,8 @@ namespace Lemon
 
 		//Register System
 		m_SystemManager->RegisterSystem<Timer>(this); // must be first so it ticks first
+		m_SystemManager->RegisterSystem<InputSystem>(this);
+
 		m_SystemManager->RegisterSystem<World>(this);
 		m_SystemManager->RegisterSystem<Renderer>(this);
 
@@ -30,6 +33,7 @@ namespace Lemon
 
 		// Get the Timer
 		m_Timer = m_SystemManager->GetSystem<Timer>();
+
 
 		LEMON_CORE_INFO("LemonEngine Initialize");
 	}
@@ -43,9 +47,9 @@ namespace Lemon
 		m_SystemManager->Tick(static_cast<float>(m_Timer->GetDeltaTimeSec()));
 	}
 
-	void Engine::SetWindowData(WindowData& window_data)
+	void Engine::SetWindowData(WindowData& windowData)
 	{
-		m_WindowData = window_data;
-	//	FIRE_EVENT(EventType::WindowData);
+		m_WindowData = windowData;
+		OnWindowMessageEvent.Broadcast(windowData);
 	}
 }

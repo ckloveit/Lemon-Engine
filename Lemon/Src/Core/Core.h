@@ -3,6 +3,7 @@
 // Platform Detection
 #include "PlatformDetection.h"
 
+#define API_INPUT_WINDOWS
 #ifdef LEMON_PLATFORM_WINDOW
 	#if LEMON_DYNAMIC_LINK
 		#if LEMON_BUILD_DLL

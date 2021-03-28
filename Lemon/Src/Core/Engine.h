@@ -4,6 +4,7 @@ constexpr auto EngineVersion = "LemonEngineV01";
 
 #include "Core.h"
 #include "SystemManager.h"
+#include "Delegate.h"
 
 namespace Lemon
 {
@@ -32,7 +33,7 @@ namespace Lemon
 
 		// WindowData
 		const WindowData& GetWindowData() const { return m_WindowData; }
-		void SetWindowData(WindowData& window_data);
+		void SetWindowData(WindowData& windowData);
 
 		template<typename T>
 		T* GetSystem() const
@@ -40,10 +41,15 @@ namespace Lemon
 			return m_SystemManager->GetSystem<T>();
 		}
 
+	public:
+		//Delegate
+		MultiDelegate<void, WindowData> OnWindowMessageEvent;
+
 	private:
 		WindowData m_WindowData;
 		Ref<SystemManager> m_SystemManager;
 		Timer* m_Timer;
+
 
 	};
 

@@ -19,6 +19,7 @@ namespace Lemon
 		template <typename T>
 		Ref<T> GetRefPtr() { return dynamic_pointer_cast<T>(shared_from_this()); }
 
+		Engine* GetEngine() const { return m_Engine; }
 	protected:
 		Engine* m_Engine;
 	};

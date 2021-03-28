@@ -4,6 +4,7 @@
 #include "World/World.h"
 #include "World/Entity.h"
 #include "TransformComponent.h"
+#include "Input/InputSystem.h"
 
 namespace Lemon
 {
@@ -66,5 +67,21 @@ namespace Lemon
 		return glm::mat4(1.0f);
 	}
 
-    
+
+	void CameraComponent::ProcessInputSystem(float deltaTime)
+	{
+		if (!m_Entity.GetWorld())
+			return;
+		InputSystem* inputSystem = m_Entity.GetWorld()->GetEngine()->GetSystem<InputSystem>();
+		if (inputSystem)
+		{
+			if(inputSystem->GetKeyDown(KeyCode::W))
+			{
+				LEMON_CORE_INFO("KeyCode W Pressed");
+			}
+		}
+
+
+
+	}
 }

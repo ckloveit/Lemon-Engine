@@ -72,7 +72,7 @@ namespace Lemon
         {
             return !(*this == other);
         }
-        
+		World* GetWorld() const { return m_World; }
     private:
         entt::entity m_EntityHandle {0};
         World* m_World = nullptr;

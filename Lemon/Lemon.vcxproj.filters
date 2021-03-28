@@ -1438,6 +1438,9 @@
       <Filter>ThirdParty\std_image</Filter>
     </ClInclude>
     <ClInclude Include="Src\World\Components\IComponent.h" />
+    <ClInclude Include="Src\Input\InputSystem.h" />
+    <ClInclude Include="Src\Input\Input.h" />
+    <ClInclude Include="Src\Core\Delegate.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Core\Engine.cpp">
@@ -1546,5 +1549,6 @@
       <Filter>ThirdParty\std_image</Filter>
     </ClCompile>
     <ClCompile Include="Src\World\Components\IComponent.cpp" />
+    <ClCompile Include="Src\Input\Windows\WindowsInputSystem.cpp" />
   </ItemGroup>
 </Project>
