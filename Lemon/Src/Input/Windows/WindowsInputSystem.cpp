@@ -64,8 +64,8 @@ namespace Lemon
 		{
 			// Keys
 			m_Keys[m_StartIndexMouse] = (::GetKeyState(VK_LBUTTON) & 0x8000) != 0; // Left button pressed
-			m_Keys[(uint32_t)m_StartIndexMouse + 1] = (::GetKeyState(VK_MBUTTON) & 0x8000) != 0; // Middle button pressed
-			m_Keys[(uint32_t)m_StartIndexMouse + 2] = (::GetKeyState(VK_RBUTTON) & 0x8000) != 0; // Right button pressed
+			m_Keys[(uint32_t)(m_StartIndexMouse + 1)] = (::GetKeyState(VK_MBUTTON) & 0x8000) != 0; // Middle button pressed
+			m_Keys[(uint32_t)(m_StartIndexMouse + 2)] = (::GetKeyState(VK_RBUTTON) & 0x8000) != 0; // Right button pressed
 
 			// Delta
 			if (windowData.Message == WM_INPUT)
@@ -78,6 +78,7 @@ namespace Lemon
 				{
 					m_MouseDelta.x = static_cast<float>(raw->data.mouse.lLastX);
 					m_MouseDelta.y = static_cast<float>(raw->data.mouse.lLastY);
+					//LEMON_CORE_INFO("inputSystem->GetMouseDelta() = {0} , {1}", m_MouseDelta.x, m_MouseDelta.y);
 				}
 			}
 

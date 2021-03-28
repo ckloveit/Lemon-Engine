@@ -5,6 +5,8 @@
 #include "World/Entity.h"
 #include "TransformComponent.h"
 #include "Input/InputSystem.h"
+#include <glm/gtx/compatibility.hpp>
+#include <glm/ext/quaternion_trigonometric.hpp>
 
 namespace Lemon
 {
@@ -70,18 +72,49 @@ namespace Lemon
 
 	void CameraComponent::ProcessInputSystem(float deltaTime)
 	{
-		if (!m_Entity.GetWorld())
+		if (!m_Entity.GetWorld() || !m_Entity.GetWorld()->GetEngine())
 			return;
 		InputSystem* inputSystem = m_Entity.GetWorld()->GetEngine()->GetSystem<InputSystem>();
-		if (inputSystem)
+		if (!inputSystem)
+			return;
+		static const float mouseSensitivity = 0.13f;
+		static const float movementSpeedMax = 40.0f;
+		static const float movementAcceration = 0.8f;
+		static const float movementDrag = 0.08f;
+
+		if (inputSystem->GetKey(KeyCode::Mouse_Left))
 		{
-			if(inputSystem->GetKeyDown(KeyCode::W))
+			// Get Mouse delta
+			glm::vec2 mouseDelta = inputSystem->GetMouseDelta() * mouseSensitivity;
+
+			// Compute rotation
+			TransformComponent& transformComp = m_Entity.GetComponent<TransformComponent>();
+			transformComp.Rotation += glm::vec3(mouseDelta.y, mouseDelta.x, 0);
+			// Clamp rotation along the x-axis
+			transformComp.Rotation.x = glm::clamp(transformComp.Rotation.x, -90.0f, 90.0f);
+
+			// Keyboard movement
+			glm::vec3 direction = { 0,0,0 };
+			if (inputSystem->GetKey(KeyCode::W)) direction += transformComp.GetForwardVector();
+			if (inputSystem->GetKey(KeyCode::S)) direction += transformComp.GetBackVector();
+			if (inputSystem->GetKey(KeyCode::D)) direction += transformComp.GetRightVector();
+			if (inputSystem->GetKey(KeyCode::A)) direction += transformComp.GetLeftVector();
+
+			// Compute speed
+			m_MovementSpeed += direction * movementAcceration;
+			m_MovementSpeed.x = glm::clamp(m_MovementSpeed.x, -movementSpeedMax, movementSpeedMax);
+			m_MovementSpeed.y = glm::clamp(m_MovementSpeed.y, -movementSpeedMax, movementSpeedMax);
+			m_MovementSpeed.z = glm::clamp(m_MovementSpeed.z, -movementSpeedMax, movementSpeedMax);
+
+			// Apply movement drag
+			m_MovementSpeed *= 1.0f - movementDrag;
+
+			// Translate for as long as there is speed
+			if (m_MovementSpeed != glm::vec3(0, 0, 0));
 			{
-				LEMON_CORE_INFO("KeyCode W Pressed");
+				transformComp.Position += m_MovementSpeed * deltaTime;
 			}
 		}
-
-
 
 	}
 }

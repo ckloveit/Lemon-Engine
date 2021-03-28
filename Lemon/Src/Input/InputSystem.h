@@ -34,9 +34,9 @@ namespace Lemon
 		Insert,
 
 		// Mouse
-		Click_Left,
-		Click_Middle,
-		Click_Right,
+		Mouse_Left,
+		Mouse_Middle,
+		Mouse_Right,
 
 		// Gamepad
 		DPad_Up,

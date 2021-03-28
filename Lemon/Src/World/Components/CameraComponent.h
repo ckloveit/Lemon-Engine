@@ -57,5 +57,9 @@ namespace Lemon
         float m_OrthographicSize = 10.0f;
         float m_OrthographicNear = -1.0f;
         float m_OrthographicFar  = 1.0f;
+
+
+		// Input
+		glm::vec3 m_MovementSpeed;
     };
 }
