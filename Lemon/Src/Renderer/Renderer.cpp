@@ -137,7 +137,11 @@ namespace Lemon
 		PSOInit.BoundShaderState.PixelShaderRHI = staticMeshComp.GetRenderMesh()->GetPixelShader();
 		PSOInit.BoundShaderState.VertexShaderRHI = staticMeshComp.GetRenderMesh()->GetVertexShader();
 		PSOInit.BoundShaderState.VertexDeclarationRHI = staticMeshComp.GetRenderMesh()->GetVertexDeclaration();
-		PSOInit.PrimitiveType = EPrimitiveType::PT_TriangleList;
+		PSOInit.PrimitiveType = staticMeshComp.GetRenderMesh()->GetPrimitiveType();//EPrimitiveType::PT_TriangleList;
+		PSOInit.BlendState = staticMeshComp.GetRenderMesh()->GetBlendState();
+		PSOInit.RasterizerState = staticMeshComp.GetRenderMesh()->GetRasterizerState();
+		PSOInit.DepthStencilState = staticMeshComp.GetRenderMesh()->GetDepthStencilState();
+		
 		m_RHICommandList->SetGraphicsPipelineState(PSOInit);
 
 		// Set VertexBuffer and IndexBuffer

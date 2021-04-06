@@ -52,6 +52,11 @@ namespace Lemon
 		return std::make_shared<T>(std::forward<Args>(args)...);
 	}
 
+	template<typename T1, typename T2>
+	T1* RefCast(const Ref<T2>& object)
+	{
+		return static_cast<T1*>(object.get());
+	}
 }
 
 

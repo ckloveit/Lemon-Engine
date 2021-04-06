@@ -147,7 +147,5 @@ namespace Lemon
 	{
 		m_Direct3DDeviceIMContext->ClearRenderTargetView((ID3D11RenderTargetView*)swapChain->GetRHIRenderTargetView(), glm::value_ptr(backgroundColor));
 	}
-
-
 	//===================End RHI Methods ==================//
 }

@@ -29,6 +29,8 @@ namespace Lemon
     private:
         entt::registry m_Registry;
         Entity MainCameraEntity;
+		Entity GridGizmoEntity;
+
 
         std::vector<Entity> m_Entitys;
 

@@ -44,6 +44,14 @@ namespace Lemon
 
 		virtual Ref<RHIVertexDeclaration> RHICreateVertexDeclaration(Ref<RHIVertexShader> vertexShader, const VertexDeclarationElementList& Elements) override;
 
+		// ====STATE======
+		virtual Ref<RHIDepthStencilState> RHICreateDepthStencilState(const DepthStencilStateInitializer& initializer) override;
+		
+		virtual Ref<RHIBlendState> RHICreateBlendState(const BlendStateInitializer& initializer) override;
+		
+		virtual Ref<RHIRasterizerState> RHICreateRasterizerState(const RasterizerStateInitializer& initializer) override;
+		
+		virtual Ref<RHISamplerState> RHICreateSamplerState(const SamplerStateInitializer& initializer) override;
 		
 		//========Just Debug
 		virtual void RHIClearRenderTarget(Ref<RHISwapChain> swapChain, glm::vec4 backgroundColor) override;

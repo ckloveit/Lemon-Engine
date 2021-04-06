@@ -51,6 +51,19 @@ namespace Lemon
 		//=========Shaders Binds=========//
 		virtual Ref<RHIVertexDeclaration> RHICreateVertexDeclaration(Ref<RHIVertexShader> vertexShader, const VertexDeclarationElementList& Elements) = 0;
 
+
+		//======DepthStencil State======//
+		virtual Ref<RHIDepthStencilState> RHICreateDepthStencilState(const DepthStencilStateInitializer& initializer) = 0;
+
+		//=====Blend State===============//
+		virtual Ref<RHIBlendState> RHICreateBlendState(const BlendStateInitializer& initializer) = 0;
+
+		//====RasterizerState====//
+		virtual Ref<RHIRasterizerState> RHICreateRasterizerState(const RasterizerStateInitializer& initializer) = 0;
+
+		//===SamplerState=======//
+		virtual Ref<RHISamplerState> RHICreateSamplerState(const SamplerStateInitializer& initializer) = 0;
+		
 		//========Just Debug
 		virtual void RHIClearRenderTarget(Ref<RHISwapChain> swapChain, glm::vec4 backgroundColor) = 0;
 		//===================End RHI Methods ==================//
@@ -123,12 +136,36 @@ namespace Lemon
 	{
 		return g_DynamicRHI->RHIClearRenderTarget(swapChain, backgroundColor);
 	}
+	
+	//======DepthStencil State======//
+	FORCEINLINE Ref<RHIDepthStencilState> RHICreateDepthStencilState(const DepthStencilStateInitializer& initializer)
+	{
+		return g_DynamicRHI->RHICreateDepthStencilState(initializer);
+	}
 
 	template<typename T>
 	Ref<RHIUniformBufferBase> RHICreateUniformBuffer(const std::string& uniformBufferName)
 	{
 		uint32_t size = GetValidateUniformBufferSize(static_cast<uint32_t>(sizeof(T)));
 		return g_DynamicRHI->RHICreateUniformBuffer(size, uniformBufferName);
+	}
+
+	//=====Blend State===============//
+	FORCEINLINE Ref<RHIBlendState> RHICreateBlendState(const BlendStateInitializer& initializer)
+	{
+		return g_DynamicRHI->RHICreateBlendState(initializer);
+	}
+
+	//====RasterizerState====//
+	FORCEINLINE Ref<RHIRasterizerState> RHICreateRasterizerState(const RasterizerStateInitializer& initializer)
+	{
+		return g_DynamicRHI->RHICreateRasterizerState(initializer);
+	}
+
+	//===SamplerState=======//
+	FORCEINLINE Ref<RHISamplerState> RHICreateSamplerState(const SamplerStateInitializer& initializer)
+	{
+		return g_DynamicRHI->RHICreateSamplerState(initializer);
 	}
 
 }

@@ -61,16 +61,34 @@ namespace Lemon
 		const std::shared_ptr<RHIPixelShader>& GetPixelShader() const { return m_PixelShader; }
 		const std::shared_ptr<RHIVertexDeclaration>& GetVertexDeclaration() const { return  m_VertexDeclaration; }
 		uint32_t GetIndexCount() const {return (uint32_t)m_Indices.size(); }
+
+		//=== Render Stage====//
+		const Ref<RHIRasterizerState>& GetRasterizerState() const { return m_RasterizerState; }
+		void SetRasterizerState(Ref<RHIRasterizerState>& state) { m_RasterizerState = state; }
+
 		
+		const Ref<RHIBlendState>& GetBlendState() const { return m_BlendState; }
+		void SetBlendState(Ref<RHIBlendState>& state) { m_BlendState = state; }
+
+		const Ref<RHIDepthStencilState>& GetDepthStencilState() const { return m_DepthStencilState; }
+		void SetDepthStencilState(Ref<RHIDepthStencilState>& state) { m_DepthStencilState = state; }
+
+		const EPrimitiveType GetPrimitiveType() const { return m_PrimitiveType; }
+		void SetPrimitiveType(EPrimitiveType primitiveType) { m_PrimitiveType = primitiveType; }
 	protected:
 		std::vector<StandardMeshVertex> m_Vertices;
 		std::vector<uint32_t> m_Indices;
-
+		// Render State
+		Ref<RHIBlendState> m_BlendState = nullptr;
+		Ref<RHIRasterizerState> m_RasterizerState = nullptr;
+		Ref<RHIDepthStencilState> m_DepthStencilState = nullptr;
+		EPrimitiveType m_PrimitiveType = EPrimitiveType::PT_TriangleList;
+				
 		// Draw Data
-		std::shared_ptr<RHIVertexBuffer> m_VertexBuffer;
-		std::shared_ptr<RHIIndexBuffer> m_IndexBuffer;
-		std::shared_ptr<RHIVertexDeclaration> m_VertexDeclaration;
-		std::shared_ptr<RHIVertexShader> m_VertexShader;
-		std::shared_ptr<RHIPixelShader> m_PixelShader;
+		std::shared_ptr<RHIVertexBuffer> m_VertexBuffer = nullptr;
+		std::shared_ptr<RHIIndexBuffer> m_IndexBuffer = nullptr;
+		std::shared_ptr<RHIVertexDeclaration> m_VertexDeclaration = nullptr;
+		std::shared_ptr<RHIVertexShader> m_VertexShader = nullptr;
+		std::shared_ptr<RHIPixelShader> m_PixelShader = nullptr;
 	};
 }

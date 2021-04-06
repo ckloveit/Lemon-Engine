@@ -22,6 +22,7 @@ namespace Lemon
 		{
 
 		}
+		
 		virtual ~D3D11TextureBase()
 		{
 			D3D11::SafeRelease(m_Resource);

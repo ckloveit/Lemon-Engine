@@ -6,6 +6,8 @@
 #include "Components/TransformComponent.h"
 #include "entt/include/entt.hpp"
 #include "RenderCore/Geometry/Cube.h"
+#include "RenderCore/Geometry/GridGizmo.h"
+#include "RHI/RHIStaticStates.h"
 
 namespace Lemon
 {
@@ -51,6 +53,15 @@ namespace Lemon
 			Ref<Mesh> cubeMesh = CreateRef<Cube>();
 			staticMesh.SetMesh(cubeMesh);
 			cubeEntity = cube;
+
+			//GridGizmo
+			GridGizmoEntity = CreateEntity("GridGizmo");
+			StaticMeshComponent& gridMeshComp = GridGizmoEntity.AddComponent<StaticMeshComponent>();
+			Ref<Mesh> gridMesh = CreateRef<GridGizmo>();
+			gridMeshComp.SetMesh(gridMesh);
+			Ref<RHIRasterizerState> rasterizerState = TStaticRasterizerState<RFM_Wireframe, RCM_None>::CreateRHI();
+			gridMesh->SetRasterizerState(rasterizerState);
+			//gridMesh->SetPrimitiveType(EPrimitiveType::PT_LineList);
 		}
     }
     void World::Tick(float deltaTime)
@@ -66,6 +77,16 @@ namespace Lemon
 		{
 			MainCameraEntity.GetComponent<CameraComponent>().ProcessInputSystem(deltaTime);
 		}
+
+		if (GridGizmoEntity)
+		{
+			glm::vec3 translation;
+			glm::vec3 scale;
+			GridGizmo::ComputeWorldAndScaleWithSnap(MainCameraEntity.GetComponent<CameraComponent>(), translation, scale);
+			GridGizmoEntity.GetComponent<TransformComponent>().Position = translation;
+			GridGizmoEntity.GetComponent<TransformComponent>().Scale = scale;
+		}
+
     }
     
     void World::CreateMainCamera()

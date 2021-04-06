@@ -15,7 +15,8 @@ namespace Lemon
 	public:
 		virtual ~RHIResource() {}
 
-
+		virtual void* GetNativeResource() const { return nullptr; }
+		
 	};
 	//
 	// Buffers
@@ -43,7 +44,6 @@ namespace Lemon
 		// close the Update Buffer address
 		virtual bool UnLock() const = 0;
 
-		virtual void* GetNativeResource() const = 0;
 	private:
 		uint32_t m_Size;
 		// e.g. RHI_BUF_UnorderedAccess
@@ -72,8 +72,6 @@ namespace Lemon
 		// close the Update Buffer address
 		virtual bool UnLock() const = 0;
 
-		virtual void* GetNativeResource() const = 0;
-
 	private:
 		uint32_t m_Size;
 		// e.g. RHI_BUF_UnorderedAccess
@@ -91,7 +89,6 @@ namespace Lemon
 		// close the Update Buffer address
 		virtual bool UnLock() const = 0;
 
-		virtual void* GetNativeResource() const = 0;
 	private:
 		uint32_t m_Size;
 	};
@@ -216,15 +213,169 @@ namespace Lemon
 	//	RHIBoundShaderStateInput m_BoundStates;
 
 	//};
+	// RasterizerState
+	// ====State==========//
+	class RHISamplerState : public RHIResource
+	{
+	public:
+		RHISamplerState(const SamplerStateInitializer& Init)
+			:m_SamplerStateInitializer(Init)
+		{
+			
+		}
+	protected:
+		SamplerStateInitializer m_SamplerStateInitializer;
+	};
 
+	class RHIRasterizerState : public RHIResource
+	{
+	public:
+		RHIRasterizerState(const RasterizerStateInitializer& Init)
+			: m_RasterizerInitializer(Init){ }
 
+	protected:
+		RasterizerStateInitializer m_RasterizerInitializer;
+	};
+	
+	class RHIBlendState : public RHIResource
+	{
+	public:
+		RHIBlendState(const BlendStateInitializer& Init)
+            : m_BlendStateInitializer(Init){ }
 
+	protected:
+		BlendStateInitializer m_BlendStateInitializer;
+	};
+	
+	class DepthStencilOperation
+	{
+	public:
+		enum Type
+		{
+			// don't use those directly, use the combined versions below
+			// 4 bits are used for depth and 4 for stencil to make the hex value readable and non overlapping
+			DepthNop =		0x00,
+            DepthRead =		0x01,
+            DepthWrite =	0x02,
+            DepthMask =		0x0f,
+            StencilNop =	0x00,
+            StencilRead =	0x10,
+            StencilWrite =	0x20,
+            StencilMask =	0xf0,
+
+            // use those:
+            DepthNop_StencilNop = DepthNop + StencilNop,
+            DepthRead_StencilNop = DepthRead + StencilNop,
+            DepthWrite_StencilNop = DepthWrite + StencilNop,
+            DepthNop_StencilRead = DepthNop + StencilRead,
+            DepthRead_StencilRead = DepthRead + StencilRead,
+            DepthWrite_StencilRead = DepthWrite + StencilRead,
+            DepthNop_StencilWrite = DepthNop + StencilWrite,
+            DepthRead_StencilWrite = DepthRead + StencilWrite,
+            DepthWrite_StencilWrite = DepthWrite + StencilWrite,
+        };
+
+	private:
+		Type Value;
+	public:
+		// constructor
+		DepthStencilOperation(Type InValue = DepthNop_StencilNop)
+            : Value(InValue)
+		{
+		}
+		bool operator==(const DepthStencilOperation& rhs) const
+		{
+			return Value == rhs.Value;
+		}
+		bool operator != (const DepthStencilOperation& RHS) const
+		{
+			return Value != RHS.Value;
+		}
+		inline bool IsUsingDepthStencil() const
+		{
+			return Value != DepthNop_StencilNop;
+		}
+		inline bool IsUsingDepth() const
+		{
+			return (ExtractDepth() != DepthNop);
+		}
+		inline bool IsUsingStencil() const
+		{
+			return (ExtractStencil() != StencilNop);
+		}
+		inline bool IsDepthWrite() const
+		{
+			return ExtractDepth() == DepthWrite;
+		}
+		inline bool IsDepthRead() const
+		{
+			return ExtractDepth() == DepthRead;
+		}
+		inline bool IsStencilWrite() const
+		{
+			return ExtractStencil() == StencilWrite;
+		}
+		inline bool IsStencilRead() const
+		{
+			return ExtractStencil() == StencilRead;
+		}
+		inline bool IsAnyWrite() const
+		{
+			return IsDepthWrite() || IsStencilWrite();
+		}
+
+		inline void SetDepthWrite()
+		{
+			Value = (Type)(ExtractStencil() | DepthWrite);
+		}
+		inline void SetStencilWrite()
+		{
+			Value = (Type)(ExtractDepth() | StencilWrite);
+		}
+		inline void SetDepthStencilWrite(bool bDepth, bool bStencil)
+		{
+			Value = DepthNop_StencilNop;
+
+			if (bDepth)
+			{
+				SetDepthWrite();
+			}
+			if (bStencil)
+			{
+				SetStencilWrite();
+			}
+		}
+		
+	private:
+		inline Type ExtractDepth() const
+		{
+			return (Type)(Value & DepthMask);
+		}
+		inline Type ExtractStencil() const
+		{
+			return (Type)(Value & StencilMask);
+		}
+	};
+	
+	class RHIDepthStencilState : public RHIResource
+	{
+	public:
+		RHIDepthStencilState(const DepthStencilStateInitializer& Init)
+			:m_DepthStencilStateInitializer(Init){ }
+
+	protected:
+		DepthStencilStateInitializer m_DepthStencilStateInitializer;
+	};
+	
 	//==========Pipeline state===================================//
 	struct GraphicsPipelineStateInitializer
 	{
 	public:
 		RHIBoundShaderStateInput			BoundShaderState;
 		EPrimitiveType					PrimitiveType;
+		Ref<RHIBlendState>				BlendState;
+		Ref<RHIRasterizerState>			RasterizerState;
+		Ref<RHIDepthStencilState>		DepthStencilState;
 
 		bool IsValid() const 
 		{
@@ -235,7 +386,10 @@ namespace Lemon
 		{
 			if (BoundShaderState.PixelShaderRHI == rhs.BoundShaderState.PixelShaderRHI &&
 				BoundShaderState.VertexShaderRHI == rhs.BoundShaderState.VertexShaderRHI &&
-				BoundShaderState.VertexDeclarationRHI == rhs.BoundShaderState.VertexDeclarationRHI)
+				BoundShaderState.VertexDeclarationRHI == rhs.BoundShaderState.VertexDeclarationRHI &&
+				BlendState == rhs.BlendState &&
+				RasterizerState == rhs.RasterizerState &&
+				DepthStencilState == rhs.DepthStencilState)
 			{
 				return true;
 			}

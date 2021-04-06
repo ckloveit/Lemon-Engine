@@ -11,7 +11,9 @@ namespace Lemon
 	{
 		MaxVertexElementCount = 16,
 		MaxVertexElementCount_NumBits = 4,
+		MaxSimultaneousRenderTargets = 8,
 	};
+	
 	enum ERHIVertexElementType
 	{
 		VET_None,
@@ -44,6 +46,7 @@ namespace Lemon
 	{
 		// Topology that defines a triangle N with 3 vertex extremities: 3*N+0, 3*N+1, 3*N+2.
 		PT_TriangleList,
+		PT_LineList,
 	};
 
 
@@ -123,6 +126,106 @@ namespace Lemon
 	};
 	using EUniformBufferUsageScopeType = uint8_t;
 
+	enum ERasterizerFillMode
+	{
+		RFM_Wireframe,
+		RFM_Solid,
+	};
+	enum ERasterizerCullMode
+	{
+		RCM_None,
+		RCM_CW,
+		RCM_CCW,
+	};
 
+	enum ECompareFunction
+	{
+		CF_Less,
+		CF_LessEqual,
+		CF_Greater,
+		CF_GreaterEqual,
+		CF_Equal,
+		CF_NotEqual,
+		CF_Never,
+		CF_Always,
+	};
+	enum EStencilOp
+	{
+		SO_Keep,
+    	SO_Zero,
+    	SO_Replace,
+    	SO_SaturatedIncrement,
+    	SO_SaturatedDecrement,
+    	SO_Invert,
+    	SO_Increment,
+    	SO_Decrement,
+	};
+
+	enum EBlendOperation
+	{
+		BO_Add,
+        BO_Subtract,
+        BO_Min,
+        BO_Max,
+        BO_ReverseSubtract,
+	};
+
+	enum EBlendFactor
+	{
+		BF_Zero,
+        BF_One,
+        BF_SourceColor,
+        BF_InverseSourceColor,
+        BF_SourceAlpha,
+        BF_InverseSourceAlpha,
+        BF_DestAlpha,
+        BF_InverseDestAlpha,
+        BF_DestColor,
+        BF_InverseDestColor,
+        BF_ConstantBlendFactor,
+        BF_InverseConstantBlendFactor,
+        BF_Source1Color,
+        BF_InverseSource1Color,
+        BF_Source1Alpha,
+        BF_InverseSource1Alpha,
+    };
+
+	enum EColorWriteMask
+	{
+		CW_RED   = 0x01,
+	    CW_GREEN = 0x02,
+	    CW_BLUE  = 0x04,
+	    CW_ALPHA = 0x08,
+
+	    CW_NONE  = 0,
+	    CW_RGB   = CW_RED | CW_GREEN | CW_BLUE,
+	    CW_RGBA  = CW_RED | CW_GREEN | CW_BLUE | CW_ALPHA,
+	    CW_RG    = CW_RED | CW_GREEN,
+	    CW_BA    = CW_BLUE | CW_ALPHA,
+	};
+
+	enum ESamplerFilter
+	{
+		SF_Point,
+	    SF_Bilinear,
+	    SF_Trilinear,
+	    SF_AnisotropicPoint,
+	    SF_AnisotropicLinear,
+	};
+
+	enum ESamplerAddressMode
+	{
+		AM_Wrap,
+        AM_Clamp,
+        AM_Mirror,
+        /** Not supported on all platforms */
+        AM_Border,
+    };
+
+	enum ESamplerCompareFunction
+	{
+		SCF_Never,
+        SCF_Less
+    };
 	
 }

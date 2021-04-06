@@ -1441,6 +1441,7 @@
     <ClInclude Include="Src\Input\InputSystem.h" />
     <ClInclude Include="Src\Input\Input.h" />
     <ClInclude Include="Src\Core\Delegate.h" />
+    <ClInclude Include="Src\RenderCore\Geometry\GridGizmo.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Core\Engine.cpp">
@@ -1550,5 +1551,6 @@
     </ClCompile>
     <ClCompile Include="Src\World\Components\IComponent.cpp" />
     <ClCompile Include="Src\Input\Windows\WindowsInputSystem.cpp" />
+    <ClCompile Include="Src\RenderCore\Geometry\GridGizmo.cpp" />
   </ItemGroup>
 </Project>

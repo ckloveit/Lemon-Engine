@@ -68,18 +68,56 @@ namespace Lemon
 		{
 			m_D3D11RHI->GetDeviceContext()->PSSetShader(pixelShader->m_Resource, nullptr, 0);
 		}
-
+		/*
 		//Blend State
+		if (GraphicsPSOInit.BlendState)
+		{
+			if (void* resource = GraphicsPSOInit.BlendState->GetNativeResource())
+			{
+				float blendFactor = 1.0f;
+				FLOAT blendFactors[4] = { blendFactor, blendFactor, blendFactor, blendFactor };
 
+				m_D3D11RHI->GetDeviceContext()->OMSetBlendState
+                (
+                    static_cast<ID3D11BlendState*>(const_cast<void*>(resource)),
+                    blendFactors,
+                    0xffffffff
+                );
+			}
+		}
 		//Depth Stencil State
-
+		if (GraphicsPSOInit.DepthStencilState)
+		{
+			if (void* resource = GraphicsPSOInit.DepthStencilState->GetNativeResource())
+			{
+				m_D3D11RHI->GetDeviceContext()->OMSetDepthStencilState(static_cast<ID3D11DepthStencilState*>(const_cast<void*>(resource)), 1);
+			}
+		}
+		*/
+		
 		//Rasterizer State
-
+		if (GraphicsPSOInit.RasterizerState)
+		{
+			if (void* resource = GraphicsPSOInit.RasterizerState->GetNativeResource())
+			{
+				m_D3D11RHI->GetDeviceContext()->RSSetState(static_cast<ID3D11RasterizerState*>(const_cast<void*>(resource)));
+			}
+		}
+		else
+		{
+			m_D3D11RHI->GetDeviceContext()->RSSetState(nullptr);
+		}
+		
 		//PrimitiveTopology
 		if (GraphicsPSOInit.PrimitiveType == EPrimitiveType::PT_TriangleList)
 		{
 			m_D3D11RHI->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		}
+		else if(GraphicsPSOInit.PrimitiveType == EPrimitiveType::PT_LineList)
+		{
+			m_D3D11RHI->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+		}
+		
 	}
 
 	void D3D11CommandList::SetRenderTarget(Ref<RHITexture2D> colorTarget)

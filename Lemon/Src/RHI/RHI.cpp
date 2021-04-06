@@ -3,5 +3,9 @@
 
 namespace Lemon
 {
-	
+	std::string DepthStencilStateInitializer::ToString() const
+	{
+		return "DepthStencilStateInitializer";
+	}
+
 }
