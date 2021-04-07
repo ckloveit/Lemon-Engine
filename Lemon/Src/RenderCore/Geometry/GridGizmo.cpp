@@ -19,8 +19,8 @@ namespace Lemon
 		BuileMesh(vertices, indices);
 
 		// Shader And RHIResouce
-		CreateShader<SF_Vertex>("Assets/Shaders/SimpleStandardVertex.hlsl", "MainVS");
-		CreateShader<SF_Pixel>("Assets/Shaders/SimpleStandardPixel.hlsl", "MainPS");
+		CreateShader<SF_Vertex>("Assets/Shaders/SimpleColorVertex.hlsl", "MainVS");
+		CreateShader<SF_Pixel>("Assets/Shaders/SimpleColorPixel.hlsl", "MainPS");
 		CreateRHIBuffers();
 	}
 

@@ -61,7 +61,7 @@ namespace Lemon
 			gridMeshComp.SetMesh(gridMesh);
 			Ref<RHIRasterizerState> rasterizerState = TStaticRasterizerState<RFM_Wireframe, RCM_None>::CreateRHI();
 			gridMesh->SetRasterizerState(rasterizerState);
-			//gridMesh->SetPrimitiveType(EPrimitiveType::PT_LineList);
+			gridMesh->SetPrimitiveType(EPrimitiveType::PT_LineList);
 		}
     }
     void World::Tick(float deltaTime)

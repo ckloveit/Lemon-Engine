@@ -1,3 +1,4 @@
+#include "Common.hlsl"
 struct PixelInput
 {
 	float4 Position : SV_POSITION;

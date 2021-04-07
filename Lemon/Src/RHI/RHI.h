@@ -61,7 +61,7 @@ namespace Lemon
 	inline uint32_t GetIndexCountForPrimitiveCount(uint32_t NumPrimitives, EPrimitiveType PrimitiveType)
 	{
 		//static_assert(PT_Num == 38, "This function needs to be updated");
-		uint32_t Factor = (PrimitiveType == PT_TriangleList) ? 3 : 1;
+		uint32_t Factor = 3;// (PrimitiveType == PT_TriangleList) ? 3 : 1;
 		uint32_t Offset = 0;// (PrimitiveType == PT_TriangleStrip) ? 2 : 0;
 		return NumPrimitives * Factor + Offset;
 	}
