@@ -82,6 +82,8 @@ namespace Lemon
 		virtual void* GetNativeShaderResourceView() override final { return GetShaderResourceView(); }
 
 		virtual void* GetNativeRenderTargetView() override final { return GetRenderTargetViews().size() ? GetRenderTargetViews()[0] : nullptr; }
+
+		virtual void* GetNativeDepthStencilView() override final { return GetDepthStencilView();};
 		//=========================================
 	};
 

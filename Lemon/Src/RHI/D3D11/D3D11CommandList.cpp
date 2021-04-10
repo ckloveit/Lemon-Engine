@@ -18,10 +18,16 @@ namespace Lemon
 
 	//===================================RHI RenderCommand Helper function==================================//
 
-	void D3D11CommandList::RHIClearRenderTarget(Ref<RHITexture2D> renderTarget, glm::vec4 backgroundColor)
+	void D3D11CommandList::RHIClearRenderTarget(Ref<RHITexture2D> renderTarget, glm::vec4 backgroundColor,
+            Ref<RHITexture2D> depthStencilTarget, float depthClear, float stencilClear)
 	{
 		const void* rtvs[1] = { renderTarget->GetNativeRenderTargetView() };
-		m_D3D11RHI->GetDeviceContext()->ClearRenderTargetView((ID3D11RenderTargetView*)renderTarget->GetNativeRenderTargetView(), glm::value_ptr(backgroundColor));
+		m_D3D11RHI->GetDeviceContext()->ClearRenderTargetView(static_cast<ID3D11RenderTargetView*>(renderTarget->GetNativeRenderTargetView()), glm::value_ptr(backgroundColor));
+		if(depthStencilTarget)
+		{
+			m_D3D11RHI->GetDeviceContext()->ClearDepthStencilView(static_cast<ID3D11DepthStencilView*>(depthStencilTarget->GetNativeDepthStencilView()),
+				D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, depthClear, stencilClear);
+		}
 	}
 
 	void D3D11CommandList::SetRenderTarget(Ref<RHISwapChain> swapChain)
@@ -68,7 +74,7 @@ namespace Lemon
 		{
 			m_D3D11RHI->GetDeviceContext()->PSSetShader(pixelShader->m_Resource, nullptr, 0);
 		}
-		/*
+		
 		//Blend State
 		if (GraphicsPSOInit.BlendState)
 		{
@@ -85,6 +91,7 @@ namespace Lemon
                 );
 			}
 		}
+		
 		//Depth Stencil State
 		if (GraphicsPSOInit.DepthStencilState)
 		{
@@ -93,7 +100,6 @@ namespace Lemon
 				m_D3D11RHI->GetDeviceContext()->OMSetDepthStencilState(static_cast<ID3D11DepthStencilState*>(const_cast<void*>(resource)), 1);
 			}
 		}
-		*/
 		
 		//Rasterizer State
 		if (GraphicsPSOInit.RasterizerState)
@@ -120,13 +126,15 @@ namespace Lemon
 		
 	}
 
-	void D3D11CommandList::SetRenderTarget(Ref<RHITexture2D> colorTarget)
+	void D3D11CommandList::SetRenderTarget(Ref<RHITexture2D> colorTarget, Ref<RHITexture2D> depthTarget)
 	{
 		// render targets
 		void* depthStencil = nullptr;
+		if(depthTarget)
 		{
-			//TODO:
+			depthStencil= static_cast<ID3D11DepthStencilView*>(depthTarget->GetNativeDepthStencilView());
 		}
+		
 		if (colorTarget)
 		{
 			void* renderTargetViews[1];
@@ -139,6 +147,7 @@ namespace Lemon
 				static_cast<ID3D11DepthStencilView*>(depthStencil)
 			);
 		}
+		
 	}
 
 	void D3D11CommandList::SetViewport(const Viewport& viewport)

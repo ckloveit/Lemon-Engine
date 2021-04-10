@@ -159,7 +159,6 @@
     <ClInclude Include="Src\RHI\D3D11\D3D11Resources.h" />
     <ClInclude Include="Src\RHI\D3D11\D3D11State.h" />
     <ClInclude Include="Src\RHI\D3D11\D3D11SwapChain.h" />
-    <ClInclude Include="Src\RHI\D3D11\D3D11Texture.h" />
     <ClInclude Include="Src\RHI\D3D11\D3D11Utils.h" />
     <ClInclude Include="Src\RHI\DynamicRHI.h" />
     <ClInclude Include="Src\RHI\RHI.h" />

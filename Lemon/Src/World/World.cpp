@@ -46,6 +46,7 @@ namespace Lemon
 			bHasInitGeometry = true;
 			//Create Cube
 			Entity cube = CreateEntity("Cube1");
+			cube.GetComponent<TransformComponent>().Position = { 0, 0, 2.5 };
 			//cube.GetComponent<TransformComponent>().Position = { 0, 0, 0.5 };
 			//cube.GetComponent<TransformComponent>().Rotation = { 20.0f, 0, 0 };
 
@@ -53,6 +54,11 @@ namespace Lemon
 			Ref<Mesh> cubeMesh = CreateRef<Cube>();
 			staticMesh.SetMesh(cubeMesh);
 			cubeEntity = cube;
+
+			cube = CreateEntity("Cube2");
+			StaticMeshComponent& staticMesh1 = cube.AddComponent<StaticMeshComponent>();
+			cubeMesh = CreateRef<Cube>();
+			staticMesh1.SetMesh(cubeMesh);
 
 			//GridGizmo
 			GridGizmoEntity = CreateEntity("GridGizmo");
@@ -62,6 +68,10 @@ namespace Lemon
 			Ref<RHIRasterizerState> rasterizerState = TStaticRasterizerState<RFM_Wireframe, RCM_None>::CreateRHI();
 			gridMesh->SetRasterizerState(rasterizerState);
 			gridMesh->SetPrimitiveType(EPrimitiveType::PT_LineList);
+			// for mirror window, write RGBA, RGB = src.rgb * src.a + dst.rgb * (1 - src.a), A = src.a * 1 + dst.a * (1 - src a)
+			Ref<RHIBlendState> translucencyBlendState = TStaticBlendState<CW_RGBA, BO_Add, BF_SourceAlpha, BF_InverseSourceAlpha, BO_Add,
+				BF_One, BF_InverseSourceAlpha>::CreateRHI();
+			gridMesh->SetBlendState(translucencyBlendState);
 		}
     }
     void World::Tick(float deltaTime)

@@ -17,9 +17,10 @@ namespace Lemon
 		D3D11CommandList(D3D11DynamicRHI* D3D11RHI, Renderer* renderer);
 
 		//===================================RHI RenderCommand Helper function==================================//
-		virtual void RHIClearRenderTarget(Ref<RHITexture2D> renderTarget, glm::vec4 backgroundColor) override;
+		virtual void RHIClearRenderTarget(Ref<RHITexture2D> renderTarget, glm::vec4 backgroundColor,
+            Ref<RHITexture2D> depthStencilTarget = nullptr, float depthClear = 1.0f, float stencilClear = 0)  override;
 
-		virtual void SetRenderTarget(Ref<RHITexture2D> colorTarget) override;
+		virtual void SetRenderTarget(Ref<RHITexture2D> colorTarget,Ref<RHITexture2D> depthTarget = nullptr) override;
 
 		virtual void SetRenderTarget(Ref<RHISwapChain> swapChain) override;
 

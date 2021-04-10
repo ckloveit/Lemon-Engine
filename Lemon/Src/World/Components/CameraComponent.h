@@ -50,7 +50,7 @@ namespace Lemon
         
         // Perspective Properties
         float m_PerspectiveFOV = glm::radians(90.0f);
-        float m_PerspectiveNear = 0.01f;
+        float m_PerspectiveNear = 0.1f;
         float m_PerspectiveFar = 1000.0f;
 
         // orthographic Properties

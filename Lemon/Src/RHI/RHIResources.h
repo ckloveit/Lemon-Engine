@@ -158,6 +158,7 @@ namespace Lemon
 		virtual void* GetNativeResource() = 0;
 		virtual void* GetNativeShaderResourceView() = 0;
 		virtual void* GetNativeRenderTargetView() = 0;
+		virtual void* GetNativeDepthStencilView() = 0;
 		//=========================================
 
 	protected:

@@ -22,9 +22,10 @@ namespace Lemon
 
 
 		//===================================RHI RenderCommand Helper function==================================//
-		virtual void RHIClearRenderTarget(Ref<RHITexture2D> renderTarget, glm::vec4 backgroundColor) = 0;
+		virtual void RHIClearRenderTarget(Ref<RHITexture2D> renderTarget, glm::vec4 backgroundColor,
+			Ref<RHITexture2D> depthStencilTarget = nullptr, float depthClear = 1.0f, float stencilClear = 0) = 0;
 
-		virtual void SetRenderTarget(Ref<RHITexture2D> colorTarget) = 0;
+		virtual void SetRenderTarget(Ref<RHITexture2D> colorTarget, Ref<RHITexture2D> depthTarget = nullptr) = 0;
 
 		virtual void SetRenderTarget(Ref<RHISwapChain> swapChain) = 0;
 

@@ -168,8 +168,9 @@ namespace Lemon
 	void Renderer::Tick(float deltaTime)
 	{
 		m_RHICommandList->SetViewport(m_Viewport);
-		m_RHICommandList->SetRenderTarget(GetSceneRenderTargets()->GetSceneColorTexture());
-		m_RHICommandList->RHIClearRenderTarget(GetSceneRenderTargets()->GetSceneColorTexture(), glm::vec4(0.1f, 0.4f, 0.7f, 1.0f));
+		m_RHICommandList->SetRenderTarget(GetSceneRenderTargets()->GetSceneColorTexture(), GetSceneRenderTargets()->GetSceneDepthTexture());
+		m_RHICommandList->RHIClearRenderTarget(GetSceneRenderTargets()->GetSceneColorTexture(),glm::vec4(0.1f, 0.4f, 0.7f, 1.0f),
+			GetSceneRenderTargets()->GetSceneDepthTexture());
 
 		UpdateViewUniformBuffer();
 
