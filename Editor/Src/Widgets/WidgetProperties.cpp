@@ -8,7 +8,7 @@ WidgetProperties::WidgetProperties(Lemon::Engine* engine)
 
 }
 
-void WidgetProperties::Tick()
+void WidgetProperties::Tick(float deltaTime)
 {
 
 

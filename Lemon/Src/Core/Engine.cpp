@@ -54,4 +54,14 @@ namespace Lemon
 		m_WindowData = windowData;
 		OnWindowMessageEvent.Broadcast(windowData);
 	}
+
+	const Timer* Engine::GetTimer() const
+	{
+		return GetSystem<Timer>();
+		
+	}
+	const InputSystem* Engine::GetInputSystem() const
+	{
+		return GetSystem<InputSystem>();
+	}
 }

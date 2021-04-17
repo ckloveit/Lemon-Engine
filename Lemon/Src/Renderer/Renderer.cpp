@@ -143,10 +143,17 @@ namespace Lemon
 		PSOInit.BoundShaderState.PixelShaderRHI = staticMeshComp.GetRenderMesh()->GetPixelShader();
 		PSOInit.BoundShaderState.VertexShaderRHI = staticMeshComp.GetRenderMesh()->GetVertexShader();
 		PSOInit.BoundShaderState.VertexDeclarationRHI = staticMeshComp.GetRenderMesh()->GetVertexDeclaration();
-		PSOInit.PrimitiveType = staticMeshComp.GetRenderMesh()->GetPrimitiveType();//EPrimitiveType::PT_TriangleList;
-		PSOInit.BlendState = staticMeshComp.GetRenderMesh()->GetBlendState();
-		PSOInit.RasterizerState = staticMeshComp.GetRenderMesh()->GetRasterizerState();
-		PSOInit.DepthStencilState = staticMeshComp.GetRenderMesh()->GetDepthStencilState();
+		if(staticMeshComp.GetRenderMesh()->GetMaterial())
+		{
+			PSOInit.PrimitiveType = staticMeshComp.GetRenderMesh()->GetMaterial()->GetPrimitiveType();//EPrimitiveType::PT_TriangleList;
+			PSOInit.BlendState = staticMeshComp.GetRenderMesh()->GetMaterial()->GetBlendState();
+			PSOInit.RasterizerState = staticMeshComp.GetRenderMesh()->GetMaterial()->GetRasterizerState();
+			PSOInit.DepthStencilState = staticMeshComp.GetRenderMesh()->GetMaterial()->GetDepthStencilState();
+		}else
+		{
+			PSOInit.PrimitiveType = EPrimitiveType::PT_TriangleList;
+			
+		}
 		
 		m_RHICommandList->SetGraphicsPipelineState(PSOInit);
 
@@ -154,9 +161,12 @@ namespace Lemon
 		m_RHICommandList->SetIndexBuffer(staticMeshComp.GetRenderMesh()->GetIndexBuffer());
 		m_RHICommandList->SetVertexBuffer(0, staticMeshComp.GetRenderMesh()->GetVertexBuffer());
 		// Set Textures
-		for(int i = 0;i < staticMeshComp.GetRenderMesh()->GetTextures().size(); i++)
+		if(staticMeshComp.GetRenderMesh()->GetMaterial())
 		{
-			m_RHICommandList->SetTexture(staticMeshComp.GetRenderMesh()->GetTextureStartSlot() + i, staticMeshComp.GetRenderMesh()->GetTextures()[i]);
+			for(int i = 0;i < staticMeshComp.GetRenderMesh()->GetMaterial()->GetTextures().size(); i++)
+			{
+				m_RHICommandList->SetTexture(staticMeshComp.GetRenderMesh()->GetMaterial()->GetTextureStartSlot() + i, staticMeshComp.GetRenderMesh()->GetMaterial()->GetTextures()[i]);
+			}
 		}
 		
 		// Draw

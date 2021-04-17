@@ -2,6 +2,8 @@
 #include "Core/Core.h"
 #include <vector>
 #include <glm/glm.hpp>
+
+#include "Material.h"
 #include "RHI/RHI.h"
 #include "RHI/DynamicRHI.h"
 #include "RHI/RHIResources.h"
@@ -72,6 +74,10 @@ namespace Lemon
 		const std::shared_ptr<RHIVertexDeclaration>& GetVertexDeclaration() const { return  m_VertexDeclaration; }
 		uint32_t GetIndexCount() const {return (uint32_t)m_Indices.size(); }
 
+		const std::shared_ptr<Material>& GetMaterial() const { return m_RenderMaterial; }
+		void SetMaterial(std::shared_ptr<Material> material) { m_RenderMaterial = material; }
+
+		/*
 		//=== Render Stage====//
 		const Ref<RHIRasterizerState>& GetRasterizerState() const { return m_RasterizerState; }
 		void SetRasterizerState(Ref<RHIRasterizerState>& state) { m_RasterizerState = state; }
@@ -89,16 +95,22 @@ namespace Lemon
 		uint32_t GetTextureStartSlot() const { return m_TextureStartSlot; }
 		std::vector<Ref<RHITexture>>& GetTextures() { return m_Textures; }
 		const std::vector<Ref<RHITexture>> GetTextures() const { return m_Textures; }
+		*/
 		
 	protected:
 		std::vector<StandardMeshVertex> m_Vertices;
 		std::vector<uint32_t> m_Indices;
+		/*
 		// Render State
 		Ref<RHIBlendState> m_BlendState = nullptr;
 		Ref<RHIRasterizerState> m_RasterizerState = nullptr;
 		Ref<RHIDepthStencilState> m_DepthStencilState = nullptr;
 		EPrimitiveType m_PrimitiveType = EPrimitiveType::PT_TriangleList;
-				
+		// Textures
+		uint32_t m_TextureStartSlot = 0;
+		std::vector<Ref<RHITexture>> m_Textures;
+		*/
+		
 		// Draw Data
 		std::shared_ptr<RHIVertexBuffer> m_VertexBuffer = nullptr;
 		std::shared_ptr<RHIIndexBuffer> m_IndexBuffer = nullptr;
@@ -106,8 +118,8 @@ namespace Lemon
 		std::shared_ptr<RHIVertexShader> m_VertexShader = nullptr;
 		std::shared_ptr<RHIPixelShader> m_PixelShader = nullptr;
 
-		// Textures
-		uint32_t m_TextureStartSlot = 0;
-		std::vector<Ref<RHITexture>> m_Textures;
+		// Material
+		std::shared_ptr<Material> m_RenderMaterial = nullptr;
+
 	};
 }

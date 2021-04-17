@@ -6,6 +6,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/TransformComponent.h"
 #include "Core/Engine.h"
+#include "Core/Timer.h"
 #include "entt/include/entt.hpp"
 #include "RenderCore/Geometry/Cube.h"
 #include "RenderCore/Geometry/Sphere.h"
@@ -60,12 +61,12 @@ namespace Lemon
 			StaticMeshComponent& staticMesh = cube.AddComponent<StaticMeshComponent>();
 			Ref<Mesh> cubeMesh = CreateRef<Cube>();
 			staticMesh.SetMesh(cubeMesh);
-			cubeEntity = cube;
 
 			cube = CreateEntity("Cube2");
 			StaticMeshComponent& staticMesh1 = cube.AddComponent<StaticMeshComponent>();
 			cubeMesh = CreateRef<Cube>();
 			staticMesh1.SetMesh(cubeMesh);
+			cubeEntity = cube;
 
 			Entity sphere = CreateEntity("Sphere");
 			StaticMeshComponent& staticMesh2 = sphere.AddComponent<StaticMeshComponent>();
@@ -80,13 +81,16 @@ namespace Lemon
 			Ref<Mesh> gridMesh = CreateRef<GridGizmo>();
 			gridMeshComp.SetMesh(gridMesh);
 			Ref<RHIRasterizerState> rasterizerState = TStaticRasterizerState<RFM_Wireframe, RCM_None>::CreateRHI();
-			gridMesh->SetRasterizerState(rasterizerState);
-			gridMesh->SetPrimitiveType(EPrimitiveType::PT_LineList);
+
+			Ref<Material> renderMaterial = CreateRef<Material>();
+			renderMaterial->SetRasterizerState(rasterizerState);
+			renderMaterial->SetPrimitiveType(EPrimitiveType::PT_LineList);
 			// for mirror window, write RGBA, RGB = src.rgb * src.a + dst.rgb * (1 - src.a), A = src.a * 1 + dst.a * (1 - src a)
 			Ref<RHIBlendState> translucencyBlendState = TStaticBlendState<CW_RGBA, BO_Add, BF_SourceAlpha, BF_InverseSourceAlpha, BO_Add,
 				BF_One, BF_InverseSourceAlpha>::CreateRHI();
-			gridMesh->SetBlendState(translucencyBlendState);
-
+			renderMaterial->SetBlendState(translucencyBlendState);
+			gridMesh->SetMaterial(renderMaterial);
+			
 			// Create Env
 			CreateEnvironment();
 		}
@@ -97,12 +101,14 @@ namespace Lemon
 
         if(cubeEntity)
         {
-            //cubeEntity.GetComponent<TransformComponent>().Rotation += glm::vec3(0.0f, 0.0f, 1.0f);          
+        	cubeEntity.GetComponent<TransformComponent>().Position.x = 5.0f * sin(0.4f * GetEngine()->GetTimer()->GetGameTime());
+        	
+            cubeEntity.GetComponent<TransformComponent>().Rotation += glm::vec3(0.0f, 0.0f, 0.1f);          
         }
 
 		if (MainCameraEntity)
 		{
-			MainCameraEntity.GetComponent<CameraComponent>().ProcessInputSystem(deltaTime);
+			//MainCameraEntity.GetComponent<CameraComponent>().ProcessInputSystem(deltaTime);
 		}
 
 		if (GridGizmoEntity)
@@ -136,8 +142,9 @@ namespace Lemon
 		sphereMesh->CreateRHIBuffers();
 		staticMesh.SetMesh(sphereMesh);
     	
-    	Ref<RHIRasterizerState> CullBackRS = GetEngine()->GetSystem<Renderer>()->GetSceneRenderStates()->SolidCullBackRasterizerState;
-    	sphereMesh->SetRasterizerState(CullBackRS);
+    	Ref<RHIRasterizerState> CullFrontRS = GetEngine()->GetSystem<Renderer>()->GetSceneRenderStates()->SolidCullFrontRasterizerState;
+		Ref<Material> renderMaterial = CreateRef<Material>();
+    	renderMaterial->SetRasterizerState(CullFrontRS);
 		// Create Environment Component
     	EnvironmentComponent& EnvComp = EnvironmentEntity.AddComponent<EnvironmentComponent>();
 		std::vector<std::string> envFilePaths;
@@ -149,7 +156,9 @@ namespace Lemon
     	envFilePaths.emplace_back(dir_cubemaps + "array/Z-.tga");// back
     	envFilePaths.emplace_back(dir_cubemaps + "array/Z+.tga");// front
     	EnvComp.CreateFromFilePath(envFilePaths);
-    	sphereMesh->GetTextures().emplace_back(EnvComp.GetEnvironmentTexture());
+    	renderMaterial->GetTextures().emplace_back(EnvComp.GetEnvironmentTexture());
+    	sphereMesh->SetMaterial(renderMaterial);
+    	
     	m_EnvironmentEntitys.emplace_back(EnvironmentEntity);
     	
 	}

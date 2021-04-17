@@ -205,7 +205,7 @@ namespace Lemon
 
 	void InputSystem::Tick(float deltaTime)
 	{
-		m_bNewframe = true;
+		//m_bNewframe = true;
 	}
 
 }

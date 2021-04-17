@@ -25,7 +25,7 @@ private:
 
 private:
 	void SetDarkThemeColors();
-	void WidgetsTick();
+	void WidgetsTick(float deltaTime);
 	void WidgetsCreate();
 	void BeginDockSpace();
 	void EndDockSpace();

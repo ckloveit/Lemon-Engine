@@ -5,6 +5,7 @@
 #include "Core/Engine.h"
 #include "Renderer/Renderer.h"
 #include "RHI/RHISwapChain.h"
+#include "Core/Timer.h"
 
 //==========Widgets==================
 #include "Widgets/WidgetViewport.h"
@@ -13,6 +14,7 @@
 #include "Widgets/WidgetMenuBar.h"
 
 #include "ImGuiRHI/ImGuiRHI.h"
+#include "Input/InputSystem.h"
 
 #if LEMON_GRAPHICS_D3D11
 #include "ImGuiRHI/Implementation/imgui_impl_dx11.h"
@@ -103,8 +105,11 @@ void Editor::OnTick()
 		ImGui::NewFrame();
 
 		// Editor update
-		WidgetsTick();
+		WidgetsTick(m_Engine->GetSystem<Timer>()->GetDeltaTimeSec());
 
+		// input system need special process
+		m_Engine->GetSystem<InputSystem>()->SetFrameEnd();
+		
 		// ImGui implementation - end frame
 		ImGui::Render();
 		ImGuiRHI::RenderDrawData(ImGui::GetDrawData());
@@ -116,7 +121,7 @@ void Editor::OnTick()
 			ImGui::RenderPlatformWindowsDefault();
 		}
 	}
-
+	
 }
 
 void Editor::InitImGui(const WindowData& windowData)
@@ -166,7 +171,7 @@ void Editor::WidgetsCreate()
 	m_Widgets.emplace_back(make_unique<WidgetProperties>(m_Engine.get()));
 }
 
-void Editor::WidgetsTick()
+void Editor::WidgetsTick(float deltaTime)
 {
 	if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_DockingEnable)
 	{
@@ -176,7 +181,7 @@ void Editor::WidgetsTick()
 	for (auto& widget : m_Widgets)
 	{
 		widget->Begin();
-		widget->Tick();
+		widget->Tick(deltaTime);
 		widget->End();
 	}
 

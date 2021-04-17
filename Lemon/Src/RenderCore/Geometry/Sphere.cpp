@@ -57,8 +57,9 @@ namespace Lemon
 		for (int i = 1; i <= m_Slices; i++)
 		{
 			indices->emplace_back(0);
-			indices->emplace_back(i + 1);
+			//indices->emplace_back(i + 1);
 			indices->emplace_back(i);
+			indices->emplace_back(i + 1);
 		}
 		int baseIndex = 1;
 		const int ringVertexCount = m_Slices + 1;
@@ -67,12 +68,14 @@ namespace Lemon
 			for (int j = 0; j < m_Slices; j++)
 			{
 				indices->emplace_back(baseIndex + i * ringVertexCount + j);
-				indices->emplace_back(baseIndex + i * ringVertexCount + j + 1);
-				indices->emplace_back(baseIndex + (i + 1) * ringVertexCount + j);
-
+				//indices->emplace_back(baseIndex + i * ringVertexCount + j + 1);
 				indices->emplace_back(baseIndex + (i + 1) * ringVertexCount + j);
 				indices->emplace_back(baseIndex + i * ringVertexCount + j + 1);
+				
+				indices->emplace_back(baseIndex + (i + 1) * ringVertexCount + j);
+				//indices->emplace_back(baseIndex + i * ringVertexCount + j + 1);
 				indices->emplace_back(baseIndex + (i + 1) * ringVertexCount + j + 1);
+				indices->emplace_back(baseIndex + i * ringVertexCount + j + 1);
 			}
 		}
 		int southPoleIndex = (int)vertices->size() - 1;
@@ -80,8 +83,9 @@ namespace Lemon
 		for (int i = 0; i < m_Slices; i++)
 		{
 			indices->emplace_back(southPoleIndex);
-			indices->emplace_back(baseIndex + i);
+			//indices->emplace_back(baseIndex + i);
 			indices->emplace_back(baseIndex + i + 1);
+			indices->emplace_back(baseIndex + i);
 		}
 
 	}

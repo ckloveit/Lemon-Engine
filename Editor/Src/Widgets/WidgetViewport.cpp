@@ -1,8 +1,12 @@
 #include "WidgetViewport.h"
+
+#include "Input/InputSystem.h"
 #include "Renderer/Renderer.h"
 #include "Renderer/SceneRenderTargets.h"
 #include "RHI/RHIResources.h"
 #include "RenderCore/Viewport.h"
+#include "World/World.h"
+#include "World/Components/CameraComponent.h"
 
 using namespace Lemon;
 
@@ -17,7 +21,7 @@ WidgetViewport::WidgetViewport(Lemon::Engine* engine)
 
 }
 
-void WidgetViewport::Tick()
+void WidgetViewport::Tick(float deltaTime)
 {
 	if (!m_Renderer)
 		return;
@@ -25,6 +29,25 @@ void WidgetViewport::Tick()
 	// Draw our render result texture into ImGuiViewport
 	ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
 	m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
+
+	//
+	bool bMouseDown = ImGui::IsMouseDown(0);
+	if(bMouseDown && ImGui::IsWindowHovered())
+	{
+		m_bWidgetFocus = true;
+	}
+	if(bMouseDown && m_bWidgetFocus)
+	{
+		LEMON_CORE_INFO("WidgetViewport----mouse Position X = {0}, {1}---", m_Renderer->GetEngine()->GetSystem<InputSystem>()->GetMouseDelta().x,
+			m_Renderer->GetEngine()->GetSystem<InputSystem>()->GetMouseDelta().y);
+		
+		m_Renderer->GetEngine()->GetSystem<World>()->GetMainCamera().GetComponent<CameraComponent>().ProcessInputSystem(deltaTime);
+	}
+
+	if(!bMouseDown)
+	{
+		m_bWidgetFocus = false;
+	}
 	
 	ImTextureID textureID = m_Renderer->GetSceneRenderTargets()->GetSceneColorTexture()->GetNativeShaderResourceView();
 	// fuck!!!

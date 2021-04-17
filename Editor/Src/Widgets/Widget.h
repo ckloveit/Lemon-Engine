@@ -86,7 +86,7 @@ public:
 		return true;
 	}
 
-	virtual void Tick() = 0;
+	virtual void Tick(float deltaTime) = 0;
 
 	bool End()
 	{

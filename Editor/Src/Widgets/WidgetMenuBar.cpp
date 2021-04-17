@@ -7,7 +7,7 @@ WidgetMenuBar::WidgetMenuBar(Lemon::Engine* engine) : Widget(engine)
 }
 
 
-void WidgetMenuBar::Tick()
+void WidgetMenuBar::Tick(float deltaTime)
 {
 	if (ImGui::BeginMainMenuBar())
 	{

@@ -5,7 +5,7 @@ class WidgetMenuBar : public Widget
 {
 public:
 	WidgetMenuBar(Lemon::Engine* engine);
-	virtual void Tick() override;
+	virtual void Tick(float deltaTime) override;
 
 private:
 	void ShowAboutWindow();

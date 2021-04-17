@@ -5,6 +5,6 @@ class WidgetProperties : public Widget
 {
 public:
 	WidgetProperties(Lemon::Engine* engine);
-	virtual void Tick() override;
+	virtual void Tick(float deltaTime) override;
 
 };

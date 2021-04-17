@@ -1,5 +1,4 @@
 #pragma once
-
 constexpr auto EngineVersion = "LemonEngineV01";
 
 #include "Core.h"
@@ -9,6 +8,7 @@ constexpr auto EngineVersion = "LemonEngineV01";
 namespace Lemon
 {
 	class Timer;
+	class InputSystem;
 
 	struct WindowData
 	{
@@ -40,6 +40,10 @@ namespace Lemon
 		{
 			return m_SystemManager->GetSystem<T>();
 		}
+
+		// Some use Getter
+		const Timer* GetTimer() const;
+		const InputSystem* GetInputSystem() const;
 
 	public:
 		//Delegate

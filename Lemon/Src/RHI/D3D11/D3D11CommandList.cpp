@@ -16,6 +16,8 @@ namespace Lemon
 		// RCM_CCW is FRONT face
 		// RCM_CW is back face
 		m_DefaultRasterizerState = TStaticRasterizerState<RFM_Solid, RCM_Back>::CreateRHI();
+		m_DefaultDepthStencilState = TStaticDepthStencilState<>::CreateRHI();
+		
 	}
 
 	//===================================RHI RenderCommand Helper function==================================//
@@ -98,6 +100,12 @@ namespace Lemon
 		if (GraphicsPSOInit.DepthStencilState)
 		{
 			if (void* resource = GraphicsPSOInit.DepthStencilState->GetNativeResource())
+			{
+				m_D3D11RHI->GetDeviceContext()->OMSetDepthStencilState(static_cast<ID3D11DepthStencilState*>(const_cast<void*>(resource)), 1);
+			}
+		}else
+		{
+			if (void* resource = m_DefaultDepthStencilState->GetNativeResource())
 			{
 				m_D3D11RHI->GetDeviceContext()->OMSetDepthStencilState(static_cast<ID3D11DepthStencilState*>(const_cast<void*>(resource)), 1);
 			}

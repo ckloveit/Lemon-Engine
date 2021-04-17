@@ -14,6 +14,7 @@ namespace Lemon
 
 	void Timer::Tick(float deltaTime)
 	{
+		m_GameTime += deltaTime;
 		// Get time
 		m_LastFrameTime = m_CurrentFrameTime;
 		m_CurrentFrameTime = chrono::high_resolution_clock::now();

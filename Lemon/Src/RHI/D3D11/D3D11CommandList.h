@@ -49,5 +49,6 @@ namespace Lemon
 		EPrimitiveType m_CurrentPrimitiveType;
 
 		Ref<RHIRasterizerState> m_DefaultRasterizerState;
+		Ref<RHIDepthStencilState> m_DefaultDepthStencilState;
 	};
 }

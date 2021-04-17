@@ -8,7 +8,7 @@ WidgetSceneHierachy::WidgetSceneHierachy(Lemon::Engine* engine)
 
 }
 
-void WidgetSceneHierachy::Tick()
+void WidgetSceneHierachy::Tick(float deltaTime)
 {
 
 

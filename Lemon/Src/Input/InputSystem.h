@@ -64,8 +64,11 @@ namespace Lemon
 		void OnWindowData(WindowData windowData);
 		//= ISubsystem ======================
 		void Tick(float delta_time) override;
+		
 		//===================================
 
+		void SetFrameEnd() { m_bNewframe = true; }
+		
 		// Keys
 		bool GetKey(const KeyCode key) { return m_Keys[static_cast<uint32_t>(key)]; }							        // Returns true while the button identified by KeyCode is held down.
 		bool GetKeyDown(const KeyCode key) { return GetKey(key) && !m_KeysPreviousFrame[static_cast<uint32_t>(key)]; }	// Returns true during the frame the user pressed down the button identified by KeyCode.
@@ -89,5 +92,6 @@ namespace Lemon
 
 		// Misc
 		bool m_bNewframe = false;
+
 	};
 }
