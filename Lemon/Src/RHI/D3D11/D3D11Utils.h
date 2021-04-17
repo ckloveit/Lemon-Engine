@@ -67,7 +67,7 @@ namespace Lemon::D3D11
 	{
 		if (FAILED(result))
 		{
-			LEMON_CORE_ERROR("%s", DXGIErrorToString(result));
+			LEMON_CORE_ERROR("{0}", DXGIErrorToString(result));
 			return false;
 		}
 		return true;
@@ -245,10 +245,9 @@ namespace Lemon::D3D11
 		const uint32_t channelCount,
 		const uint32_t bitsPerChannel,
 		const uint8_t numMips,
-		const uint32_t arraySize,
 		const DXGI_FORMAT format,
 		const UINT bindFlags,
-		std::vector<std::vector<std::byte>>& data,
+		TextureRawData& data,
 		ID3D11Texture2D*& outTexture);
 
 	bool CreateRenderTargetView2D(D3D11DynamicRHI* D3D11RHI,
@@ -271,8 +270,34 @@ namespace Lemon::D3D11
 		const DXGI_FORMAT format,
 		ID3D11DepthStencilView*& outDSV);
 
+	bool CreateTexture2DArray(D3D11DynamicRHI* D3D11RHI,
+		const uint32_t width,
+		const uint32_t height,
+		const uint32_t arraySize,
+		const uint32_t channelCount,
+		const uint32_t bitsPerChannel,
+		const uint8_t numMips,
+		const DXGI_FORMAT format,
+		const UINT bindFlags,
+		std::vector<TextureRawData>& arrayDatas,
+		ID3D11Texture2D*& outTexture);
 
+	bool CreateTextureCube(D3D11DynamicRHI* D3D11RHI,
+		const uint32_t width,
+		const uint32_t height,
+		const uint32_t channelCount,
+		const uint32_t bitsPerChannel,
+		const uint8_t numMips,
+		const DXGI_FORMAT format,
+		const UINT bindFlags,
+		std::vector<TextureRawData>& arrayDatas,
+		ID3D11Texture2D*& outTexture);
 
+	bool CreateShaderResourceViewCube(D3D11DynamicRHI* D3D11RHI,
+		ID3D11Texture2D* texture,
+		const uint8_t numMips,
+		const DXGI_FORMAT format,
+		ID3D11ShaderResourceView*& outSRV);
 	//=========================================================
 
 	

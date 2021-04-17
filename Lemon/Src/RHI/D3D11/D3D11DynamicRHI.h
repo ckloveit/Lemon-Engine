@@ -30,7 +30,9 @@ namespace Lemon
 
 		virtual Ref<RHISwapChain> RHICreateSwapChain(void* windowHandle, const uint32_t width, const uint32_t height, const ERHIPixelFormat format) override;
 
-		virtual Ref<RHITexture2D> RHICreateTexture2D(uint32_t sizeX, uint32_t sizeY, ERHIPixelFormat format, uint32_t numMips, uint32_t flags, RHIResourceCreateInfo& CreateInfo) override;
+		virtual Ref<RHITexture2D> RHICreateTexture2D(uint32_t sizeX, uint32_t sizeY, ERHIPixelFormat format, uint32_t numMips, uint32_t createFlags, RHIResourceCreateInfo& CreateInfo) override;
+		
+		virtual Ref<RHITexture2D> RHICreateTextureCube(uint32_t sizeX, uint32_t sizeY, ERHIPixelFormat format, uint32_t numMips, uint32_t createFlags, RHIResourceCreateInfo& CreateInfo) override;
 
 		virtual Ref<RHIVertexBuffer> RHICreateVertexBuffer(uint32_t size, uint32_t usage, RHIResourceCreateInfo& createInfo) override;
 

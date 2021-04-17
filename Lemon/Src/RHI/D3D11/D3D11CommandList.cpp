@@ -3,7 +3,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "RHI/RHIResources.h"
 #include "RHI/RHISwapChain.h"
-
+#include "RHI/RHIStaticStates.h"
 #include <DirectXMath.h>
 using namespace DirectX;
 
@@ -13,7 +13,9 @@ namespace Lemon
 		: RHICommandList(renderer)
 		, m_D3D11RHI(D3D11RHI)
 	{
-		
+		// RCM_CCW is FRONT face
+		// RCM_CW is back face
+		m_DefaultRasterizerState = TStaticRasterizerState<RFM_Solid, RCM_Back>::CreateRHI();
 	}
 
 	//===================================RHI RenderCommand Helper function==================================//
@@ -111,7 +113,10 @@ namespace Lemon
 		}
 		else
 		{
-			m_D3D11RHI->GetDeviceContext()->RSSetState(nullptr);
+			if (void* resource = m_DefaultRasterizerState->GetNativeResource())
+			{
+				m_D3D11RHI->GetDeviceContext()->RSSetState(static_cast<ID3D11RasterizerState*>(const_cast<void*>(resource)));
+			}
 		}
 		
 		//PrimitiveTopology
@@ -224,7 +229,7 @@ namespace Lemon
 			m_D3D11RHI->GetDeviceContext()->VSSetConstantBuffers(
                 static_cast<UINT>(slot),
                 static_cast<UINT>(resourceCount),
-                reinterpret_cast<ID3D11Buffer *const*>(resourceCount > 1 ? resource : &resourceArray)
+                static_cast<ID3D11Buffer *const*>(resourceCount > 1 ? resource : &resourceArray)
             );
 		}
 		if (scopeType & EUniformBufferUsageScope::UBUS_Pixel)
@@ -232,7 +237,7 @@ namespace Lemon
 			m_D3D11RHI->GetDeviceContext()->PSSetConstantBuffers(
                 static_cast<UINT>(slot),
                 static_cast<UINT>(resourceCount),
-                reinterpret_cast<ID3D11Buffer * const*>(resourceCount > 1 ? resource : &resourceArray)
+                static_cast<ID3D11Buffer * const*>(resourceCount > 1 ? resource : &resourceArray)
             );
 		}
 	}
@@ -240,5 +245,36 @@ namespace Lemon
 	void D3D11CommandList::Flush()
 	{
 		m_D3D11RHI->GetDeviceContext()->Flush();
+	}
+
+	void D3D11CommandList::SetSamplerState(uint32_t slot,const Ref<RHISamplerState>& samplerState)
+	{
+		if(samplerState)
+		{
+			void* resource = samplerState->GetNativeResource();
+			const void* resourceArray[1] = { resource };
+			m_D3D11RHI->GetDeviceContext()->PSSetSamplers
+			(
+				slot,
+				1,
+				reinterpret_cast<ID3D11SamplerState * const*>(&resourceArray)
+			);
+		}
+		
+	}
+
+	void D3D11CommandList::SetTexture(uint32_t slot, const Ref<RHITexture>& texture)
+	{
+		if(texture)
+		{
+			void* resource = texture->GetNativeShaderResourceView();
+			const void* resourceArray[1] = { resource };
+			m_D3D11RHI->GetDeviceContext()->PSSetShaderResources
+			(
+               static_cast<UINT>(slot),
+               static_cast<UINT>(1),
+                reinterpret_cast<ID3D11ShaderResourceView * const*>(&resourceArray)
+            );
+		}
 	}
 }

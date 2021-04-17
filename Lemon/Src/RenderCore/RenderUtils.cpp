@@ -5,7 +5,6 @@ namespace Lemon
 {
 	PixelFormatInfo	GPixelFormats[RHI_PF_MAX] =
 	{
-		{ "RHI_PF_Undefined",				 0,		0,		0,	1,	RHI_PF_Undefined},
 		{ "RHI_PF_R8_Unorm",				 1,		1,		0,	1,	RHI_PF_R8_Unorm},
 		{ "RHI_PF_R16_Uint",				 2,		1,		0,	1,	RHI_PF_R16_Uint},
 		{ "RHI_PF_R16_Float",				 2,		1,		0,	1,	RHI_PF_R16_Float},
@@ -23,6 +22,7 @@ namespace Lemon
 		{ "RHI_PF_R32G32B32A32_Float",		16,		4,		0,	1,	RHI_PF_R32G32B32A32_Float},
 		{ "RHI_PF_D32_Float",				 4,		1,		0,	1,	RHI_PF_D32_Float},
 		{ "RHI_PF_D32_Float_S8X24_Uint",	 8,		1,		0,	1,	RHI_PF_D32_Float_S8X24_Uint},
+		{ "RHI_PF_Undefined",				 0,		0,		0,	1,	RHI_PF_Undefined},
 
 	};
 

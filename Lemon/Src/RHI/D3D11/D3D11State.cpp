@@ -5,6 +5,10 @@ namespace Lemon
 {
 	//SamplerState
 	static std::map<ID3D11SamplerState*, Ref<RHISamplerState>> GSamplerStateCache;
+	static std::map<ID3D11RasterizerState*, Ref<RHIRasterizerState>> GRasterizerStataCache;
+	static std::map<ID3D11DepthStencilState*, Ref<RHIDepthStencilState>> GDepthStencilStateCache;
+	static std::map<ID3D11BlendState*, Ref<RHIBlendState>> GBlendStateCache;
+	
 	void EmptyD3DSamplerStateCache()
 	{
 		for (auto Iter = GSamplerStateCache.begin(); Iter != GSamplerStateCache.end(); ++Iter )
@@ -15,6 +19,8 @@ namespace Lemon
 			State = nullptr;
 		}
 		GSamplerStateCache.clear();
+
+		
 	}
 	
     static D3D11_COMPARISON_FUNC TranslateCompareFunction(ECompareFunction CompareFunction)
@@ -86,8 +92,8 @@ namespace Lemon
     {
         switch(CullMode)
         {
-        case RCM_CW: return D3D11_CULL_BACK;
-        case RCM_CCW: return D3D11_CULL_FRONT;
+        case RCM_Back: return D3D11_CULL_BACK;
+        case RCM_Front: return D3D11_CULL_FRONT;
         default: return D3D11_CULL_NONE;
         };
     }
@@ -131,7 +137,6 @@ namespace Lemon
 	
     Ref<RHIDepthStencilState> D3D11DynamicRHI::RHICreateDepthStencilState(const DepthStencilStateInitializer& initializer)
     {
-        Ref<RHIDepthStencilState> depthStencilState = CreateRef<D3D11DepthStencilState>(initializer);
         
         D3D11_DEPTH_STENCIL_DESC depthStencilDesc = {};
         // depth part
@@ -166,13 +171,26 @@ namespace Lemon
         && initializer.BackFaceDepthFailStencilOp == SO_Keep
         && initializer.BackFacePassStencilOp == SO_Keep;
 	    const bool bMayWriteStencil = initializer.StencilWriteMask != 0 && !bStencilOpIsKeep;
+		
+		ID3D11DepthStencilState* StateHandle = nullptr;
+		if (FAILED(this->GetDevice()->CreateDepthStencilState(&depthStencilDesc, &StateHandle)))
+		{
+			LEMON_CORE_ERROR("Failed Create D3D11DepthStencilState");
+			return nullptr;
+		}
+		const auto result =  GDepthStencilStateCache.find(StateHandle);
+		if(result != GDepthStencilStateCache.end())
+		{
+			return result->second;
+		}
+		
+		Ref<RHIDepthStencilState> depthStencilState = CreateRef<D3D11DepthStencilState>(initializer);
         D3D11DepthStencilState* d3d11DepthStencilState = RefCast<D3D11DepthStencilState>(depthStencilState);
         d3d11DepthStencilState->AccessType.SetDepthStencilWrite(initializer.bEnableDepthWrite, bMayWriteStencil);
-        if (FAILED(this->GetDevice()->CreateDepthStencilState(&depthStencilDesc, &d3d11DepthStencilState->m_Resource)))
-        {
-            LEMON_CORE_ERROR("Failed Create D3D11DepthStencilState");
-            return nullptr;
-        }
+		d3d11DepthStencilState->m_Resource = StateHandle;
+		// Store
+		GDepthStencilStateCache[StateHandle] = depthStencilState;
+		
         return depthStencilState;
     }
     
@@ -203,14 +221,25 @@ namespace Lemon
             | ((RenderTargetInitializer.ColorWriteMask & CW_BLUE)  ? D3D11_COLOR_WRITE_ENABLE_BLUE  : 0)
             | ((RenderTargetInitializer.ColorWriteMask & CW_ALPHA) ? D3D11_COLOR_WRITE_ENABLE_ALPHA : 0);
         }
-	
+		//GBlendStateCache
+		ID3D11BlendState* StateHandle = nullptr;
+		if (FAILED(this->GetDevice()->CreateBlendState(&blendDesc, &StateHandle)))
+		{
+			LEMON_CORE_ERROR("Failed Create D3D11BlendState");
+			return nullptr;
+		}
+		const auto result =  GBlendStateCache.find(StateHandle);
+		if(result != GBlendStateCache.end())
+		{
+			return result->second;
+		}
+		
         Ref<RHIBlendState> BlendState = CreateRef<D3D11BlendState>(initializer);
         D3D11BlendState* d3d11BlendState = RefCast<D3D11BlendState>(BlendState);
-        if (FAILED(this->GetDevice()->CreateBlendState(&blendDesc, &d3d11BlendState->m_Resource)))
-        {
-            LEMON_CORE_ERROR("Failed Create D3D11BlendState");
-            return nullptr;
-        }
+
+		// store
+		d3d11BlendState->m_Resource = StateHandle;
+		
         return BlendState;
     }
     
@@ -227,14 +256,24 @@ namespace Lemon
         rasterizerDesc.DepthClipEnable = true;
         rasterizerDesc.MultisampleEnable = false;//Initializer.bAllowMSAA;
         rasterizerDesc.ScissorEnable = false;
-
+		
+		// D3D11 will return the same pointer if the particular state description was already created
+		ID3D11RasterizerState* StateHandle = nullptr;
+		if (FAILED(this->GetDevice()->CreateRasterizerState(&rasterizerDesc, &StateHandle)))
+		{
+			LEMON_CORE_ERROR("Failed Create D3D11RasterizerState");
+			return nullptr;
+		}
+		const auto result =  GRasterizerStataCache.find(StateHandle);
+		if(result != GRasterizerStataCache.end())
+		{
+			return result->second;
+		}
+		
         Ref<RHIRasterizerState> rasterizerState = CreateRef<D3D11RasterizerState>(initializer);
         D3D11RasterizerState* d3d11RasterizerState = RefCast<D3D11RasterizerState>(rasterizerState);
-        if (FAILED(this->GetDevice()->CreateRasterizerState(&rasterizerDesc, &d3d11RasterizerState->m_Resource)))
-        {
-            LEMON_CORE_ERROR("Failed Create D3D11RasterizerState");
-            return nullptr;
-        }
+		d3d11RasterizerState->m_Resource = StateHandle;
+		GRasterizerStataCache[StateHandle] = rasterizerState;
 		return rasterizerState;
     }
 	
@@ -290,14 +329,16 @@ namespace Lemon
 			LEMON_CORE_ERROR("Failed Create D3D11SamplerState");
 			return nullptr;
 		}
-		Ref<RHISamplerState> Found = GSamplerStateCache.find(SamplerStateHandle)->second;
-		if (Found)
+		const auto result =  GSamplerStateCache.find(SamplerStateHandle);
+		if(result != GSamplerStateCache.end())
 		{
-			return Found;
+			return result->second;
 		}
+		
 		Ref<RHISamplerState> samplerState = CreateRef<D3D11SamplerState>(initializer);
 		D3D11SamplerState* d3d11samplerState = RefCast<D3D11SamplerState>(samplerState);
 		d3d11samplerState->m_Resource = SamplerStateHandle;
+		GSamplerStateCache[SamplerStateHandle] = samplerState;
 		return samplerState;
 	}
 }

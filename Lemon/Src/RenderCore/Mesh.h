@@ -27,6 +27,16 @@ namespace Lemon
 			for(int i = 0;i < MAX_MESH_TEXTURE_COORDS; i++)
 				Texcoords[i] = glm::vec2(0,0);
 		}
+		StandardMeshVertex(glm::vec3 InPosition, glm::vec4 InColor, glm::vec3 InNormal,glm::vec3 InTangent, glm::vec2 InUV0)
+			: Position(InPosition)
+			, Color(InColor)
+			, Normal(InNormal)
+			, Tangent(InTangent)
+		{
+			Texcoords[0] = InUV0;
+			for (int i = 1; i < MAX_MESH_TEXTURE_COORDS; i++)
+				Texcoords[i] = glm::vec2(0, 0);
+		}
 	};
 
 	class LEMON_API Mesh
@@ -75,6 +85,11 @@ namespace Lemon
 
 		const EPrimitiveType GetPrimitiveType() const { return m_PrimitiveType; }
 		void SetPrimitiveType(EPrimitiveType primitiveType) { m_PrimitiveType = primitiveType; }
+
+		uint32_t GetTextureStartSlot() const { return m_TextureStartSlot; }
+		std::vector<Ref<RHITexture>>& GetTextures() { return m_Textures; }
+		const std::vector<Ref<RHITexture>> GetTextures() const { return m_Textures; }
+		
 	protected:
 		std::vector<StandardMeshVertex> m_Vertices;
 		std::vector<uint32_t> m_Indices;
@@ -90,5 +105,9 @@ namespace Lemon
 		std::shared_ptr<RHIVertexDeclaration> m_VertexDeclaration = nullptr;
 		std::shared_ptr<RHIVertexShader> m_VertexShader = nullptr;
 		std::shared_ptr<RHIPixelShader> m_PixelShader = nullptr;
+
+		// Textures
+		uint32_t m_TextureStartSlot = 0;
+		std::vector<Ref<RHITexture>> m_Textures;
 	};
 }

@@ -13,6 +13,6 @@ VertexOutput MainVS(VertexInput Input)
 	float4 WorldPos = mul(g_LocalToWorldMatrix, LocalPos);
     Output.Position = mul(g_ViewProjectionMatrix, WorldPos);
 	//Output.Position = mul float4(Input.Position, 1.0f);
-	Output.Color = Output.Position;//Input.Color;
+	Output.Color = LocalPos; //Input.Color;
 	return Output;
 }

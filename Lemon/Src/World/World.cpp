@@ -2,11 +2,17 @@
 #include "World.h"
 
 #include "Components/CameraComponent.h"
+#include "Components/EnvironmentComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/TransformComponent.h"
+#include "Core/Engine.h"
 #include "entt/include/entt.hpp"
 #include "RenderCore/Geometry/Cube.h"
+#include "RenderCore/Geometry/Sphere.h"
+
 #include "RenderCore/Geometry/GridGizmo.h"
+#include "Renderer/Renderer.h"
+#include "Resources/ResourceSystem.h"
 #include "RHI/RHIStaticStates.h"
 
 namespace Lemon
@@ -17,10 +23,11 @@ namespace Lemon
 		    
 	}
     
-    Entity World::CreateEntity(const std::string& name)
+    Entity World::CreateEntity(const std::string& name, bool bIsGizmoDebug /*= false*/)
     {
         Entity entity(m_Registry.create(), this, name);
         entity.AddComponent<TransformComponent>();
+		entity.SetGizmo(bIsGizmoDebug);
         m_Entitys.emplace_back(entity);
         return entity;
     }
@@ -38,7 +45,7 @@ namespace Lemon
         return true;
     }
     
-    void World::InitGeometry()
+    void World::InitRenderGeometry()
     {
 		static bool bHasInitGeometry = false;
 		if (!bHasInitGeometry)
@@ -60,8 +67,15 @@ namespace Lemon
 			cubeMesh = CreateRef<Cube>();
 			staticMesh1.SetMesh(cubeMesh);
 
+			Entity sphere = CreateEntity("Sphere");
+			StaticMeshComponent& staticMesh2 = sphere.AddComponent<StaticMeshComponent>();
+			Ref<Mesh> sphereMesh = CreateRef<Sphere>();
+			staticMesh2.SetMesh(sphereMesh);
+
 			//GridGizmo
-			GridGizmoEntity = CreateEntity("GridGizmo");
+			GridGizmoEntity = CreateEntity("GridGizmo", true);
+			m_GizmoDebugEntitys.emplace_back(GridGizmoEntity);
+
 			StaticMeshComponent& gridMeshComp = GridGizmoEntity.AddComponent<StaticMeshComponent>();
 			Ref<Mesh> gridMesh = CreateRef<GridGizmo>();
 			gridMeshComp.SetMesh(gridMesh);
@@ -72,11 +86,14 @@ namespace Lemon
 			Ref<RHIBlendState> translucencyBlendState = TStaticBlendState<CW_RGBA, BO_Add, BF_SourceAlpha, BF_InverseSourceAlpha, BO_Add,
 				BF_One, BF_InverseSourceAlpha>::CreateRHI();
 			gridMesh->SetBlendState(translucencyBlendState);
+
+			// Create Env
+			CreateEnvironment();
 		}
     }
     void World::Tick(float deltaTime)
 	{
-		InitGeometry();
+		InitRenderGeometry();
 
         if(cubeEntity)
         {
@@ -107,9 +124,49 @@ namespace Lemon
         CameraComponent& camera = MainCameraEntity.AddComponent<CameraComponent>();
         camera.SetProjectionType(CameraComponent::ProjectionType::Perspective);
     }
+
+	void World::CreateEnvironment(float SkySphereRadius /* = 1000.0f*/)
+	{
+		EnvironmentEntity = CreateEntity("Environment");
+    	// Create Static Mesh Component
+		StaticMeshComponent& staticMesh = EnvironmentEntity.AddComponent<StaticMeshComponent>();
+		Ref<Mesh> sphereMesh = CreateRef<Sphere>(SkySphereRadius, false);
+		sphereMesh->CreateShader<SF_Vertex>("Assets/Shaders/SimpleEnvironmentCubeVertex.hlsl", "MainVS");
+		sphereMesh->CreateShader<SF_Pixel>("Assets/Shaders/SimpleEnvironmentCubePixel.hlsl", "MainPS");
+		sphereMesh->CreateRHIBuffers();
+		staticMesh.SetMesh(sphereMesh);
+    	
+    	Ref<RHIRasterizerState> CullBackRS = GetEngine()->GetSystem<Renderer>()->GetSceneRenderStates()->SolidCullBackRasterizerState;
+    	sphereMesh->SetRasterizerState(CullBackRS);
+		// Create Environment Component
+    	EnvironmentComponent& EnvComp = EnvironmentEntity.AddComponent<EnvironmentComponent>();
+		std::vector<std::string> envFilePaths;
+		const auto dir_cubemaps = GetEngine()->GetSystem<ResourceSystem>()->GetAssetDataDirectory(Asset_Cubemaps) + "/";
+    	envFilePaths.emplace_back(dir_cubemaps + "array/X+.tga");// Right
+    	envFilePaths.emplace_back(dir_cubemaps + "array/X-.tga");// Left
+    	envFilePaths.emplace_back(dir_cubemaps + "array/Y+.tga");// Up
+    	envFilePaths.emplace_back(dir_cubemaps + "array/Y-.tga");// down
+    	envFilePaths.emplace_back(dir_cubemaps + "array/Z-.tga");// back
+    	envFilePaths.emplace_back(dir_cubemaps + "array/Z+.tga");// front
+    	EnvComp.CreateFromFilePath(envFilePaths);
+    	sphereMesh->GetTextures().emplace_back(EnvComp.GetEnvironmentTexture());
+    	m_EnvironmentEntitys.emplace_back(EnvironmentEntity);
+    	
+	}
+
     std::vector<Entity> World::GetAllEntities() const
     {
         return m_Entitys;
     }
+	
+	std::vector<Entity> World::GetAllEnvironmentEntitys() const
+    {
+	    return m_EnvironmentEntitys;
+    }
+
+	std::vector<Entity> World::GetGizmoDebugEntitys() const
+	{
+		return m_GizmoDebugEntitys;
+	}
 }
 

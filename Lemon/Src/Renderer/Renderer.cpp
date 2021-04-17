@@ -10,6 +10,7 @@
 #include "Core/Timer.h"
 #include "World/World.h"
 #include "World/Components/CameraComponent.h"
+#include "World/Components/EnvironmentComponent.h"
 #include "World/Components/StaticMeshComponent.h"
 #include "World/Components/TransformComponent.h"
 
@@ -57,6 +58,11 @@ namespace Lemon
 		m_SceneRenderTargets = CreateRef<SceneRenderTargets>(m_Viewport.Width, m_Viewport.Height);
 		m_SceneRenderTargets->Allocate(m_RHICommandList);
 
+		// Create RenderStates tp initalize some RenderStates
+		m_SceneRenderStates = CreateRef<SceneRenderStates>();
+		m_SceneRenderStates->Allocate();
+		m_SceneRenderStates->SetGlobalSampler(m_RHICommandList);
+		
 		m_SceneUniformBuffers = CreateRef<SceneUniformBuffers>();
 		
 		// Init Others
@@ -147,7 +153,12 @@ namespace Lemon
 		// Set VertexBuffer and IndexBuffer
 		m_RHICommandList->SetIndexBuffer(staticMeshComp.GetRenderMesh()->GetIndexBuffer());
 		m_RHICommandList->SetVertexBuffer(0, staticMeshComp.GetRenderMesh()->GetVertexBuffer());
-
+		// Set Textures
+		for(int i = 0;i < staticMeshComp.GetRenderMesh()->GetTextures().size(); i++)
+		{
+			m_RHICommandList->SetTexture(staticMeshComp.GetRenderMesh()->GetTextureStartSlot() + i, staticMeshComp.GetRenderMesh()->GetTextures()[i]);
+		}
+		
 		// Draw
 		m_RHICommandList->DrawIndexPrimitive(0, 0, staticMeshComp.GetRenderMesh()->GetIndexCount() / 3);
 	}
@@ -175,14 +186,38 @@ namespace Lemon
 		UpdateViewUniformBuffer();
 
 		std::vector<Entity> entitys = m_World->GetAllEntities();
-		
+
+		std::vector<Entity> environments; // Environment Entity need draw Last
 		for(int i = 0;i < entitys.size(); i++)
 		{
-			if(entitys[i] && entitys[i].HasComponent<StaticMeshComponent>())
+			if(entitys[i] && !entitys[i].IsGizmo() && entitys[i].HasComponent<StaticMeshComponent>())
 			{
-				DrawRenderer(entitys[i]);
+				if(entitys[i].HasComponent<EnvironmentComponent>())
+					environments.emplace_back(entitys[i]);
+				else
+					DrawRenderer(entitys[i]);
 			}
 		}
+
+		//Draw Last
+		for(int i = 0;i < environments.size(); i++)
+		{
+			if(environments[i] && !environments[i].IsGizmo() && environments[i].HasComponent<EnvironmentComponent>())
+			{
+				DrawRenderer(environments[i]);
+			}
+		}
+
+		//Draw Debug Gizmo
+		std::vector<Entity> GizmoDebugEntitys = m_World->GetGizmoDebugEntitys();
+		for (int i = 0; i < GizmoDebugEntitys.size(); i++)
+		{
+			if (GizmoDebugEntitys[i] && GizmoDebugEntitys[i].IsGizmo() && GizmoDebugEntitys[i].HasComponent<StaticMeshComponent>())
+			{
+				DrawRenderer(GizmoDebugEntitys[i]);
+			}
+		}
+
 	}
 
 	void Renderer::UpdateViewUniformBuffer() const
@@ -213,7 +248,18 @@ namespace Lemon
 
 		//glm::vec4 debugPoint1 = parameters.ViewMatrix * glm::vec4(-0.5f, 0.5f, 1.0f, 1.0f);
 		//glm::vec4 debugPoint = parameters.ProjectionMatrix * debugPoint1;
-
+		
+		/*
+		 consider EnvironmentEntity to snap transform to camera transform
+		*/
+		for(int i = 0; i < m_World->GetAllEnvironmentEntitys().size(); i++)
+		{
+			Entity envEntity = m_World->GetAllEnvironmentEntitys()[i];
+			envEntity.GetComponent<TransformComponent>().Position = transformComp.Position;
+			envEntity.GetComponent<TransformComponent>().Rotation = glm::vec3(0, 0, 0);
+			envEntity.GetComponent<TransformComponent>().Scale = glm::vec3(1, 1, 1);
+		}
+		
 		parameters.TestColor = glm::vec3(preRColorValue,accTime,accTime);
 		m_SceneUniformBuffers->ViewUniformBuffer->UpdateUniformBufferImmediate(parameters);
 	}

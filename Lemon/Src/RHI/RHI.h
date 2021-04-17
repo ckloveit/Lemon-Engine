@@ -13,10 +13,27 @@ namespace Lemon
 	extern LEMON_API void RHIExit();
 
 	class RHISwapChain;
+
+	struct TextureMipData
+	{
+		std::vector<std::byte> TextureData;
+	};
+
+	struct TextureRawData
+	{
+		std::vector<TextureMipData> MipDatas;
+
+		TextureMipData& AddMip() { return MipDatas.emplace_back(TextureMipData()); }
+	};
+
 	struct RHIResourceCreateInfo
 	{
 		// for CreateTexture uses
-		std::vector<std::vector<std::byte>> RawTextureDatas;
+		TextureRawData Texture2DDatas;
+		// for CreateTextureArray uses, the size is texture size
+		std::vector<TextureRawData> TextureArrayDatas;
+		// is RawTextureDatas used for textureArray
+		bool bUsedForTextureArray = false;
 		// for CreateVertexBuffer & CreateStructBuffer uses
 		ResourceArrayInterface* ResourceArray;
 		// for Debug use

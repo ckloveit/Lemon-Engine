@@ -22,7 +22,6 @@ namespace Lemon
         // Note: setting to a different value than GSystemSettings.MaxAnisotropy is only supported in D3D11 (is that still true?)
         // A value of 0 will use GSystemSettings.MaxAnisotropy
         int32_t MaxAnisotropy = 1,
-        float BorderColor[4] = (0, 0, 0 ,0),
         /** Only supported in D3D11 */
         ESamplerCompareFunction SamplerComparisonFunction=SCF_Never>
     class TStaticSamplerState
@@ -30,6 +29,7 @@ namespace Lemon
     public:
         static Ref<RHISamplerState> CreateRHI()
         {
+        	float BorderColor[4] = {0, 0, 0, 0};
             const glm::vec4 borderColor = glm::vec4(BorderColor[0],BorderColor[1],BorderColor[2],BorderColor[3] );
             const SamplerStateInitializer initializer( Filter, AddressU, AddressV, AddressW, MipBias, MaxAnisotropy, 0, FLT_MAX, borderColor, SamplerComparisonFunction );
             return RHICreateSamplerState(initializer);

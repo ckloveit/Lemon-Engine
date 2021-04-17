@@ -16,7 +16,7 @@ namespace Lemon
 	{
 	public:
 		RHICommandList(Renderer* renderer);
-
+		virtual ~RHICommandList() {}
 		//=====Static function====================
 		static RHICommandList& Get();
 
@@ -46,6 +46,11 @@ namespace Lemon
 		// ConstantBuffer
 		virtual void SetUniformBuffer(uint32_t slot, EUniformBufferUsageScopeType scopeType, const RHIUniformBufferBaseRef& uniformBuffer) = 0;
 
+		// SamplerState
+		virtual void SetSamplerState(uint32_t slot,const Ref<RHISamplerState>& samplerState) = 0;
+
+		// Texture
+		virtual void SetTexture(uint32_t slot, const Ref<RHITexture>& texture) = 0;
 		//=======================================================================================================//
 	private:
 		static RHICommandList* s_Instance;

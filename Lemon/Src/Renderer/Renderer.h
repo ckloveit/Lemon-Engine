@@ -4,6 +4,8 @@
 
 #include <glm/glm.hpp>
 
+
+#include "SceneRenderStates.h"
 #include "RenderCore/Viewport.h"
 #include "RHI/RHI.h"
 
@@ -35,7 +37,8 @@ namespace Lemon
 		const auto& GetSwapChain() const { return m_RHISwapChain; }
 
 		Ref<SceneRenderTargets> GetSceneRenderTargets() const { return m_SceneRenderTargets; }
-
+		Ref<SceneRenderStates> GetSceneRenderStates() const {return m_SceneRenderStates;}
+		
 		void SetViewport(const Viewport& inViewport) { m_Viewport = inViewport; }
 		Viewport GetViewport() const { return m_Viewport;}
 
@@ -55,7 +58,8 @@ namespace Lemon
 		Ref<RHICommandList> m_RHICommandList;
 		Ref<SceneRenderTargets> m_SceneRenderTargets;
 		Ref<SceneUniformBuffers> m_SceneUniformBuffers;
-
+		Ref<SceneRenderStates> m_SceneRenderStates;
+		
 		World* m_World;
 		
 		//===============Debug

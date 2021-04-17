@@ -1,6 +1,9 @@
 #include "LemonPCH.h"
 #include <fstream>
 #include "FileUtils.h"
+#include <filesystem>
+
+using namespace std;
 
 namespace Lemon
 {
@@ -21,6 +24,27 @@ namespace Lemon
 			LEMON_CORE_ERROR("Could not open file '{0}'", filepath);
 		}
 		return result;
+	}
+
+	std::string FileUtils::GetSolutionDirectory()
+	{
+		return filesystem::current_path().parent_path().generic_string();
+	}
+
+
+	bool FileUtils::PathExists(const std::string& filePath)
+	{
+		try
+		{
+			if (filesystem::exists(filePath))
+				return true;
+		}
+		catch (filesystem::filesystem_error& e)
+		{
+			LEMON_CORE_ERROR("{0}, {1}", e.what(), filePath.c_str());
+		}
+
+		return false;
 	}
 
 	std::wstring FileUtils::StringToWstring(const std::string& str /*= CP_ACP*/)

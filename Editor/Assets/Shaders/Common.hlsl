@@ -1,4 +1,5 @@
 #include "CommonBuffer.hlsl"
+#include "CommonSampler.hlsl"
 
 #define MAX_MESH_TEXTURE_COORDS 2
 struct VertexInput

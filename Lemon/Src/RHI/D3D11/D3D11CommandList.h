@@ -38,11 +38,16 @@ namespace Lemon
 		
 		virtual void SetUniformBuffer(uint32_t slot, EUniformBufferUsageScopeType scopeType, const RHIUniformBufferBaseRef& uniformBuffer) override;
 
+		virtual void SetSamplerState(uint32_t slot, const Ref<RHISamplerState>& samplerState) override;
+		
+		virtual void SetTexture(uint32_t slot, const Ref<RHITexture>& texture) override;
+		
 		//=======================================================================================================//
 	private:
 		D3D11DynamicRHI* m_D3D11RHI;
 		GraphicsPipelineStateInitializer m_CurrentGraphicsPipelineState;
 		EPrimitiveType m_CurrentPrimitiveType;
 
+		Ref<RHIRasterizerState> m_DefaultRasterizerState;
 	};
 }

@@ -29,7 +29,7 @@ namespace Lemon
 		bool bRTVResult = true;
 		bool bDSVResult = true;
 		ID3D11Texture2D* texture = nullptr;
-		bTexResult = D3D11::CreateTexture2D(this, sizeX, sizeY, channelCount, perChannelBits, numMips, 1, D3Dformat, bindFlags, createInfo.RawTextureDatas, texture);
+		bTexResult = D3D11::CreateTexture2D(this, sizeX, sizeY, channelCount, perChannelBits, numMips, D3Dformat, bindFlags, createInfo.Texture2DDatas, texture);
 
 		ID3D11ShaderResourceView* textureSRV = nullptr;
 		if (IsShaderResource(createFlags))
@@ -53,6 +53,45 @@ namespace Lemon
 		return nullptr;
 	}
 
+	Ref<RHITexture2D> D3D11DynamicRHI::RHICreateTextureCube(uint32_t sizeX, uint32_t sizeY, ERHIPixelFormat format, uint32_t numMips, uint32_t createFlags, RHIResourceCreateInfo& createInfo)
+	{
+		UINT bindFlags = D3D11::GetD3D11TextureResourceBindFlags(createFlags);
 
+		DXGI_FORMAT D3Dformat = D3D11::GetD3D11TextureFormat(format);
+		DXGI_FORMAT D3DformatDSV = D3D11::GetD3D11TextureFormatDSV(format);
+		DXGI_FORMAT D3DformatSRV = D3D11::GetD3D11TextureFormatSRV(format);
+
+		int channelCount = GPixelFormats[format].NumComponents;
+		int perChannelBits = GPixelFormats[format].NumBytes / channelCount;
+
+		bool bTexResult = true;
+		bool bSRVResult = true;
+		bool bRTVResult = true;
+		bool bDSVResult = true;
+		ID3D11Texture2D* texture = nullptr;
+		bTexResult = D3D11::CreateTextureCube(this, sizeX, sizeY, channelCount, perChannelBits, numMips, D3Dformat, bindFlags, createInfo.TextureArrayDatas, texture);
+
+		ID3D11ShaderResourceView* textureSRV = nullptr;
+		if (IsShaderResource(createFlags))
+		{
+			bSRVResult = D3D11::CreateShaderResourceViewCube(this, texture, numMips, D3DformatSRV, textureSRV);
+		}
+		
+		std::vector<ID3D11RenderTargetView*> textureRTVs;
+		/*if (IsRenderTarget(createFlags))
+		{
+			bRTVResult = D3D11::CreateRenderTargetView2D(this, texture, 1, D3Dformat, textureRTVs);
+		}*/
+		ID3D11DepthStencilView* textureDSV = nullptr;
+		/*if (IsDepthStencil(createFlags))
+		{
+			bDSVResult = D3D11::CreateDepthStencilView2D(this, texture, 1, numMips, D3DformatDSV, textureDSV);
+		}*/
+		if (bTexResult && bSRVResult && bRTVResult && bDSVResult)
+		{
+			return CreateRef<D3D11Texture2D>(this, texture, textureSRV, textureRTVs, textureDSV, sizeX, sizeY, numMips, format);
+		}
+		return nullptr;
+	}
 
 }

@@ -131,11 +131,14 @@ namespace Lemon
 		RFM_Wireframe,
 		RFM_Solid,
 	};
+
+	// RCM_CCW is FRONT face
+	// RCM_CW is back face
 	enum ERasterizerCullMode
 	{
 		RCM_None,
-		RCM_CW,
-		RCM_CCW,
+		RCM_Front,
+		RCM_Back,
 	};
 
 	enum ECompareFunction
