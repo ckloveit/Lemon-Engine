@@ -21,6 +21,7 @@ ThirdPartyIncludeDir["imgui"] = "%{wks.location}/Lemon/ThirdParty/imgui"
 ThirdPartyIncludeDir["glm"] = "%{wks.location}/Lemon/ThirdParty/glm"
 ThirdPartyIncludeDir["std_image"] = "%{wks.location}/Lemon/ThirdParty/std_image"
 ThirdPartyIncludeDir["entt"] = "%{wks.location}/Lemon/ThirdParty/entt/include"
+ThirdPartyIncludeDir["ImGuizmo"] = "%{wks.location}/Lemon/ThirdParty/ImGuizmo"
 
 group "External"
 	include "Lemon/ThirdParty/imgui"
@@ -53,6 +54,8 @@ project "Lemon"
 		"%{prj.name}/ThirdParty/std_image/*.h",
 		"%{prj.name}/ThirdParty/std_image/*.cpp",
 		"%{prj.name}/ThirdParty/entt/**.hpp",
+		"%{prj.name}/ThirdParty/ImGuizmo/ImGuizmo.h",
+		"%{prj.name}/ThirdParty/ImGuizmo/ImGuizmo.cpp"
 	}
 
 	links 

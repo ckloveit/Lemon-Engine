@@ -20,6 +20,7 @@
 #include "ImGuiRHI/Implementation/imgui_impl_dx11.h"
 #include "ImGuiRHI/Implementation/imgui_impl_win32.h"
 #endif
+#include "ImGuiRHI/Icons/IconsFontAwesome4.h"
 
 using namespace std;
 using namespace Lemon;
@@ -139,7 +140,17 @@ void Editor::InitImGui(const WindowData& windowData)
 	//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoMerge;
 	io.Fonts->AddFontFromFileTTF("Assets/Fonts/Roboto/Roboto-Bold.ttf", 18.0f);
 	io.FontDefault = io.Fonts->AddFontFromFileTTF("Assets/Fonts/Roboto/Roboto-Regular.ttf", 18.0f);
-
+	{
+		//Add Icon
+		io.Fonts->AddFontDefault();
+		ImFontConfig icons_config; 
+		icons_config.MergeMode = true; 
+		icons_config.PixelSnapH = true;
+		icons_config.GlyphOffset.y = 7;
+		icons_config.GlyphOffset.x = -2;
+		static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
+		io.Fonts->AddFontFromFileTTF("Assets/Fonts/fontawesome/fontawesome-webfont.ttf", 30.0f, &icons_config, icons_ranges);
+	}
 	// Setup Dear ImGui style
 	ImGui::StyleColorsDark();
 

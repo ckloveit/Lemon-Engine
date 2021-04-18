@@ -10,8 +10,17 @@
     <Filter Include="Src\Core">
       <UniqueIdentifier>{8537E246-7104-3D52-9A1D-2BFA864972E0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Input">
+      <UniqueIdentifier>{CC289523-3893-499A-81D1-FA3FED7A27EF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Input\Windows">
+      <UniqueIdentifier>{06DF74B3-72F5-7249-BB6C-FE6A27C243D1}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Src\Log">
       <UniqueIdentifier>{5EF9E709-CAD8-66A5-D3F0-F17B3F4FCD06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Math">
+      <UniqueIdentifier>{0678E746-F244-4252-1B5E-30FA078A77E0}</UniqueIdentifier>
     </Filter>
     <Filter Include="Src\RHI">
       <UniqueIdentifier>{BF0DE809-2BED-66A5-3405-F27BA063CD06}</UniqueIdentifier>
@@ -28,6 +37,12 @@
     <Filter Include="Src\Renderer">
       <UniqueIdentifier>{532574A1-3F88-0346-E80D-3CFCD44FCFC8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Resources">
+      <UniqueIdentifier>{B73CA66B-23FD-21A2-EC37-6B1F58B7667E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Resources\Importer">
+      <UniqueIdentifier>{98B07CD9-84AA-A52B-6D17-3C3C59B00B98}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Src\Utils">
       <UniqueIdentifier>{2D7A7124-99E4-259B-E222-D7404ECC03F0}</UniqueIdentifier>
     </Filter>
@@ -39,6 +54,9 @@
     </Filter>
     <Filter Include="ThirdParty">
       <UniqueIdentifier>{107145F9-FC28-8746-6530-60A251072237}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty\ImGuizmo">
+      <UniqueIdentifier>{7015E757-DC76-C465-65E4-0A18D144FB24}</UniqueIdentifier>
     </Filter>
     <Filter Include="ThirdParty\entt">
       <UniqueIdentifier>{5A60324C-C6EB-9F10-CFFC-22053B07FC10}</UniqueIdentifier>
@@ -78,6 +96,9 @@
     <ClInclude Include="Src\Core\Core.h">
       <Filter>Src\Core</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Core\Delegate.h">
+      <Filter>Src\Core</Filter>
+    </ClInclude>
     <ClInclude Include="Src\Core\Engine.h">
       <Filter>Src\Core</Filter>
     </ClInclude>
@@ -93,6 +114,12 @@
     <ClInclude Include="Src\Core\Timer.h">
       <Filter>Src\Core</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Input\Input.h">
+      <Filter>Src\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Input\InputSystem.h">
+      <Filter>Src\Input</Filter>
+    </ClInclude>
     <ClInclude Include="Src\Lemon.h">
       <Filter>Src</Filter>
     </ClInclude>
@@ -101,6 +128,9 @@
     </ClInclude>
     <ClInclude Include="Src\Log\Log.h">
       <Filter>Src\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Math\Math.h">
+      <Filter>Src\Math</Filter>
     </ClInclude>
     <ClInclude Include="Src\RHI\D3D11\D3D11CommandList.h">
       <Filter>Src\RHI\D3D11</Filter>
@@ -112,6 +142,9 @@
       <Filter>Src\RHI\D3D11</Filter>
     </ClInclude>
     <ClInclude Include="Src\RHI\D3D11\D3D11Resources.h">
+      <Filter>Src\RHI\D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\RHI\D3D11\D3D11State.h">
       <Filter>Src\RHI\D3D11</Filter>
     </ClInclude>
     <ClInclude Include="Src\RHI\D3D11\D3D11SwapChain.h">
@@ -138,10 +171,19 @@
     <ClInclude Include="Src\RHI\RHIResources.h">
       <Filter>Src\RHI</Filter>
     </ClInclude>
+    <ClInclude Include="Src\RHI\RHIStaticStates.h">
+      <Filter>Src\RHI</Filter>
+    </ClInclude>
     <ClInclude Include="Src\RHI\RHISwapChain.h">
       <Filter>Src\RHI</Filter>
     </ClInclude>
     <ClInclude Include="Src\RenderCore\Geometry\Cube.h">
+      <Filter>Src\RenderCore\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\RenderCore\Geometry\GridGizmo.h">
+      <Filter>Src\RenderCore\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\RenderCore\Geometry\Sphere.h">
       <Filter>Src\RenderCore\Geometry</Filter>
     </ClInclude>
     <ClInclude Include="Src\RenderCore\Material.h">
@@ -162,6 +204,9 @@
     <ClInclude Include="Src\Renderer\Renderer.h">
       <Filter>Src\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Renderer\SceneRenderStates.h">
+      <Filter>Src\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="Src\Renderer\SceneRenderTargets.h">
       <Filter>Src\Renderer</Filter>
     </ClInclude>
@@ -171,10 +216,22 @@
     <ClInclude Include="Src\Renderer\SceneUniformBuffers.h">
       <Filter>Src\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Resources\Importer\ImageImporter.h">
+      <Filter>Src\Resources\Importer</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Resources\ResourceSystem.h">
+      <Filter>Src\Resources</Filter>
+    </ClInclude>
     <ClInclude Include="Src\Utils\FileUtils.h">
       <Filter>Src\Utils</Filter>
     </ClInclude>
     <ClInclude Include="Src\World\Components\CameraComponent.h">
+      <Filter>Src\World\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\World\Components\EnvironmentComponent.h">
+      <Filter>Src\World\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\World\Components\IComponent.h">
       <Filter>Src\World\Components</Filter>
     </ClInclude>
     <ClInclude Include="Src\World\Components\StaticMeshComponent.h">
@@ -188,6 +245,9 @@
     </ClInclude>
     <ClInclude Include="Src\World\World.h">
       <Filter>Src\World</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdParty\ImGuizmo\ImGuizmo.h">
+      <Filter>ThirdParty\ImGuizmo</Filter>
     </ClInclude>
     <ClInclude Include="ThirdParty\entt\include\entt.hpp">
       <Filter>ThirdParty\entt\include</Filter>
@@ -1434,19 +1494,6 @@
     <ClInclude Include="ThirdParty\std_image\std_image.h">
       <Filter>ThirdParty\std_image</Filter>
     </ClInclude>
-    <ClInclude Include="Src\World\Components\IComponent.h" />
-    <ClInclude Include="Src\Input\InputSystem.h" />
-    <ClInclude Include="Src\Input\Input.h" />
-    <ClInclude Include="Src\Core\Delegate.h" />
-    <ClInclude Include="Src\RenderCore\Geometry\GridGizmo.h" />
-    <ClInclude Include="Src\RHI\D3D11\D3D11State.h" />
-    <ClInclude Include="Src\RHI\RHIStaticStates.h" />
-    <ClInclude Include="Src\Resources\Importer\ImageImporter.h" />
-    <ClInclude Include="Src\Resources\ResourceSystem.h" />
-    <ClInclude Include="Src\World\Components\EnvironmentComponent.h" />
-    <ClInclude Include="Src\RenderCore\Geometry\Sphere.h" />
-    <ClInclude Include="Src\Math\Math.h" />
-    <ClInclude Include="Src\Renderer\SceneRenderStateCache.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Core\Engine.cpp">
@@ -1457,6 +1504,9 @@
     </ClCompile>
     <ClCompile Include="Src\Core\Timer.cpp">
       <Filter>Src\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Input\Windows\WindowsInputSystem.cpp">
+      <Filter>Src\Input\Windows</Filter>
     </ClCompile>
     <ClCompile Include="Src\LemonPCH.cpp">
       <Filter>Src</Filter>
@@ -1474,6 +1524,9 @@
       <Filter>Src\RHI\D3D11</Filter>
     </ClCompile>
     <ClCompile Include="Src\RHI\D3D11\D3D11Shader.cpp">
+      <Filter>Src\RHI\D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\RHI\D3D11\D3D11State.cpp">
       <Filter>Src\RHI\D3D11</Filter>
     </ClCompile>
     <ClCompile Include="Src\RHI\D3D11\D3D11SwapChain.cpp">
@@ -1506,6 +1559,12 @@
     <ClCompile Include="Src\RenderCore\Geometry\Cube.cpp">
       <Filter>Src\RenderCore\Geometry</Filter>
     </ClCompile>
+    <ClCompile Include="Src\RenderCore\Geometry\GridGizmo.cpp">
+      <Filter>Src\RenderCore\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\RenderCore\Geometry\Sphere.cpp">
+      <Filter>Src\RenderCore\Geometry</Filter>
+    </ClCompile>
     <ClCompile Include="Src\RenderCore\Material.cpp">
       <Filter>Src\RenderCore</Filter>
     </ClCompile>
@@ -1524,6 +1583,9 @@
     <ClCompile Include="Src\Renderer\Renderer.cpp">
       <Filter>Src\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Renderer\SceneRenderStates.cpp">
+      <Filter>Src\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="Src\Renderer\SceneRenderTargets.cpp">
       <Filter>Src\Renderer</Filter>
     </ClCompile>
@@ -1533,10 +1595,22 @@
     <ClCompile Include="Src\Renderer\SceneUniformBuffers.cpp">
       <Filter>Src\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Resources\Importer\ImageImporter.cpp">
+      <Filter>Src\Resources\Importer</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Resources\ResourceSystem.cpp">
+      <Filter>Src\Resources</Filter>
+    </ClCompile>
     <ClCompile Include="Src\Utils\FileUtils.cpp">
       <Filter>Src\Utils</Filter>
     </ClCompile>
     <ClCompile Include="Src\World\Components\CameraComponent.cpp">
+      <Filter>Src\World\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\World\Components\EnvironmentComponent.cpp">
+      <Filter>Src\World\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\World\Components\IComponent.cpp">
       <Filter>Src\World\Components</Filter>
     </ClCompile>
     <ClCompile Include="Src\World\Components\StaticMeshComponent.cpp">
@@ -1551,17 +1625,11 @@
     <ClCompile Include="Src\World\World.cpp">
       <Filter>Src\World</Filter>
     </ClCompile>
+    <ClCompile Include="ThirdParty\ImGuizmo\ImGuizmo.cpp">
+      <Filter>ThirdParty\ImGuizmo</Filter>
+    </ClCompile>
     <ClCompile Include="ThirdParty\std_image\std_image.cpp">
       <Filter>ThirdParty\std_image</Filter>
     </ClCompile>
-    <ClCompile Include="Src\World\Components\IComponent.cpp" />
-    <ClCompile Include="Src\Input\Windows\WindowsInputSystem.cpp" />
-    <ClCompile Include="Src\RenderCore\Geometry\GridGizmo.cpp" />
-    <ClCompile Include="Src\RHI\D3D11\D3D11State.cpp" />
-    <ClCompile Include="Src\Resources\Importer\ImageImporter.cpp" />
-    <ClCompile Include="Src\Resources\ResourceSystem.cpp" />
-    <ClCompile Include="Src\World\Components\EnvironmentComponent.cpp" />
-    <ClCompile Include="Src\RenderCore\Geometry\Sphere.cpp" />
-    <ClCompile Include="Src\Renderer\SceneRenderStateCache.cpp" />
   </ItemGroup>
 </Project>

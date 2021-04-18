@@ -4,6 +4,9 @@
     <Filter Include="ImGuiRHI">
       <UniqueIdentifier>{234E234F-0F1B-7E5A-3834-6C022460B3E8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ImGuiRHI\Icons">
+      <UniqueIdentifier>{0EBF1F15-FA8C-131B-E320-8441CF8DEF7F}</UniqueIdentifier>
+    </Filter>
     <Filter Include="ImGuiRHI\Implementation">
       <UniqueIdentifier>{38416562-A478-ADF9-AD82-111D1939D4F2}</UniqueIdentifier>
     </Filter>
@@ -13,6 +16,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Editor.h" />
+    <ClInclude Include="src\ImGuiRHI\Icons\IconsFontAwesome4.h">
+      <Filter>ImGuiRHI\Icons</Filter>
+    </ClInclude>
     <ClInclude Include="src\ImGuiRHI\ImGuiExtension.h">
       <Filter>ImGuiRHI</Filter>
     </ClInclude>
@@ -26,6 +32,9 @@
       <Filter>ImGuiRHI\Implementation</Filter>
     </ClInclude>
     <ClInclude Include="src\Widgets\Widget.h">
+      <Filter>Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Widgets\WidgetHelpers.h">
       <Filter>Widgets</Filter>
     </ClInclude>
     <ClInclude Include="src\Widgets\WidgetMenuBar.h">
@@ -44,6 +53,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Editor.cpp" />
+    <ClCompile Include="src\ImGuiRHI\ImGuiExtension.cpp">
+      <Filter>ImGuiRHI</Filter>
+    </ClCompile>
     <ClCompile Include="src\ImGuiRHI\ImGuiRHI.cpp">
       <Filter>ImGuiRHI</Filter>
     </ClCompile>
@@ -52,6 +64,9 @@
     </ClCompile>
     <ClCompile Include="src\ImGuiRHI\Implementation\imgui_impl_win32.cpp">
       <Filter>ImGuiRHI\Implementation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Widgets\WidgetHelpers.cpp">
+      <Filter>Widgets</Filter>
     </ClCompile>
     <ClCompile Include="src\Widgets\WidgetMenuBar.cpp">
       <Filter>Widgets</Filter>
