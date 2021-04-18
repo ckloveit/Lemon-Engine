@@ -17,14 +17,14 @@ namespace Lemon
         bool Initialize() override;
         void Tick(float deltaTime) override;
 
+    	void EndOneFrame();
+
         Entity CreateEntity(const std::string& name = std::string(), bool bIsGizmoDebug = false);
-		void DestroyEntity(Entity entity);
+		void DestroyEntity(Entity& entity);
         
         Entity GetMainCamera() const { return MainCameraEntity; }
                 
         std::vector<Entity> GetAllEntities() const;
-        std::vector<Entity> GetAllEnvironmentEntitys() const;
-		std::vector<Entity> GetGizmoDebugEntitys() const;
     private:
         void CreateMainCamera();
         void InitRenderGeometry();

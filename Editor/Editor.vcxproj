@@ -144,6 +144,7 @@
     <ClInclude Include="src\ImGuiRHI\Implementation\imgui_impl_dx11.h" />
     <ClInclude Include="src\ImGuiRHI\Implementation\imgui_impl_win32.h" />
     <ClInclude Include="src\Widgets\Widget.h" />
+    <ClInclude Include="Src\Widgets\WidgetHelpers.h" />
     <ClInclude Include="src\Widgets\WidgetMenuBar.h" />
     <ClInclude Include="src\Widgets\WidgetProperties.h" />
     <ClInclude Include="src\Widgets\WidgetSceneHierachy.h" />
@@ -155,6 +156,7 @@
     <ClCompile Include="src\ImGuiRHI\ImGuiRHI.cpp" />
     <ClCompile Include="src\ImGuiRHI\Implementation\imgui_impl_dx11.cpp" />
     <ClCompile Include="src\ImGuiRHI\Implementation\imgui_impl_win32.cpp" />
+    <ClCompile Include="Src\Widgets\WidgetHelpers.cpp" />
     <ClCompile Include="src\Widgets\WidgetMenuBar.cpp" />
     <ClCompile Include="src\Widgets\WidgetProperties.cpp" />
     <ClCompile Include="src\Widgets\WidgetSceneHierachy.cpp" />

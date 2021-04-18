@@ -107,8 +107,8 @@ void Editor::OnTick()
 		// Editor update
 		WidgetsTick(m_Engine->GetSystem<Timer>()->GetDeltaTimeSec());
 
-		// input system need special process
-		m_Engine->GetSystem<InputSystem>()->SetFrameEnd();
+		// EndOneFrame
+		m_Engine->EndOneFrame();
 		
 		// ImGui implementation - end frame
 		ImGui::Render();

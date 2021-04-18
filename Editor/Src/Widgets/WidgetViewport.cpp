@@ -38,9 +38,6 @@ void WidgetViewport::Tick(float deltaTime)
 	}
 	if(bMouseDown && m_bWidgetFocus)
 	{
-		LEMON_CORE_INFO("WidgetViewport----mouse Position X = {0}, {1}---", m_Renderer->GetEngine()->GetSystem<InputSystem>()->GetMouseDelta().x,
-			m_Renderer->GetEngine()->GetSystem<InputSystem>()->GetMouseDelta().y);
-		
 		m_Renderer->GetEngine()->GetSystem<World>()->GetMainCamera().GetComponent<CameraComponent>().ProcessInputSystem(deltaTime);
 	}
 

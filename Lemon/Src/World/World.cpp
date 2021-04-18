@@ -33,8 +33,9 @@ namespace Lemon
         return entity;
     }
    
-    void World::DestroyEntity(Entity entity)
+    void World::DestroyEntity(Entity& entity)
     {
+    	entity.MarkDestroy();
         m_Registry.destroy(entity);
     }
     
@@ -167,15 +168,23 @@ namespace Lemon
     {
         return m_Entitys;
     }
-	
-	std::vector<Entity> World::GetAllEnvironmentEntitys() const
-    {
-	    return m_EnvironmentEntitys;
-    }
 
-	std::vector<Entity> World::GetGizmoDebugEntitys() const
-	{
-		return m_GizmoDebugEntitys;
-	}
+	void World::EndOneFrame()
+    {
+    	// remove the destroy entity in m_entitys
+	    for(auto iter = m_Entitys.begin(); iter != m_Entitys.end();)
+	    {
+		    if(iter->IsMarkDestroy())
+		    {
+		    	// STL erase iterator, the iterator the next element
+		    	m_Entitys.erase(iter);
+		    }
+	    	else
+		    {
+			    iter++;
+		    }
+	    }
+    	
+    }
 }
 

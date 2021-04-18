@@ -74,14 +74,23 @@ namespace Lemon
         }
 		World* GetWorld() const { return m_World; }
 
+    	// Name
+    	const std::string& GetName() const { return m_entityName; }
+		std::string& GetName() {return m_entityName;}
 		// Gizmo flag
 		bool IsGizmo() const { return m_bIsGizmo; }
 		void SetGizmo(bool bIsGizmo) { m_bIsGizmo = bIsGizmo; }
+
+    	//
+    	void MarkDestroy() { m_bIsDestroy = true; }
+    	bool IsMarkDestroy() const { return m_bIsDestroy; }
+    	
     private:
         entt::entity m_EntityHandle {0};
         World* m_World = nullptr;
         std::string m_entityName;
 		bool m_bIsGizmo = false;
+    	bool m_bIsDestroy = false;
     };
 }
 

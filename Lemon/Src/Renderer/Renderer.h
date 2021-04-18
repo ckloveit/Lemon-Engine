@@ -43,7 +43,7 @@ namespace Lemon
 		Viewport GetViewport() const { return m_Viewport;}
 
 		//ConstantBuffer Update
-		void UpdateViewUniformBuffer() const;
+		void UpdateViewUniformBuffer(Entity mainCameraEntity) const;
 		
 		
 	private:

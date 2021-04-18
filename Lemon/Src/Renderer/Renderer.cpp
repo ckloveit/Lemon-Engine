@@ -193,44 +193,70 @@ namespace Lemon
 		m_RHICommandList->RHIClearRenderTarget(GetSceneRenderTargets()->GetSceneColorTexture(),glm::vec4(0.1f, 0.4f, 0.7f, 1.0f),
 			GetSceneRenderTargets()->GetSceneDepthTexture());
 
-		UpdateViewUniformBuffer();
-
 		std::vector<Entity> entitys = m_World->GetAllEntities();
+		
+		// classify the entity types
+		std::vector<Entity> gizmoDebugEntitys;
+		std::vector<Entity> environmentEntitys;
+		std::vector<Entity> normalEntitys;
 
-		std::vector<Entity> environments; // Environment Entity need draw Last
-		for(int i = 0;i < entitys.size(); i++)
+		for(int i =0;i < entitys.size(); i++)
 		{
-			if(entitys[i] && !entitys[i].IsGizmo() && entitys[i].HasComponent<StaticMeshComponent>())
+			if(entitys[i].IsGizmo())
 			{
-				if(entitys[i].HasComponent<EnvironmentComponent>())
-					environments.emplace_back(entitys[i]);
-				else
-					DrawRenderer(entitys[i]);
+				gizmoDebugEntitys.emplace_back(entitys[i]);
+			}
+			else if(entitys[i].HasComponent<EnvironmentComponent>())
+			{
+				environmentEntitys.emplace_back(entitys[i]);
+			}
+			else
+			{
+				normalEntitys.emplace_back(entitys[i]);
+			}
+		}
+
+		Entity mainCameraEntity = m_World->GetMainCamera();
+		// Update View UniformBuffer
+		UpdateViewUniformBuffer(mainCameraEntity);
+		
+		/*
+			consider EnvironmentEntity to snap transform to camera transform
+		*/
+		for(int i = 0; i < environmentEntitys.size(); i++)
+		{
+			Entity& envEntity = environmentEntitys[i];
+			envEntity.GetComponent<TransformComponent>().Position =  mainCameraEntity.GetComponent<TransformComponent>().Position;
+			envEntity.GetComponent<TransformComponent>().Rotation = glm::vec3(0, 0, 0);
+			envEntity.GetComponent<TransformComponent>().Scale = glm::vec3(1, 1, 1);
+		}
+		
+		for(int i = 0;i < normalEntitys.size(); i++)
+		{
+			if(normalEntitys[i] && !normalEntitys[i].IsGizmo() && normalEntitys[i].HasComponent<StaticMeshComponent>())
+			{
+				DrawRenderer(normalEntitys[i]);
 			}
 		}
 
 		//Draw Last
-		for(int i = 0;i < environments.size(); i++)
+		for(int i = 0;i < environmentEntitys.size(); i++)
 		{
-			if(environments[i] && !environments[i].IsGizmo() && environments[i].HasComponent<EnvironmentComponent>())
-			{
-				DrawRenderer(environments[i]);
-			}
+			DrawRenderer(environmentEntitys[i]);
 		}
 
 		//Draw Debug Gizmo
-		std::vector<Entity> GizmoDebugEntitys = m_World->GetGizmoDebugEntitys();
-		for (int i = 0; i < GizmoDebugEntitys.size(); i++)
+		for (int i = 0; i < gizmoDebugEntitys.size(); i++)
 		{
-			if (GizmoDebugEntitys[i] && GizmoDebugEntitys[i].IsGizmo() && GizmoDebugEntitys[i].HasComponent<StaticMeshComponent>())
+			if (gizmoDebugEntitys[i] && gizmoDebugEntitys[i].IsGizmo() && gizmoDebugEntitys[i].HasComponent<StaticMeshComponent>())
 			{
-				DrawRenderer(GizmoDebugEntitys[i]);
+				DrawRenderer(gizmoDebugEntitys[i]);
 			}
 		}
 
 	}
 
-	void Renderer::UpdateViewUniformBuffer() const
+	void Renderer::UpdateViewUniformBuffer(Entity mainCameraEntity) const
 	{
 		m_RHICommandList->SetUniformBuffer(0,
 			EUniformBufferUsageScope::UBUS_Vertex | EUniformBufferUsageScope::UBUS_Pixel,
@@ -247,7 +273,6 @@ namespace Lemon
 			accTime = 0;
 			preRColorValue = glm::linearRand(0, 1);
 		}
-		Entity mainCameraEntity = m_World->GetMainCamera();
 
 		TransformComponent& transformComp = mainCameraEntity.GetComponent<TransformComponent>();
 		CameraComponent& mainCameraComp = mainCameraEntity.GetComponent<CameraComponent>();
@@ -259,16 +284,6 @@ namespace Lemon
 		//glm::vec4 debugPoint1 = parameters.ViewMatrix * glm::vec4(-0.5f, 0.5f, 1.0f, 1.0f);
 		//glm::vec4 debugPoint = parameters.ProjectionMatrix * debugPoint1;
 		
-		/*
-		 consider EnvironmentEntity to snap transform to camera transform
-		*/
-		for(int i = 0; i < m_World->GetAllEnvironmentEntitys().size(); i++)
-		{
-			Entity envEntity = m_World->GetAllEnvironmentEntitys()[i];
-			envEntity.GetComponent<TransformComponent>().Position = transformComp.Position;
-			envEntity.GetComponent<TransformComponent>().Rotation = glm::vec3(0, 0, 0);
-			envEntity.GetComponent<TransformComponent>().Scale = glm::vec3(1, 1, 1);
-		}
 		
 		parameters.TestColor = glm::vec3(preRColorValue,accTime,accTime);
 		m_SceneUniformBuffers->ViewUniformBuffer->UpdateUniformBufferImmediate(parameters);

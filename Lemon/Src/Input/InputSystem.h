@@ -67,7 +67,7 @@ namespace Lemon
 		
 		//===================================
 
-		void SetFrameEnd() { m_bNewframe = true; }
+		void EndOneFrame() { m_bNewframe = true; }
 		
 		// Keys
 		bool GetKey(const KeyCode key) { return m_Keys[static_cast<uint32_t>(key)]; }							        // Returns true while the button identified by KeyCode is held down.

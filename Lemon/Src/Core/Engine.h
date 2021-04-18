@@ -41,6 +41,9 @@ namespace Lemon
 			return m_SystemManager->GetSystem<T>();
 		}
 
+		void BeginOneFrame() {}
+		void EndOneFrame();
+
 		// Some use Getter
 		const Timer* GetTimer() const;
 		const InputSystem* GetInputSystem() const;

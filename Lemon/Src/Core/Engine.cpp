@@ -64,4 +64,12 @@ namespace Lemon
 	{
 		return GetSystem<InputSystem>();
 	}
+	
+	void Engine::EndOneFrame()
+	{
+		GetSystem<InputSystem>()->EndOneFrame();
+
+		GetSystem<World>()->EndOneFrame();
+		
+	}
 }
