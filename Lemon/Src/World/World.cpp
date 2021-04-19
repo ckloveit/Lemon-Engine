@@ -2,6 +2,7 @@
 #include "World.h"
 
 #include "Components/CameraComponent.h"
+#include "Components/DirectionalLightComponent.h"
 #include "Components/EnvironmentComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/TransformComponent.h"
@@ -94,8 +95,19 @@ namespace Lemon
 			
 			// Create Env
 			CreateEnvironment();
+			// Create Light
+			CreateLight();
 		}
     }
+
+	void World::CreateLight()
+    {
+    	Entity directionalLightEntity = CreateEntity("DirectionalLight");
+    	DirectionalLightComponent& directionalLightComp = directionalLightEntity.AddComponent<DirectionalLightComponent>();
+		TransformComponent& transformComp = directionalLightEntity.GetComponent<TransformComponent>();
+    	transformComp.Rotation = glm::vec3(0,0,45); // set light dir
+    }
+	
     void World::Tick(float deltaTime)
 	{
 		InitRenderGeometry();

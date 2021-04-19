@@ -29,9 +29,12 @@ namespace Lemon
 		RHIUniformBuffer()
 		{}
 		/** Creates a uniform buffer with the given value, and returns a structured reference to it. */
-		static Ref<RHIUniformBuffer<TBufferStruct>> CreateUniformBufferImmediate(const std::string& uniformBufferName)
+		static Ref<RHIUniformBuffer<TBufferStruct>> CreateUniformBufferImmediate(uint32_t slot, const std::string& uniformBufferName)
 		{
-			return CreateRef<RHIUniformBuffer<TBufferStruct>>(RHICreateUniformBuffer<TBufferStruct>(uniformBufferName));
+			Ref<RHIUniformBuffer<TBufferStruct>> uniformBuffer =
+				CreateRef<RHIUniformBuffer<TBufferStruct>>(RHICreateUniformBuffer<TBufferStruct>(uniformBufferName));
+			uniformBuffer->m_SlotIndex = slot;
+			return uniformBuffer;
 		}
 		
 		bool UpdateUniformBufferImmediate(const TBufferStruct& value)
@@ -46,7 +49,9 @@ namespace Lemon
 		{}
 
 		const RHIUniformBufferBaseRef& UniformBuffer() const { return m_UniformBuffer;}
+		uint32_t GetSlotIndex() const { return m_SlotIndex; }
 	private:
 		RHIUniformBufferBaseRef m_UniformBuffer;
+		uint32_t m_SlotIndex;
 	};
 }

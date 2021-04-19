@@ -18,12 +18,23 @@ namespace Lemon
 
         glm::vec3 TestColor;
     };
+    
+    // Low frequency buffer - Updates once per frame
+    struct LightUniformParameters
+    {
+        glm::vec4 DirectionalLightDir; // if w = 0 which mean no directionallight
+        glm::vec4 DirectionalLightColor; //
 
+        
+    };
     
     // High frequency - Updates at least as many times as there are objects in the scene
     struct ObjectUniformParameters
     {
         glm::mat4 LocalToWorldMatrix;
+        glm::mat4 WorldToWorldMatrix;
+        glm::mat4 WorldToWorldTransposeMatrix;
+        
         glm::vec4 Color;
         
         bool operator==(const ObjectUniformParameters& rhs)
@@ -33,6 +44,8 @@ namespace Lemon
                 Color == rhs.Color;
         }
     };
+
+    
     
     struct LEMON_API SceneUniformBuffers
     {
@@ -43,6 +56,7 @@ namespace Lemon
         // UniformBuffers
         Ref<RHIUniformBuffer<ViewUniformParameters>> ViewUniformBuffer;
         Ref<RHIUniformBuffer<ObjectUniformParameters>> ObjectUniformBuffer;
+        Ref<RHIUniformBuffer<LightUniformParameters>> LightUniformBuffer;
         
     };
 

@@ -6,8 +6,9 @@ namespace Lemon
     
     SceneUniformBuffers::SceneUniformBuffers()
     {
-        ViewUniformBuffer = RHIUniformBuffer<ViewUniformParameters>::CreateUniformBufferImmediate("ViewUniform");
-        ObjectUniformBuffer = RHIUniformBuffer<ObjectUniformParameters>::CreateUniformBufferImmediate("ObjectUniform");
+        ViewUniformBuffer = RHIUniformBuffer<ViewUniformParameters>::CreateUniformBufferImmediate(0, "ViewUniform");
+        ObjectUniformBuffer = RHIUniformBuffer<ObjectUniformParameters>::CreateUniformBufferImmediate(1, "ObjectUniform");
+        LightUniformBuffer = RHIUniformBuffer<LightUniformParameters>::CreateUniformBufferImmediate(2, "LightUniform");
         
         // Upload
         ViewUniformParameters viewParameters;
@@ -22,6 +23,11 @@ namespace Lemon
         objectParameters.Color = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
         objectParameters.LocalToWorldMatrix = glm::mat4();
         ObjectUniformBuffer->UpdateUniformBufferImmediate(objectParameters);
+
+        LightUniformParameters lightParameters;
+        lightParameters.DirectionalLightDir = glm::vec4(1.0f, 0.0f, 0.0f, 0.0f);
+        lightParameters.DirectionalLightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+        LightUniformBuffer->UpdateUniformBufferImmediate(lightParameters);
         
     }
     

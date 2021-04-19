@@ -10,6 +10,7 @@
 #include "Core/Timer.h"
 #include "World/World.h"
 #include "World/Components/CameraComponent.h"
+#include "World/Components/DirectionalLightComponent.h"
 #include "World/Components/EnvironmentComponent.h"
 #include "World/Components/StaticMeshComponent.h"
 #include "World/Components/TransformComponent.h"
@@ -130,11 +131,14 @@ namespace Lemon
 		StaticMeshComponent& staticMeshComp = entity.GetComponent<StaticMeshComponent>();
 
 		// Update ObjectBuffer
-		m_RHICommandList->SetUniformBuffer(1,
+		m_RHICommandList->SetUniformBuffer(m_SceneUniformBuffers->ObjectUniformBuffer->GetSlotIndex(),
             EUniformBufferUsageScope::UBUS_Vertex | EUniformBufferUsageScope::UBUS_Pixel,
             m_SceneUniformBuffers->ObjectUniformBuffer->UniformBuffer());
 		ObjectUniformParameters parameters;
 		parameters.LocalToWorldMatrix = transformComp.GetTransform();
+		parameters.WorldToWorldMatrix = glm::inverse(transformComp.GetTransform());
+		parameters.WorldToWorldTransposeMatrix = glm::transpose(parameters.WorldToWorldMatrix);
+		
 		parameters.Color = glm::vec4(1.0f, 1.0f, 0.0f, 1.0f);
 		m_SceneUniformBuffers->ObjectUniformBuffer->UpdateUniformBufferImmediate(parameters);
 
@@ -200,6 +204,7 @@ namespace Lemon
 		std::vector<Entity> environmentEntitys;
 		std::vector<Entity> normalEntitys;
 
+		std::vector<Entity> lightEntitys;
 		for(int i =0;i < entitys.size(); i++)
 		{
 			if(entitys[i].IsGizmo())
@@ -210,6 +215,10 @@ namespace Lemon
 			{
 				environmentEntitys.emplace_back(entitys[i]);
 			}
+			else if(entitys[i].HasComponent<DirectionalLightComponent>())
+			{
+				lightEntitys.emplace_back(entitys[i]);
+			}
 			else
 			{
 				normalEntitys.emplace_back(entitys[i]);
@@ -219,6 +228,9 @@ namespace Lemon
 		Entity mainCameraEntity = m_World->GetMainCamera();
 		// Update View UniformBuffer
 		UpdateViewUniformBuffer(mainCameraEntity);
+
+		// Update Light UniformBuffer
+		UpdateLightUniformBuffer(lightEntitys);
 		
 		/*
 			consider EnvironmentEntity to snap transform to camera transform
@@ -258,7 +270,7 @@ namespace Lemon
 
 	void Renderer::UpdateViewUniformBuffer(Entity mainCameraEntity) const
 	{
-		m_RHICommandList->SetUniformBuffer(0,
+		m_RHICommandList->SetUniformBuffer(m_SceneUniformBuffers->ViewUniformBuffer->GetSlotIndex(),
 			EUniformBufferUsageScope::UBUS_Vertex | EUniformBufferUsageScope::UBUS_Pixel,
 			m_SceneUniformBuffers->ViewUniformBuffer->UniformBuffer());
 		
@@ -287,6 +299,30 @@ namespace Lemon
 		
 		parameters.TestColor = glm::vec3(preRColorValue,accTime,accTime);
 		m_SceneUniformBuffers->ViewUniformBuffer->UpdateUniformBufferImmediate(parameters);
+	}
+
+	
+	void Renderer::UpdateLightUniformBuffer(const std::vector<Entity>& lightEntitys) const
+	{
+		m_RHICommandList->SetUniformBuffer(m_SceneUniformBuffers->LightUniformBuffer->GetSlotIndex(),
+        EUniformBufferUsageScope::UBUS_Vertex | EUniformBufferUsageScope::UBUS_Pixel,
+			m_SceneUniformBuffers->LightUniformBuffer->UniformBuffer());
+
+		LightUniformParameters parameters;
+		for(int i = 0;i < lightEntitys.size(); i++)
+		{
+			if(lightEntitys[i].HasComponent<DirectionalLightComponent>())
+			{
+				const DirectionalLightComponent& directionalLightComp = lightEntitys[i].GetComponent<DirectionalLightComponent>();
+				
+				parameters.DirectionalLightColor =
+					glm::vec4(directionalLightComp.GetLightColor() * directionalLightComp.GetLightIntensity(), 1.0f);
+
+				parameters.DirectionalLightDir = glm::vec4(directionalLightComp.GetLightDirection(), 1.0f);
+			}
+		}
+
+		m_SceneUniformBuffers->LightUniformBuffer->UpdateUniformBufferImmediate(parameters);
 	}
 	
 }

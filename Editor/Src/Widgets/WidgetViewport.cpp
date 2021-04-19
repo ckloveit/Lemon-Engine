@@ -40,11 +40,12 @@ void WidgetViewport::Tick(float deltaTime)
 	if(ImGui::IsWindowHovered())
 	{
 		InputSystem* input = m_Renderer->GetEngine()->GetSystem<InputSystem>();
+/*
 		if(input->GetKeyDown(KeyCode::Q)) m_GizmoType = -1;
 		if(input->GetKeyDown(KeyCode::W)) m_GizmoType = ImGuizmo::OPERATION::TRANSLATE;
 		if(input->GetKeyDown(KeyCode::E)) m_GizmoType = ImGuizmo::OPERATION::SCALE;
 		if(input->GetKeyDown(KeyCode::R)) m_GizmoType = ImGuizmo::OPERATION::ROTATE;
-		
+*/		
 	}
 	
 	bool gameView = false;

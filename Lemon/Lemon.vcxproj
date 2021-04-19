@@ -185,6 +185,7 @@
     <ClInclude Include="Src\Resources\ResourceSystem.h" />
     <ClInclude Include="Src\Utils\FileUtils.h" />
     <ClInclude Include="Src\World\Components\CameraComponent.h" />
+    <ClInclude Include="Src\World\Components\DirectionalLightComponent.h" />
     <ClInclude Include="Src\World\Components\EnvironmentComponent.h" />
     <ClInclude Include="Src\World\Components\IComponent.h" />
     <ClInclude Include="Src\World\Components\StaticMeshComponent.h" />
@@ -649,6 +650,7 @@
     <ClCompile Include="Src\Resources\ResourceSystem.cpp" />
     <ClCompile Include="Src\Utils\FileUtils.cpp" />
     <ClCompile Include="Src\World\Components\CameraComponent.cpp" />
+    <ClCompile Include="Src\World\Components\DirectionalLightComponent.cpp" />
     <ClCompile Include="Src\World\Components\EnvironmentComponent.cpp" />
     <ClCompile Include="Src\World\Components\IComponent.cpp" />
     <ClCompile Include="Src\World\Components\StaticMeshComponent.cpp" />

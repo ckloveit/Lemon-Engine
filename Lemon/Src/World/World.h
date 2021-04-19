@@ -27,8 +27,12 @@ namespace Lemon
         std::vector<Entity> GetAllEntities() const;
     private:
         void CreateMainCamera();
-        void InitRenderGeometry();
 		void CreateEnvironment(float SkySphereRadius = 1000.0f);
+
+    	//======Debug
+        void InitRenderGeometry();
+    	void CreateLight();
+    	
     private:
         entt::registry m_Registry;
         Entity MainCameraEntity;

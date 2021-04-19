@@ -44,7 +44,8 @@ namespace Lemon
 
 		//ConstantBuffer Update
 		void UpdateViewUniformBuffer(Entity mainCameraEntity) const;
-		
+
+		void UpdateLightUniformBuffer(const std::vector<Entity>& lightEntitys) const;
 		
 	private:
 		void InitGeometry();
