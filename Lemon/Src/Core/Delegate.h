@@ -1,6 +1,6 @@
 #pragma once
 
-#include <typeinfo.h>
+#include <typeinfo>
 #include <list>
 #include <vector>
 

@@ -11,6 +11,8 @@ namespace Lemon
     class LEMON_API Material
     {
     public:
+        Material();
+
         //=== Render Stage====//
         const Ref<RHIRasterizerState>& GetRasterizerState() const { return m_RasterizerState; }
         void SetRasterizerState(Ref<RHIRasterizerState>& state) { m_RasterizerState = state; }
@@ -27,7 +29,14 @@ namespace Lemon
         uint32_t GetTextureStartSlot() const { return m_TextureStartSlot; }
         std::vector<Ref<RHITexture>>& GetTextures() { return m_Textures; }
         const std::vector<Ref<RHITexture>> GetTextures() const { return m_Textures; }
-        
+
+    public:
+		//PBR Material Properties
+        glm::vec3 Albedo;
+        float Metallic;
+        float Roughness;
+        float AO;
+
     private:
         // Render State
         Ref<RHIBlendState> m_BlendState = nullptr;

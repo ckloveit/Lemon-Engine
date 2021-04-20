@@ -228,6 +228,9 @@
     <ClInclude Include="Src\World\Components\CameraComponent.h">
       <Filter>Src\World\Components</Filter>
     </ClInclude>
+    <ClInclude Include="Src\World\Components\DirectionalLightComponent.h">
+      <Filter>Src\World\Components</Filter>
+    </ClInclude>
     <ClInclude Include="Src\World\Components\EnvironmentComponent.h">
       <Filter>Src\World\Components</Filter>
     </ClInclude>
@@ -1514,6 +1517,9 @@
     <ClCompile Include="Src\Log\Log.cpp">
       <Filter>Src\Log</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Math\Math.cpp">
+      <Filter>Src\Math</Filter>
+    </ClCompile>
     <ClCompile Include="Src\RHI\D3D11\D3D11CommandList.cpp">
       <Filter>Src\RHI\D3D11</Filter>
     </ClCompile>
@@ -1605,6 +1611,9 @@
       <Filter>Src\Utils</Filter>
     </ClCompile>
     <ClCompile Include="Src\World\Components\CameraComponent.cpp">
+      <Filter>Src\World\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\World\Components\DirectionalLightComponent.cpp">
       <Filter>Src\World\Components</Filter>
     </ClCompile>
     <ClCompile Include="Src\World\Components\EnvironmentComponent.cpp">

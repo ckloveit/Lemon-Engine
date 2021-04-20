@@ -74,6 +74,9 @@ namespace Lemon
 			StaticMeshComponent& staticMesh2 = sphere.AddComponent<StaticMeshComponent>();
 			Ref<Mesh> sphereMesh = CreateRef<Sphere>();
 			staticMesh2.SetMesh(sphereMesh);
+			Ref<Material> renderMaterial = CreateRef<Material>();
+			sphereMesh->SetMaterial(renderMaterial);
+
 
 			//GridGizmo
 			GridGizmoEntity = CreateEntity("GridGizmo", true);
@@ -84,7 +87,7 @@ namespace Lemon
 			gridMeshComp.SetMesh(gridMesh);
 			Ref<RHIRasterizerState> rasterizerState = TStaticRasterizerState<RFM_Wireframe, RCM_None>::CreateRHI();
 
-			Ref<Material> renderMaterial = CreateRef<Material>();
+			renderMaterial = CreateRef<Material>();
 			renderMaterial->SetRasterizerState(rasterizerState);
 			renderMaterial->SetPrimitiveType(EPrimitiveType::PT_LineList);
 			// for mirror window, write RGBA, RGB = src.rgb * src.a + dst.rgb * (1 - src.a), A = src.a * 1 + dst.a * (1 - src a)

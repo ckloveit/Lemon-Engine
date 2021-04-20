@@ -75,6 +75,7 @@ namespace Lemon
 		uint32_t GetIndexCount() const {return (uint32_t)m_Indices.size(); }
 
 		const std::shared_ptr<Material>& GetMaterial() const { return m_RenderMaterial; }
+		std::shared_ptr<Material>& GetMaterial() { return m_RenderMaterial; }
 		void SetMaterial(std::shared_ptr<Material> material) { m_RenderMaterial = material; }
 
 		/*

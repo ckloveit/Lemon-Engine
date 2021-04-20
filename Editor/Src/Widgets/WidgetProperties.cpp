@@ -77,7 +77,38 @@ void WidgetProperties::DrawEntity(Lemon::Entity entity) const
 		bool open = ImGui::TreeNodeEx((void*)typeid(Lemon::TransformComponent).hash_code(), treeNodeFlags, "StaticMeshComponent");
 		if(open)
 		{
-			// 
+			Lemon::StaticMeshComponent& staticMeshComp = entity.GetComponent<Lemon::StaticMeshComponent>();
+			Lemon::Ref<Lemon::Material>& meshMaterial = staticMeshComp.GetRenderMesh()->GetMaterial();
+			if (meshMaterial)
+			{
+				// 
+				ImGui::Text("Material");
+
+				ImGui::Columns(2);
+				ImGui::SetColumnWidth(0, 100.0f);
+				ImGui::Text("Albedo");
+				ImGui::NextColumn();
+				ImGui::ColorEdit3("##1", (float*)&meshMaterial->Albedo.x);
+
+				ImGui::Columns(2);
+				ImGui::SetColumnWidth(0, 100.0f);
+				ImGui::Text("Metallic");
+				ImGui::NextColumn();
+				ImGui::DragFloat("##2", (float*)&meshMaterial->Metallic);
+
+				ImGui::Columns(2);
+				ImGui::SetColumnWidth(0, 100.0f);
+				ImGui::Text("Roughness");
+				ImGui::NextColumn();
+				ImGui::DragFloat("##3", (float*)&meshMaterial->Roughness);
+
+				ImGui::Columns(2);
+				ImGui::SetColumnWidth(0, 100.0f);
+				ImGui::Text("AO");
+				ImGui::NextColumn();
+				ImGui::DragFloat("##4", (float*)&meshMaterial->AO);
+			}
+
 			ImGui::TreePop();
 		}
 	}
