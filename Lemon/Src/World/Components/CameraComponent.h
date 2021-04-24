@@ -14,11 +14,12 @@ namespace Lemon
         ~CameraComponent() = default;
 
         void SetOrthographic(float size, float nearClip, float farClip);
-		void SetPerspective(float verticalFOV, float nearClip, float farClip);
+		void SetPerspective(float horizontalFOV, float nearClip, float farClip);
         void SetViewportSize(uint32_t width, uint32_t height);
 
-        float GetPerspectiveVerticalFOV() const { return m_PerspectiveFOV; }
-        void SetPerspectiveVerticalFOV(float verticalFov) { m_PerspectiveFOV = verticalFov; RecalculateProjection(); }
+        float GetPerspectiveVerticalFOV() const { return GetFovVerticalRadian(); }
+        void SetPerspectiveVerticalFOV(float horizontalFov) { m_PerspectiveFOVHorizontalRadian = horizontalFov; RecalculateProjection(); }
+
         float GetPerspectiveNearClip() const { return m_PerspectiveNear; }
         void SetPerspectiveNearClip(float nearClip) { m_PerspectiveNear = nearClip; RecalculateProjection(); }
         float GetPerspectiveFarClip() const { return m_PerspectiveFar; }
@@ -43,13 +44,14 @@ namespace Lemon
 
      private:
         void RecalculateProjection();   
+		float GetFovVerticalRadian() const;
      private:
         ProjectionType m_ProjectionType = ProjectionType::Perspective;   
         float m_AspectRatio = 1.0f;
         glm::mat4 m_ProjectionMatrix = glm::mat4(1.0f);
         
         // Perspective Properties
-        float m_PerspectiveFOV = glm::radians(90.0f);
+        float m_PerspectiveFOVHorizontalRadian = glm::radians(90.0f);
         float m_PerspectiveNear = 0.1f;
         float m_PerspectiveFar = 1000.0f;
 
@@ -58,6 +60,8 @@ namespace Lemon
         float m_OrthographicNear = -1.0f;
         float m_OrthographicFar  = 1.0f;
 
+		float m_ViewportSizeX = 1.0f;
+		float m_ViewportSizeY = 1.0f;
 
 		// Input
 		glm::vec3 m_MovementSpeed;

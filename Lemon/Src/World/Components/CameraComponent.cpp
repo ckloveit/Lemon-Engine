@@ -23,10 +23,10 @@ namespace Lemon
         m_OrthographicFar = farClip;
 		RecalculateProjection();
     }
-    void CameraComponent::SetPerspective(float verticalFOV, float nearClip, float farClip)
+    void CameraComponent::SetPerspective(float horizontalFOV, float nearClip, float farClip)
     {
         m_ProjectionType = ProjectionType::Perspective;
-        m_PerspectiveFOV = verticalFOV;
+		m_PerspectiveFOVHorizontalRadian = horizontalFOV;
         m_PerspectiveNear = nearClip;
         m_PerspectiveFar = farClip;
         RecalculateProjection();
@@ -35,6 +35,9 @@ namespace Lemon
     void CameraComponent::SetViewportSize(uint32_t width, uint32_t height)
     {
 		m_AspectRatio = (float)width / (float)height;
+		m_ViewportSizeX = width;
+		m_ViewportSizeY = height;
+
 		RecalculateProjection();
     }
 
@@ -44,7 +47,7 @@ namespace Lemon
         if(m_ProjectionType == ProjectionType::Perspective)
         {
 			// caution : for Direct3D the perspective need in LR and Zero to One 
-            m_ProjectionMatrix = glm::perspectiveLH_ZO(m_PerspectiveFOV, m_AspectRatio, m_PerspectiveNear, m_PerspectiveFar);
+            m_ProjectionMatrix = glm::perspectiveLH_ZO(GetFovVerticalRadian(), m_AspectRatio, m_PerspectiveNear, m_PerspectiveFar);
         }
         else
         {
@@ -56,9 +59,12 @@ namespace Lemon
             m_ProjectionMatrix = glm::ortho(orthoLeft, orthoRight,
                 orthoBottom, orthoTop, m_OrthographicNear, m_OrthographicFar);
         }
-
     }
 
+	float CameraComponent::GetFovVerticalRadian() const
+	{
+		return 2.0f * atan(tan(m_PerspectiveFOVHorizontalRadian / 2.0f) * (m_ViewportSizeY / m_ViewportSizeX));
+	}
 
 	const glm::mat4& CameraComponent::GetViewMatrix() const
 	{
@@ -99,6 +105,8 @@ namespace Lemon
 			if (inputSystem->GetKey(KeyCode::S)) direction += transformComp.GetBackVector();
 			if (inputSystem->GetKey(KeyCode::D)) direction += transformComp.GetRightVector();
 			if (inputSystem->GetKey(KeyCode::A)) direction += transformComp.GetLeftVector();
+			if (inputSystem->GetKey(KeyCode::Q)) direction += transformComp.GetUpVector();
+			if (inputSystem->GetKey(KeyCode::E)) direction += transformComp.GetDownVector();
 
 			// Compute speed
 			m_MovementSpeed += direction * movementAcceration;
