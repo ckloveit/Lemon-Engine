@@ -1,4 +1,5 @@
-#pragma once
+#ifndef HLSL_BRDF_INCLUDE
+#define HLSL_BRDF_INCLUDE
 // Physically based shading model
 // parameterized with the below options
 
@@ -47,3 +48,10 @@ float Vis_GeometrySmith(float3 N, float3 V, float3 L, float roughness)
 
 	return ggx1 * ggx2;
 }
+
+float3 Fresnel_Schlick(float cosTheta, float3 F0)
+{
+	return F0 + (1.0 - F0) * pow(1.0f - cosTheta, 5.0);
+}
+
+#endif

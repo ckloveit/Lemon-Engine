@@ -33,6 +33,9 @@ namespace Lemon
         void InitRenderGeometry();
     	void CreateLight();
     	
+
+		// Create Test Sphere
+		void CreateTestSphere();
     private:
         entt::registry m_Registry;
         Entity MainCameraEntity;

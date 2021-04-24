@@ -84,29 +84,21 @@ void WidgetProperties::DrawEntity(Lemon::Entity entity) const
 				// 
 				ImGui::Text("Material");
 
-				ImGui::Columns(2);
-				ImGui::SetColumnWidth(0, 100.0f);
 				ImGui::Text("Albedo");
-				ImGui::NextColumn();
+				ImGui::SameLine(120.0f);
 				ImGui::ColorEdit3("##1", (float*)&meshMaterial->Albedo.x);
 
-				ImGui::Columns(2);
-				ImGui::SetColumnWidth(0, 100.0f);
 				ImGui::Text("Metallic");
-				ImGui::NextColumn();
-				ImGui::DragFloat("##2", (float*)&meshMaterial->Metallic);
+				ImGui::SameLine(120.0f);
+				ImGui::DragFloat("##2", (float*)&meshMaterial->Metallic, 0.001,0, 1);
 
-				ImGui::Columns(2);
-				ImGui::SetColumnWidth(0, 100.0f);
 				ImGui::Text("Roughness");
-				ImGui::NextColumn();
-				ImGui::DragFloat("##3", (float*)&meshMaterial->Roughness);
+				ImGui::SameLine(120.0f);
+				ImGui::DragFloat("##3", (float*)&meshMaterial->Roughness, 0.001,0, 1);
 
-				ImGui::Columns(2);
-				ImGui::SetColumnWidth(0, 100.0f);
 				ImGui::Text("AO");
-				ImGui::NextColumn();
-				ImGui::DragFloat("##4", (float*)&meshMaterial->AO);
+				ImGui::SameLine(120.0f);
+				ImGui::DragFloat("##4", (float*)&meshMaterial->AO, 0.001,0, 1);
 			}
 
 			ImGui::TreePop();

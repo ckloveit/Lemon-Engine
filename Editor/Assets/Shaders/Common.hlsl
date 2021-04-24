@@ -1,5 +1,9 @@
+#ifndef HLSL_COMMON_INCLUDE
+#define HLSL_COMMON_INCLUDE
+
 #include "CommonBuffer.hlsl"
 #include "CommonSampler.hlsl"
+#include "BRDF.hlsl"
 
 #define MAX_MESH_TEXTURE_COORDS 2
 struct VertexInput
@@ -10,3 +14,6 @@ struct VertexInput
 	float3 Tangent : ATTRIBUTE3;
 	float2 Texcoords[MAX_MESH_TEXTURE_COORDS] : ATTRIBUTE4;
 };
+
+
+#endif

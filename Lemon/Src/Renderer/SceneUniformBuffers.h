@@ -15,7 +15,8 @@ namespace Lemon
         glm::mat4 ViewMatrix;
         glm::mat4 ProjectionMatrix;
         glm::mat4 ViewProjectionMatrix;
-
+        glm::vec4 CameraWorldPosition;
+        glm::vec4 AmbientColor;
         glm::vec3 TestColor;
     };
     
@@ -34,6 +35,8 @@ namespace Lemon
         glm::mat4 LocalToWorldMatrix;
         glm::mat4 WorldToWorldMatrix;
         glm::mat4 WorldToWorldTransposeMatrix;
+        glm::vec4 Albedo;
+        glm::vec4 PBRParameters;//x : Metallic; y : Roughness; z : AO 
         
         glm::vec4 Color;
         
@@ -41,7 +44,9 @@ namespace Lemon
         {
             return
                 LocalToWorldMatrix == rhs.LocalToWorldMatrix &&
-                Color == rhs.Color;
+                Color == rhs.Color &&
+                Albedo == rhs.Albedo &&
+                PBRParameters == rhs.PBRParameters;
         }
     };
 

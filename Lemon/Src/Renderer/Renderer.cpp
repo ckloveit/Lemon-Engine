@@ -138,9 +138,8 @@ namespace Lemon
 		parameters.LocalToWorldMatrix = transformComp.GetTransform();
 		parameters.WorldToWorldMatrix = glm::inverse(transformComp.GetTransform());
 		parameters.WorldToWorldTransposeMatrix = glm::transpose(parameters.WorldToWorldMatrix);
-		
+
 		parameters.Color = glm::vec4(1.0f, 1.0f, 0.0f, 1.0f);
-		m_SceneUniformBuffers->ObjectUniformBuffer->UpdateUniformBufferImmediate(parameters);
 
 		// Set PSO
 		GraphicsPipelineStateInitializer PSOInit;
@@ -149,15 +148,23 @@ namespace Lemon
 		PSOInit.BoundShaderState.VertexDeclarationRHI = staticMeshComp.GetRenderMesh()->GetVertexDeclaration();
 		if(staticMeshComp.GetRenderMesh()->GetMaterial())
 		{
+			Ref<Material> mat = staticMeshComp.GetRenderMesh()->GetMaterial();
 			PSOInit.PrimitiveType = staticMeshComp.GetRenderMesh()->GetMaterial()->GetPrimitiveType();//EPrimitiveType::PT_TriangleList;
 			PSOInit.BlendState = staticMeshComp.GetRenderMesh()->GetMaterial()->GetBlendState();
 			PSOInit.RasterizerState = staticMeshComp.GetRenderMesh()->GetMaterial()->GetRasterizerState();
 			PSOInit.DepthStencilState = staticMeshComp.GetRenderMesh()->GetMaterial()->GetDepthStencilState();
-		}else
-		{
-			PSOInit.PrimitiveType = EPrimitiveType::PT_TriangleList;
-			
+			//PBR Properties
+			parameters.Albedo = glm::vec4(mat->Albedo, 1.0f);
+			parameters.PBRParameters = glm::vec4(mat->Metallic, mat->Roughness, mat->AO, 1.0f);
 		}
+		else
+		{
+			parameters.Albedo = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);// default 
+			parameters.PBRParameters = glm::vec4(0.0f, 1.0f, 1.0f,1.0f);// default 
+			PSOInit.PrimitiveType = EPrimitiveType::PT_TriangleList;
+		}
+
+		m_SceneUniformBuffers->ObjectUniformBuffer->UpdateUniformBufferImmediate(parameters);
 		
 		m_RHICommandList->SetGraphicsPipelineState(PSOInit);
 
@@ -292,7 +299,7 @@ namespace Lemon
 		parameters.ViewMatrix = mainCameraComp.GetViewMatrix(); //glm::inverse(transformComp.GetTransform());
 		parameters.ProjectionMatrix = mainCameraComp.GetProjectionMatrix();
 		parameters.ViewProjectionMatrix = parameters.ProjectionMatrix * parameters.ViewMatrix;
-
+		parameters.CameraWorldPosition = glm::vec4(transformComp.Position, 1.0f);
 		//glm::vec4 debugPoint1 = parameters.ViewMatrix * glm::vec4(-0.5f, 0.5f, 1.0f, 1.0f);
 		//glm::vec4 debugPoint = parameters.ProjectionMatrix * debugPoint1;
 		

@@ -70,13 +70,8 @@ namespace Lemon
 			staticMesh1.SetMesh(cubeMesh);
 			cubeEntity = cube;
 
-			Entity sphere = CreateEntity("Sphere");
-			StaticMeshComponent& staticMesh2 = sphere.AddComponent<StaticMeshComponent>();
-			Ref<Mesh> sphereMesh = CreateRef<Sphere>();
-			staticMesh2.SetMesh(sphereMesh);
-			Ref<Material> renderMaterial = CreateRef<Material>();
-			sphereMesh->SetMaterial(renderMaterial);
-
+			
+			CreateTestSphere();
 
 			//GridGizmo
 			GridGizmoEntity = CreateEntity("GridGizmo", true);
@@ -87,7 +82,7 @@ namespace Lemon
 			gridMeshComp.SetMesh(gridMesh);
 			Ref<RHIRasterizerState> rasterizerState = TStaticRasterizerState<RFM_Wireframe, RCM_None>::CreateRHI();
 
-			renderMaterial = CreateRef<Material>();
+			Ref<Material> renderMaterial = CreateRef<Material>();
 			renderMaterial->SetRasterizerState(rasterizerState);
 			renderMaterial->SetPrimitiveType(EPrimitiveType::PT_LineList);
 			// for mirror window, write RGBA, RGB = src.rgb * src.a + dst.rgb * (1 - src.a), A = src.a * 1 + dst.a * (1 - src a)
@@ -103,6 +98,8 @@ namespace Lemon
 		}
     }
 
+
+	
 	void World::CreateLight()
     {
     	Entity directionalLightEntity = CreateEntity("DirectionalLight");
@@ -201,5 +198,38 @@ namespace Lemon
 	    }
     	
     }
+
+	//////////////////////////////////////////////////////////////////////////
+#include <sstream>
+	void World::CreateTestSphere()
+	{
+		float metallic = 0.0f;
+		float roughness = 0.0f;
+		glm::vec3 position = glm::vec3(0, 0, 0);
+		for (int i = 0; i < 1; i++)
+		{
+			metallic = i * 0.1f;
+			for (int j = 0; j < 1; j++)
+			{
+				roughness = j * 0.1f;
+
+				std::stringstream ss;
+				ss << "metallic" << metallic << "roughness" << roughness;
+				Entity sphere = CreateEntity("Sphere" + ss.str());
+				
+				StaticMeshComponent& staticMesh2 = sphere.AddComponent<StaticMeshComponent>();
+				TransformComponent& transformComp = sphere.GetComponent<TransformComponent>();
+				transformComp.Position = position + glm::vec3(i * 2.5f, 0.0f, 0.0f) + glm::vec3(0.0f, j * 2.5f, 0);
+				Ref<Mesh> sphereMesh = CreateRef<Sphere>();
+				staticMesh2.SetMesh(sphereMesh);
+				Ref<Material> renderMaterial = CreateRef<Material>();
+				renderMaterial->Metallic = metallic;
+				renderMaterial->Roughness = roughness;
+				sphereMesh->SetMaterial(renderMaterial);
+			}
+		}
+		
+	}
+
 }
 
