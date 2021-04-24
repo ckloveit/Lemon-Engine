@@ -47,7 +47,7 @@ void WidgetViewport::Tick(float deltaTime)
 		if(input->GetKeyDown(KeyCode::R)) m_GizmoType = ImGuizmo::OPERATION::ROTATE;
 */		
 	}
-	
+	//Draw ToolBar
 	bool gameView = false;
 	if(!gameView)
 	{
@@ -92,8 +92,22 @@ void WidgetViewport::DrawGizmoHandle()
 
 	float windowWidth = (float)ImGui::GetWindowWidth();
 	float windowHeight = (float)ImGui::GetWindowHeight();
-	ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
 
+	/*InputSystem* input1 = m_Renderer->GetEngine()->GetSystem<InputSystem>();
+	if (input1->GetKeyDown(KeyCode::Z))
+	{
+		LEMON_CORE_INFO("windowWidth = {0}, windowHeight = {1}, m_ViewportSize.X = {2}, m_ViewportSize.Y = {3}",
+			windowWidth, windowHeight, m_ViewportSize.x, m_ViewportSize.y);
+		LEMON_CORE_INFO("ImGui::GetWindowPos().x = {0}, ImGui::GetWindowPos().y = {1}",
+			ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
+		LEMON_CORE_INFO("startPosX = {0}, startPosY = {1}",
+			startPosX, startPosY);
+	}*/
+
+	float diff = (windowHeight - m_ViewportSize.y);
+	ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y + diff, m_ViewportSize.x, m_ViewportSize.y);
+
+	//ImGuizmo::SetRect(0, 0, windowWidth, windowHeight);
 	// Camera
 	//auto cameraEntity = m_ActiveScene->GetPrimaryCameraEntity();
 	//const auto& camera = cameraEntity.GetComponent<CameraComponent>().Camera;
