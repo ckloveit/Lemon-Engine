@@ -87,6 +87,33 @@ namespace Lemon
 		//=========================================
 	};
 
+	class D3D11TextureCube : public RHITextureCube, public D3D11TextureBase
+	{
+	public:
+		D3D11TextureCube(class D3D11DynamicRHI* D3D11RHI,
+			ID3D11Texture2D* resource,
+			ID3D11ShaderResourceView* shaderResourceView,
+			const std::vector<ID3D11RenderTargetView*>& renderTargetViews,
+			ID3D11DepthStencilView* depthStencilView,
+			uint32_t sizeX, uint32_t sizeY, uint32_t numMips, ERHIPixelFormat textureFormat)
+			: RHITextureCube(sizeX, sizeY, numMips, textureFormat)
+			, D3D11TextureBase(D3D11RHI, resource, shaderResourceView, renderTargetViews, depthStencilView)
+		{
+
+		}
+
+		//=========RHI Resource====================
+		virtual void* GetNativeResource() override final { return GetResource(); }
+
+		virtual void* GetNativeShaderResourceView() override final { return GetShaderResourceView(); }
+
+		virtual void* GetNativeRenderTargetView() override final { return GetRenderTargetViews().size() ? GetRenderTargetViews()[0] : nullptr; }
+
+		virtual void* GetNativeDepthStencilView() override final { return GetDepthStencilView(); };
+		//=========================================
+	};
+
+
 	//===========================================================//
 
 

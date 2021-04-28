@@ -149,6 +149,7 @@ namespace Lemon
 
 		//=========Dynamic cast methods=============
 		virtual class RHITexture2D* GetTexture2D() { return nullptr; }
+		virtual class RHITextureCube* GetTextureCube() { return nullptr; }
 
 
 		//=========================================
@@ -187,6 +188,28 @@ namespace Lemon
 		uint32_t m_SizeX;
 		uint32_t m_SizeY;
 	};
+
+	class LEMON_API RHITextureCube : public RHITexture
+	{
+	public:
+		/** Initialization constructor. */
+		RHITextureCube(uint32_t sizeX, uint32_t sizeY, uint32_t numMips, ERHIPixelFormat textureFormat)
+			: RHITexture(numMips, textureFormat)
+			, m_SizeX(sizeX)
+			, m_SizeY(sizeY)
+		{}
+		// ====Dynamic cast methods.
+		virtual RHITextureCube* GetTextureCube() override { return this; }
+
+		uint32_t GetSizeX() const { return m_SizeX; }
+		uint32_t GetSizeY() const { return m_SizeY; }
+
+	private:
+		uint32_t m_SizeX;
+		uint32_t m_SizeY;
+	};
+
+
 	//===========================================================//
 
 	//

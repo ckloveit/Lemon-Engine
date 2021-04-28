@@ -206,12 +206,10 @@ namespace Lemon::D3D11
 		textureDesc.Format = format;
 		textureDesc.SampleDesc.Count = 1;
 		textureDesc.SampleDesc.Quality = 0;
-		textureDesc.Usage = (bindFlags & D3D11_BIND_RENDER_TARGET) || (bindFlags & D3D11_BIND_DEPTH_STENCIL) ? D3D11_USAGE_IMMUTABLE : D3D11_USAGE_DEFAULT;
+		textureDesc.Usage = (bindFlags & D3D11_BIND_RENDER_TARGET) || (bindFlags & D3D11_BIND_DEPTH_STENCIL) ? D3D11_USAGE_DEFAULT : D3D11_USAGE_IMMUTABLE;
 		textureDesc.BindFlags = bindFlags;
 		textureDesc.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
 		textureDesc.CPUAccessFlags = 0;
-
-
 
 		vector<D3D11_SUBRESOURCE_DATA> subresourceDatas;
 		vector<D3D11_TEXTURE2D_DESC> textureCubeDesc;

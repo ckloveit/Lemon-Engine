@@ -40,6 +40,15 @@ namespace Lemon
 		std::string DebugName;
 	};
 
+	struct RHITextureCubeCreateInfo
+	{
+		// for CreateTextureArray uses, the size is texture size
+		std::vector<TextureRawData> TextureArrayDatas;
+		// for Debug use
+		std::string DebugName;
+	};
+
+
 	struct RHIShaderCreateInfo
 	{
 	public:

@@ -32,7 +32,7 @@ namespace Lemon
 
 		virtual Ref<RHITexture2D> RHICreateTexture2D(uint32_t sizeX, uint32_t sizeY, ERHIPixelFormat format, uint32_t numMips, uint32_t createFlags, RHIResourceCreateInfo& CreateInfo) override;
 		
-		virtual Ref<RHITexture2D> RHICreateTextureCube(uint32_t sizeX, uint32_t sizeY, ERHIPixelFormat format, uint32_t numMips, uint32_t createFlags, RHIResourceCreateInfo& CreateInfo) override;
+		virtual Ref<RHITextureCube> RHICreateTextureCube(uint32_t sizeX, uint32_t sizeY, ERHIPixelFormat format, uint32_t numMips, uint32_t createFlags, RHITextureCubeCreateInfo& CreateInfo) override;
 
 		virtual Ref<RHIVertexBuffer> RHICreateVertexBuffer(uint32_t size, uint32_t usage, RHIResourceCreateInfo& createInfo) override;
 

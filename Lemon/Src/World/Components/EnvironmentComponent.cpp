@@ -26,8 +26,7 @@ namespace Lemon
 		}
 
 		//
-		RHIResourceCreateInfo createInfo;
-		createInfo.bUsedForTextureArray = true;
+		RHITextureCubeCreateInfo createInfo;
 		for (int i = 0; i < textureInfoDatas.size(); i++)
 		{
 			createInfo.TextureArrayDatas.emplace_back(textureInfoDatas[i].RawData);

@@ -53,7 +53,7 @@ namespace Lemon
 		return nullptr;
 	}
 
-	Ref<RHITexture2D> D3D11DynamicRHI::RHICreateTextureCube(uint32_t sizeX, uint32_t sizeY, ERHIPixelFormat format, uint32_t numMips, uint32_t createFlags, RHIResourceCreateInfo& createInfo)
+	Ref<RHITextureCube> D3D11DynamicRHI::RHICreateTextureCube(uint32_t sizeX, uint32_t sizeY, ERHIPixelFormat format, uint32_t numMips, uint32_t createFlags, RHITextureCubeCreateInfo& createInfo)
 	{
 		UINT bindFlags = D3D11::GetD3D11TextureResourceBindFlags(createFlags);
 
@@ -89,7 +89,7 @@ namespace Lemon
 		}*/
 		if (bTexResult && bSRVResult && bRTVResult && bDSVResult)
 		{
-			return CreateRef<D3D11Texture2D>(this, texture, textureSRV, textureRTVs, textureDSV, sizeX, sizeY, numMips, format);
+			return CreateRef<D3D11TextureCube>(this, texture, textureSRV, textureRTVs, textureDSV, sizeX, sizeY, numMips, format);
 		}
 		return nullptr;
 	}

@@ -36,7 +36,7 @@ namespace Lemon
 
 		virtual Ref<RHITexture2D> RHICreateTexture2D(uint32_t sizeX, uint32_t sizeY, ERHIPixelFormat format, uint32_t numMips, uint32_t createFlags, RHIResourceCreateInfo& CreateInfo) = 0;
 		
-		virtual Ref<RHITexture2D> RHICreateTextureCube(uint32_t sizeX, uint32_t sizeY, ERHIPixelFormat format, uint32_t numMips, uint32_t createFlags, RHIResourceCreateInfo& CreateInfo) = 0;
+		virtual Ref<RHITextureCube> RHICreateTextureCube(uint32_t sizeX, uint32_t sizeY, ERHIPixelFormat format, uint32_t numMips, uint32_t createFlags, RHITextureCubeCreateInfo& CreateInfo) = 0;
 
 		//=========Buffers========//
 		virtual Ref<RHIVertexBuffer> RHICreateVertexBuffer(uint32_t size, uint32_t usage, RHIResourceCreateInfo& createInfo) = 0;
@@ -109,7 +109,7 @@ namespace Lemon
 		return g_DynamicRHI->RHICreateTexture2D(sizeX, sizeY, format, numMips, createFlags, CreateInfo);
 	}
 
-	FORCEINLINE Ref<RHITexture2D> RHICreateTextureCube(uint32_t sizeX, uint32_t sizeY, ERHIPixelFormat format, uint32_t numMips, uint32_t createFlags, RHIResourceCreateInfo& CreateInfo)
+	FORCEINLINE Ref<RHITextureCube> RHICreateTextureCube(uint32_t sizeX, uint32_t sizeY, ERHIPixelFormat format, uint32_t numMips, uint32_t createFlags, RHITextureCubeCreateInfo& CreateInfo)
 	{
 		return g_DynamicRHI->RHICreateTextureCube(sizeX, sizeY, format, numMips, createFlags, CreateInfo);
 	}
