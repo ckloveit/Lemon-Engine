@@ -23,7 +23,7 @@ namespace Lemon
 		template<typename... Args>
 		decltype(auto) EmplaceBack(Args&& ... args)
 		{
-			m_Resource.emplace_back(std::forward<Args>(args)...);
+			return m_Resource.emplace_back(std::forward<Args>(args)...);
 		}
 
 		void PushBack(const ElementType& value)

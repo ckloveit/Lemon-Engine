@@ -5,7 +5,7 @@
 #include "RHI/DynamicRHI.h"
 #include "Log/Log.h"
 #include "RHI/RHISwapChain.h"
-#include "Containers/DynamicRHIResourceArray.h"
+#include "RenderCore/Containers/DynamicRHIResourceArray.h"
 #include <glm/gtc/random.hpp>
 #include "Core/Timer.h"
 #include "World/World.h"
@@ -14,6 +14,8 @@
 #include "World/Components/EnvironmentComponent.h"
 #include "World/Components/StaticMeshComponent.h"
 #include "World/Components/TransformComponent.h"
+#include "RenderCore/GlobalRenderResources.h"
+#include "RenderCore/PixelShaderUtils.h"
 
 namespace Lemon
 {
@@ -66,6 +68,9 @@ namespace Lemon
 		
 		m_SceneUniformBuffers = CreateRef<SceneUniformBuffers>();
 		
+		m_GlobalRenderResources = CreateRef<GlobalRenderResources>();
+		m_GlobalRenderResources->Init();
+
 		// Init Others
 		InitGeometry();
 		return true;
@@ -79,6 +84,7 @@ namespace Lemon
 	
 	void Renderer::InitGeometry()
 	{
+		m_FullScreenQuad = CreateRef<Quad>();
 		return;
 
 #if 0
@@ -199,11 +205,6 @@ namespace Lemon
 	}
 	void Renderer::Tick(float deltaTime)
 	{
-		m_RHICommandList->SetViewport(m_Viewport);
-		m_RHICommandList->SetRenderTarget(GetSceneRenderTargets()->GetSceneColorTexture(), GetSceneRenderTargets()->GetSceneDepthTexture());
-		m_RHICommandList->RHIClearRenderTarget(GetSceneRenderTargets()->GetSceneColorTexture(),glm::vec4(0.1f, 0.4f, 0.7f, 1.0f),
-			GetSceneRenderTargets()->GetSceneDepthTexture());
-
 		std::vector<Entity> entitys = m_World->GetAllEntities();
 		
 		// classify the entity types
@@ -231,6 +232,20 @@ namespace Lemon
 				normalEntitys.emplace_back(entitys[i]);
 			}
 		}
+
+		static bool bHasPreComputeIBL = false;
+		// Image-Base-Lighting
+		if (!bHasPreComputeIBL)
+		{
+			//PreComputeIBL(environmentEntitys);
+			bHasPreComputeIBL = true;
+		}
+
+		// Set Render Target
+		m_RHICommandList->SetViewport(m_Viewport);
+		m_RHICommandList->SetRenderTarget(GetSceneRenderTargets()->GetSceneColorTexture(), GetSceneRenderTargets()->GetSceneDepthTexture());
+		m_RHICommandList->RHIClearRenderTarget(GetSceneRenderTargets()->GetSceneColorTexture(), glm::vec4(0.1f, 0.4f, 0.7f, 1.0f),
+			GetSceneRenderTargets()->GetSceneDepthTexture());
 
 		Entity mainCameraEntity = m_World->GetMainCamera();
 		// Update View UniformBuffer
@@ -273,6 +288,8 @@ namespace Lemon
 			}
 		}
 
+		// Test
+		PreComputeIBL(environmentEntitys);
 	}
 
 	void Renderer::UpdateViewUniformBuffer(Entity mainCameraEntity) const
@@ -308,7 +325,6 @@ namespace Lemon
 		m_SceneUniformBuffers->ViewUniformBuffer->UpdateUniformBufferImmediate(parameters);
 	}
 
-	
 	void Renderer::UpdateLightUniformBuffer(const std::vector<Entity>& lightEntitys) const
 	{
 		m_RHICommandList->SetUniformBuffer(m_SceneUniformBuffers->LightUniformBuffer->GetSlotIndex(),
@@ -331,5 +347,64 @@ namespace Lemon
 
 		m_SceneUniformBuffers->LightUniformBuffer->UpdateUniformBufferImmediate(parameters);
 	}
-	
+
+	void Renderer::PreComputeIBL(std::vector<Entity>& environmentEntitys)
+	{
+		// Set Render Target
+		m_RHICommandList->SetViewport(m_Viewport);
+		m_RHICommandList->SetRenderTarget(GetSceneRenderTargets()->GetSceneColorTexture(), GetSceneRenderTargets()->GetSceneDepthTexture());
+
+		FullScreenUniformParameters fullScreenParameter;
+		fullScreenParameter.LocalToWorldMatrix = glm::mat4();
+		DrawFullScreenQuad(fullScreenParameter);
+		return;
+
+		// Pre-Compute-Diffuse-irradiance
+		for (int i = 0; i < environmentEntitys.size(); i++)
+		{
+			EnvironmentComponent& envComp = environmentEntitys[i].GetComponent<EnvironmentComponent>();
+			envComp.InitEnvDiffuseIrradianceTexture();
+
+			//
+			Ref<RHITextureCube> IrradianceDiffuseTex = envComp.GetEnvDiffuseIrradiance();
+
+			// Set Render Target
+			Viewport viewport(0, 0, IrradianceDiffuseTex->GetSizeX(), IrradianceDiffuseTex->GetSizeY());
+			m_RHICommandList->SetViewport(viewport);
+			m_RHICommandList->SetRenderTarget(IrradianceDiffuseTex, i, nullptr);
+			m_RHICommandList->RHIClearRenderTarget(IrradianceDiffuseTex, i, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f),
+				nullptr);
+			// DrawFullScreen
+			FullScreenUniformParameters fullScreenParameter;
+			fullScreenParameter.LocalToWorldMatrix = glm::mat4();
+
+			DrawFullScreenQuad(fullScreenParameter);
+		}
+	}
+
+	void Renderer::DrawFullScreenQuad(FullScreenUniformParameters fullScreenParameter)
+	{
+		// Update ObjectBuffer
+		m_RHICommandList->SetUniformBuffer(m_SceneUniformBuffers->FullScreenUniformBuffer->GetSlotIndex(),
+			EUniformBufferUsageScope::UBUS_Vertex | EUniformBufferUsageScope::UBUS_Pixel,
+			m_SceneUniformBuffers->FullScreenUniformBuffer->UniformBuffer());
+
+		m_SceneUniformBuffers->FullScreenUniformBuffer->UpdateUniformBufferImmediate(fullScreenParameter);
+		//
+		static std::shared_ptr<RHIVertexShader> FullScreenVertexShader = nullptr;
+		static std::shared_ptr<RHIPixelShader> FullScreenPixelShader = nullptr;
+		static std::shared_ptr<RHIVertexDeclaration> FullScreenVertexDeclaration = nullptr;
+		if (FullScreenVertexShader == nullptr)
+		{
+			RHIShaderCreateInfo shaderCreateInfo;
+			FullScreenVertexShader = RHICreateVertexShader("Assets/Shaders/SimpleFullScreenVertex.hlsl", "MainVS", shaderCreateInfo);
+			FullScreenPixelShader = RHICreatePixelShader("Assets/Shaders/SimpleFullScreenPixel.hlsl", "MainPS", shaderCreateInfo);
+			if (GlobalRenderResources::GetInstance())
+			{
+				FullScreenVertexDeclaration = RHICreateVertexDeclaration(FullScreenVertexShader, GlobalRenderResources::GetInstance()->StandardMeshVertexDeclarationElementList);
+			}
+		}
+		PixelShaderUtils::DrawFullScreenQuad(m_RHICommandList, FullScreenVertexDeclaration, FullScreenVertexShader, FullScreenPixelShader);
+		
+	}
 }

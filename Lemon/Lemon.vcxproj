@@ -138,8 +138,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Src\Containers\DynamicRHIResourceArray.h" />
-    <ClInclude Include="Src\Containers\ResourceArray.h" />
+    <ClInclude Include="Src\RenderCore\Containers\DynamicRHIResourceArray.h" />
+    <ClInclude Include="Src\RenderCore\Containers\ResourceArray.h" />
     <ClInclude Include="Src\Core\Core.h" />
     <ClInclude Include="Src\Core\Delegate.h" />
     <ClInclude Include="Src\Core\Engine.h" />
@@ -153,6 +153,10 @@
     <ClInclude Include="Src\LemonPCH.h" />
     <ClInclude Include="Src\Log\Log.h" />
     <ClInclude Include="Src\Math\Math.h" />
+    <ClInclude Include="Src\RenderCore\Geometry\Quad.h" />
+    <ClInclude Include="Src\RenderCore\GlobalRenderResources.h" />
+    <ClInclude Include="Src\RenderCore\PixelShaderUtils.h" />
+    <ClInclude Include="Src\RenderCore\VertexDeclarationStruct.h" />
     <ClInclude Include="Src\RHI\D3D11\D3D11CommandList.h" />
     <ClInclude Include="Src\RHI\D3D11\D3D11DynamicRHI.h" />
     <ClInclude Include="Src\RHI\D3D11\D3D11RHI.h" />
@@ -619,6 +623,9 @@
     </ClCompile>
     <ClCompile Include="Src\Log\Log.cpp" />
     <ClCompile Include="Src\Math\Math.cpp" />
+    <ClCompile Include="Src\RenderCore\Geometry\Quad.cpp" />
+    <ClCompile Include="Src\RenderCore\GlobalRenderResources.cpp" />
+    <ClCompile Include="Src\RenderCore\PixelShaderUtils.cpp" />
     <ClCompile Include="Src\RHI\D3D11\D3D11CommandList.cpp" />
     <ClCompile Include="Src\RHI\D3D11\D3D11DynamicRHI.cpp" />
     <ClCompile Include="Src\RHI\D3D11\D3D11IndexBuffer.cpp" />

@@ -23,6 +23,7 @@ namespace Lemon
 		{
 
 		}
+
 		virtual ~D3D11TextureBase()
 		{
 			D3D11::SafeRelease(m_Resource);
@@ -81,7 +82,7 @@ namespace Lemon
 
 		virtual void* GetNativeShaderResourceView() override final { return GetShaderResourceView(); }
 
-		virtual void* GetNativeRenderTargetView() override final { return GetRenderTargetViews().size() ? GetRenderTargetViews()[0] : nullptr; }
+		virtual void* GetNativeRenderTargetView(int index) override final { return index < GetRenderTargetViews().size() ? GetRenderTargetViews()[index] : nullptr; }
 
 		virtual void* GetNativeDepthStencilView() override final { return GetDepthStencilView();};
 		//=========================================
@@ -107,7 +108,7 @@ namespace Lemon
 
 		virtual void* GetNativeShaderResourceView() override final { return GetShaderResourceView(); }
 
-		virtual void* GetNativeRenderTargetView() override final { return GetRenderTargetViews().size() ? GetRenderTargetViews()[0] : nullptr; }
+		virtual void* GetNativeRenderTargetView(int index) override final { return index < GetRenderTargetViews().size() ? GetRenderTargetViews()[index] : nullptr; }
 
 		virtual void* GetNativeDepthStencilView() override final { return GetDepthStencilView(); };
 		//=========================================

@@ -78,10 +78,10 @@ namespace Lemon
 		}
 		
 		std::vector<ID3D11RenderTargetView*> textureRTVs;
-		/*if (IsRenderTarget(createFlags))
+		if (IsRenderTarget(createFlags))
 		{
-			bRTVResult = D3D11::CreateRenderTargetView2D(this, texture, 1, D3Dformat, textureRTVs);
-		}*/
+			bRTVResult = D3D11::CreateRenderTargetViewCube(this, texture, 1, D3Dformat, textureRTVs);
+		}
 		ID3D11DepthStencilView* textureDSV = nullptr;
 		/*if (IsDepthStencil(createFlags))
 		{

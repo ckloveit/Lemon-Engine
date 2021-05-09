@@ -49,7 +49,12 @@ namespace Lemon
                 PBRParameters == rhs.PBRParameters;
         }
     };
+	// High frequency - Updates at least as many times as there are many fullscreenquad drawcall in one frame
+	struct FullScreenUniformParameters
+	{
+		glm::mat4 LocalToWorldMatrix;
 
+	};
     
     
     struct LEMON_API SceneUniformBuffers
@@ -62,6 +67,7 @@ namespace Lemon
         Ref<RHIUniformBuffer<ViewUniformParameters>> ViewUniformBuffer;
         Ref<RHIUniformBuffer<ObjectUniformParameters>> ObjectUniformBuffer;
         Ref<RHIUniformBuffer<LightUniformParameters>> LightUniformBuffer;
+		Ref<RHIUniformBuffer<FullScreenUniformParameters>> FullScreenUniformBuffer;
         
     };
 

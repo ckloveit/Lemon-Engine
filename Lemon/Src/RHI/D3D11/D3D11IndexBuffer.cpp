@@ -2,7 +2,7 @@
 #include "RHI/D3D11/D3D11Resources.h"
 #include "RHI/D3D11/D3D11RHI.h"
 #include "RHI/D3D11/D3D11Utils.h"
-#include "Containers/ResourceArray.h"
+#include "RenderCore/Containers/ResourceArray.h"
 
 namespace Lemon
 {

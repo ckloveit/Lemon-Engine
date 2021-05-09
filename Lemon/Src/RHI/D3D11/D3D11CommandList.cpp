@@ -25,9 +25,23 @@ namespace Lemon
 	void D3D11CommandList::RHIClearRenderTarget(Ref<RHITexture2D> renderTarget, glm::vec4 backgroundColor,
             Ref<RHITexture2D> depthStencilTarget, float depthClear, float stencilClear)
 	{
-		const void* rtvs[1] = { renderTarget->GetNativeRenderTargetView() };
-		m_D3D11RHI->GetDeviceContext()->ClearRenderTargetView(static_cast<ID3D11RenderTargetView*>(renderTarget->GetNativeRenderTargetView()), glm::value_ptr(backgroundColor));
+		const void* rtvs[1] = { renderTarget->GetNativeRenderTargetView(0) };
+		m_D3D11RHI->GetDeviceContext()->ClearRenderTargetView(static_cast<ID3D11RenderTargetView*>(renderTarget->GetNativeRenderTargetView(0)), glm::value_ptr(backgroundColor));
 		if(depthStencilTarget)
+		{
+			m_D3D11RHI->GetDeviceContext()->ClearDepthStencilView(static_cast<ID3D11DepthStencilView*>(depthStencilTarget->GetNativeDepthStencilView()),
+				D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, depthClear, stencilClear);
+		}
+	}
+
+	void D3D11CommandList::RHIClearRenderTarget(Ref<RHITextureCube> renderTargets, int renderTargetIndex, glm::vec4 backgroundColor,
+		Ref<RHITexture2D> depthStencilTarget, float depthClear , float stencilClear) 
+	{
+		const void* rtvs[1] = { renderTargets->GetNativeRenderTargetView(renderTargetIndex) };
+		m_D3D11RHI->GetDeviceContext()->ClearRenderTargetView(
+			static_cast<ID3D11RenderTargetView*>(renderTargets->GetNativeRenderTargetView(renderTargetIndex)), 
+			glm::value_ptr(backgroundColor));
+		if (depthStencilTarget)
 		{
 			m_D3D11RHI->GetDeviceContext()->ClearDepthStencilView(static_cast<ID3D11DepthStencilView*>(depthStencilTarget->GetNativeDepthStencilView()),
 				D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, depthClear, stencilClear);
@@ -145,13 +159,13 @@ namespace Lemon
 		void* depthStencil = nullptr;
 		if(depthTarget)
 		{
-			depthStencil= static_cast<ID3D11DepthStencilView*>(depthTarget->GetNativeDepthStencilView());
+			depthStencil = static_cast<ID3D11DepthStencilView*>(depthTarget->GetNativeDepthStencilView());
 		}
 		
 		if (colorTarget)
 		{
 			void* renderTargetViews[1];
-			renderTargetViews[0] = static_cast<ID3D11RenderTargetView*>(colorTarget->GetNativeRenderTargetView());
+			renderTargetViews[0] = static_cast<ID3D11RenderTargetView*>(colorTarget->GetNativeRenderTargetView(0));
 			
 			m_D3D11RHI->GetDeviceContext()->OMSetRenderTargets
 			(
@@ -161,6 +175,29 @@ namespace Lemon
 			);
 		}
 		
+	}
+
+	void D3D11CommandList::SetRenderTarget(Ref<RHITextureCube> colorTargets, int colorTargetIndex, Ref<RHITexture2D> depthTarget)
+	{
+		// render targets
+		void* depthStencil = nullptr;
+		if (depthTarget)
+		{
+			depthStencil = static_cast<ID3D11DepthStencilView*>(depthTarget->GetNativeDepthStencilView());
+		}
+
+		if (colorTargets)
+		{
+			void* renderTargetViews[1];
+			renderTargetViews[0] = static_cast<ID3D11RenderTargetView*>(colorTargets->GetNativeRenderTargetView(colorTargetIndex));
+
+			m_D3D11RHI->GetDeviceContext()->OMSetRenderTargets
+			(
+				1,
+				reinterpret_cast<ID3D11RenderTargetView *const*>(renderTargetViews),
+				static_cast<ID3D11DepthStencilView*>(depthStencil)
+			);
+		}
 	}
 
 	void D3D11CommandList::SetViewport(const Viewport& viewport)

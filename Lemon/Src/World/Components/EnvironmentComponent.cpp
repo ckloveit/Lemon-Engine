@@ -35,5 +35,25 @@ namespace Lemon
 		m_EnvironmentTextureRHI = RHICreateTextureCube(textureInfoDatas[0].Width, textureInfoDatas[0].Height, textureInfoDatas[0].Format,
 			1, RHI_TexCreate_ShaderResource, createInfo);
 	}
-	
+
+	void EnvironmentComponent::InitEnvDiffuseIrradianceTexture()
+	{
+		if (!m_EnvironmentTextureRHI)
+		{
+			return;
+		}
+
+		if (!m_EnvironmentDiffuseIrradianceTexture)
+		{
+			uint32_t sizeX = m_EnvironmentTextureRHI->GetSizeX();
+			uint32_t sizeY = m_EnvironmentTextureRHI->GetSizeY();
+			ERHIPixelFormat pixelFormat = m_EnvironmentTextureRHI->GetPixelFormat();
+			
+			RHITextureCubeCreateInfo createInfo;
+			m_EnvironmentDiffuseIrradianceTexture = RHICreateTextureCube(sizeX, sizeY, pixelFormat, 1, 
+				RHI_TexCreate_RenderTargetable | RHI_TexCreate_ShaderResource,
+				createInfo);
+		}
+
+	}
 }

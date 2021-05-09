@@ -87,12 +87,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Src\Containers\DynamicRHIResourceArray.h">
-      <Filter>Src\Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Containers\ResourceArray.h">
-      <Filter>Src\Containers</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Core\Core.h">
       <Filter>Src\Core</Filter>
     </ClInclude>
@@ -1497,6 +1491,16 @@
     <ClInclude Include="ThirdParty\std_image\std_image.h">
       <Filter>ThirdParty\std_image</Filter>
     </ClInclude>
+    <ClInclude Include="Src\RenderCore\Geometry\Quad.h" />
+    <ClInclude Include="Src\RenderCore\PixelShaderUtils.h" />
+    <ClInclude Include="Src\RenderCore\GlobalRenderResources.h" />
+    <ClInclude Include="Src\RenderCore\VertexDeclarationStruct.h" />
+    <ClInclude Include="Src\RenderCore\Containers\DynamicRHIResourceArray.h">
+      <Filter>Src\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\RenderCore\Containers\ResourceArray.h">
+      <Filter>Src\Containers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Core\Engine.cpp">
@@ -1640,5 +1644,8 @@
     <ClCompile Include="ThirdParty\std_image\std_image.cpp">
       <Filter>ThirdParty\std_image</Filter>
     </ClCompile>
+    <ClCompile Include="Src\RenderCore\Geometry\Quad.cpp" />
+    <ClCompile Include="Src\RenderCore\PixelShaderUtils.cpp" />
+    <ClCompile Include="Src\RenderCore\GlobalRenderResources.cpp" />
   </ItemGroup>
 </Project>

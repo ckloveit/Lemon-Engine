@@ -54,4 +54,5 @@ namespace Lemon
 		RHIUniformBufferBaseRef m_UniformBuffer;
 		uint32_t m_SlotIndex;
 	};
+
 }

@@ -146,6 +146,8 @@ namespace Lemon
 
 		const std::string& GetName() const { return m_TextureName; }
 		void SetName(const std::string& name) { m_TextureName = name; }
+		ERHIPixelFormat GetPixelFormat() const { return m_PixelFormat; }
+		uint32_t GetNumMip() const { return m_NumMips; }
 
 		//=========Dynamic cast methods=============
 		virtual class RHITexture2D* GetTexture2D() { return nullptr; }
@@ -158,7 +160,7 @@ namespace Lemon
 		//=========RHI Resource====================
 		virtual void* GetNativeResource() = 0;
 		virtual void* GetNativeShaderResourceView() = 0;
-		virtual void* GetNativeRenderTargetView() = 0;
+		virtual void* GetNativeRenderTargetView(int index) = 0;
 		virtual void* GetNativeDepthStencilView() = 0;
 		//=========================================
 

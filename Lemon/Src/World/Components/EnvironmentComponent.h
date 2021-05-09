@@ -13,8 +13,15 @@ namespace Lemon
 
 		void CreateFromFilePath(const std::vector<std::string>& filePaths);
 
-		Ref<RHITexture> GetEnvironmentTexture() const { return m_EnvironmentTextureRHI; }
+		Ref<RHITextureCube> GetEnvironmentTexture() const { return m_EnvironmentTextureRHI; }
+
+		void InitEnvDiffuseIrradianceTexture();
+
+		Ref<RHITextureCube> GetEnvDiffuseIrradiance() const { return m_EnvironmentDiffuseIrradianceTexture; }
 	private:
-		Ref<RHITexture> m_EnvironmentTextureRHI;
+		Ref<RHITextureCube> m_EnvironmentTextureRHI;
+
+		//Image-Base-Lighting
+		Ref<RHITextureCube> m_EnvironmentDiffuseIrradianceTexture;
 	};
 }

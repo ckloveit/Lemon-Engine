@@ -280,5 +280,38 @@ namespace Lemon::D3D11
 		return true;
 	}
 
+	bool CreateRenderTargetViewCube(D3D11DynamicRHI* D3D11RHI,
+		ID3D11Texture2D* texture,
+		const uint8_t numMips,
+		const DXGI_FORMAT format,
+		std::vector<ID3D11RenderTargetView*>& outSRVs)
+	{
+		if (outSRVs.size() != 6)
+		{
+			outSRVs.resize(6);
+		}
+		// Describe
+		D3D11_RENDER_TARGET_VIEW_DESC viewDesc = {};
+		viewDesc.Format = format;
+		viewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DARRAY;
+		viewDesc.Texture2DArray.MipSlice = 0;
+		viewDesc.Texture2DArray.ArraySize = 6;
+		viewDesc.Texture2DArray.FirstArraySlice = 0;
+
+		// Create
+		for (uint32_t i = 0; i < 6; i++)
+		{
+			viewDesc.Texture2DArray.FirstArraySlice = i;
+			const auto result = D3D11RHI->GetDevice()->CreateRenderTargetView(static_cast<ID3D11Resource*>(texture), &viewDesc, reinterpret_cast<ID3D11RenderTargetView **>(&outSRVs[i]));
+			if (FAILED(result))
+			{
+				LEMON_CORE_ERROR("Failed, {0}.", DXGIErrorToString(result));
+				return false;
+			}
+		}
+		return true;
+
+
+	}
 
 }

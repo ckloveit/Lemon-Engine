@@ -1,6 +1,6 @@
 #pragma once
 #include "Core/Core.h"
-#include "Containers/ResourceArray.h"
+#include "RenderCore/Containers/ResourceArray.h"
 #include "RHI.h"
 #include <map>
 #include <array>

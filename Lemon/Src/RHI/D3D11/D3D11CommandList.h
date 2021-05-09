@@ -20,7 +20,13 @@ namespace Lemon
 		virtual void RHIClearRenderTarget(Ref<RHITexture2D> renderTarget, glm::vec4 backgroundColor,
             Ref<RHITexture2D> depthStencilTarget = nullptr, float depthClear = 1.0f, float stencilClear = 0)  override;
 
-		virtual void SetRenderTarget(Ref<RHITexture2D> colorTarget,Ref<RHITexture2D> depthTarget = nullptr) override;
+		virtual void RHIClearRenderTarget(Ref<RHITextureCube> renderTargets, int renderTargetIndex, glm::vec4 backgroundColor,
+			Ref<RHITexture2D> depthStencilTarget = nullptr, float depthClear = 1.0f, float stencilClear = 0)  override;
+
+
+		virtual void SetRenderTarget(Ref<RHITexture2D> colorTarget,Ref<RHITexture2D> depthTarget = nullptr) override; 
+		
+		virtual void SetRenderTarget(Ref<RHITextureCube> colorTargets, int colorTargetIndex, Ref<RHITexture2D> depthTarget = nullptr) override;
 
 		virtual void SetRenderTarget(Ref<RHISwapChain> swapChain) override;
 

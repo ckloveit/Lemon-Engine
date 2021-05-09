@@ -298,6 +298,13 @@ namespace Lemon::D3D11
 		const uint8_t numMips,
 		const DXGI_FORMAT format,
 		ID3D11ShaderResourceView*& outSRV);
+
+	bool CreateRenderTargetViewCube(D3D11DynamicRHI* D3D11RHI,
+		ID3D11Texture2D* texture,
+		const uint8_t numMips,
+		const DXGI_FORMAT format,
+		std::vector<ID3D11RenderTargetView*>& outSRVs);
+
 	//=========================================================
 
 	

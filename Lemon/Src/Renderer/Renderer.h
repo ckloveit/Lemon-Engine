@@ -14,13 +14,15 @@
 #include "RHI/RHICommandList.h"
 #include "RenderCore/Mesh.h"
 #include "RenderCore/Geometry/Cube.h"
+#include "RenderCore/Geometry/Quad.h"
 #include "World/Entity.h"
 
 namespace Lemon
 {
 	class DynamicRHI;
 	class World;
-	
+	class GlobalRenderResources;
+
 	class LEMON_API Renderer : public ISystem
 	{
 	public:
@@ -51,7 +53,10 @@ namespace Lemon
 		void InitGeometry();
 
 		void DrawRenderer(Entity entity) const;
-		
+
+		void DrawFullScreenQuad(FullScreenUniformParameters fullScreenParameter);
+
+		void PreComputeIBL(std::vector<Entity>& environment);
 	private:
 		Viewport m_Viewport = { 0, 0, 1920, 1080 };
 		Ref<RHISwapChain> m_RHISwapChain;
@@ -60,6 +65,10 @@ namespace Lemon
 		Ref<SceneRenderTargets> m_SceneRenderTargets;
 		Ref<SceneUniformBuffers> m_SceneUniformBuffers;
 		Ref<SceneRenderStates> m_SceneRenderStates;
+		Ref<GlobalRenderResources> m_GlobalRenderResources;
+
+		// use for FullScreen
+		Ref<Quad> m_FullScreenQuad;
 		
 		World* m_World;
 		
