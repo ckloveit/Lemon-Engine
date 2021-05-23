@@ -7,6 +7,7 @@
 #include "Input/InputSystem.h"
 #include <glm/gtx/compatibility.hpp>
 #include <glm/ext/quaternion_trigonometric.hpp>
+#include "TransformComponent.h"
 
 namespace Lemon
 {
@@ -47,7 +48,8 @@ namespace Lemon
         if(m_ProjectionType == ProjectionType::Perspective)
         {
 			// caution : for Direct3D the perspective need in LR and Zero to One 
-            m_ProjectionMatrix = glm::perspectiveLH_ZO(GetFovVerticalRadian(), m_AspectRatio, m_PerspectiveNear, m_PerspectiveFar);
+           // m_ProjectionMatrix = glm::perspectiveRH_ZO(GetFovVerticalRadian(), m_AspectRatio, m_PerspectiveNear, m_PerspectiveFar);
+			m_ProjectionMatrix = glm::perspectiveLH_ZO(GetFovVerticalRadian(), m_AspectRatio, m_PerspectiveNear, m_PerspectiveFar);
         }
         else
         {
@@ -70,11 +72,39 @@ namespace Lemon
 	{
 		if (m_Entity)
 		{
+			const TransformComponent& transform = m_Entity.GetComponent<TransformComponent>();
+
+			//return glm::lookAtLH(transform.Position, transform.Position + transform.GetForwardVector(), transform.GetUpVector());
+
 			return glm::inverse(m_Entity.GetComponent<TransformComponent>().GetTransform());
 		}
+
 		return glm::mat4(1.0f);
 	}
 
+	glm::vec3 CameraComponent::GetPosition() const
+	{
+		const TransformComponent& camera = m_Entity.GetComponent<TransformComponent>();
+		return camera.Position;
+	}
+
+	glm::vec3 CameraComponent::GetForwardVector() const
+	{
+		const TransformComponent& camera = m_Entity.GetComponent<TransformComponent>();
+		return camera.GetForwardVector();
+	}
+
+	glm::vec3 CameraComponent::GetRightVector() const
+	{
+		const TransformComponent& camera = m_Entity.GetComponent<TransformComponent>();
+		return camera.GetRightVector();
+	}
+
+	glm::vec3 CameraComponent::GetUpVector() const
+	{
+		const TransformComponent& camera = m_Entity.GetComponent<TransformComponent>();
+		return camera.GetUpVector();
+	}
 
 	void CameraComponent::ProcessInputSystem(float deltaTime)
 	{

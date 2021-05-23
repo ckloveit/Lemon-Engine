@@ -11,12 +11,15 @@ namespace Lemon
 	class LEMON_API GlobalRenderResources
 	{
 	public:
-		GlobalRenderResources() { s_Instance = this; };
-		~GlobalRenderResources() { s_Instance = nullptr; };
-
-		void Init();
-
+		static void Init();
 		static GlobalRenderResources* GetInstance() { return s_Instance; }
+	private:
+		GlobalRenderResources() = default;
+		~GlobalRenderResources()
+		{
+			delete s_Instance;
+			s_Instance = nullptr;
+		};
 
 	public:
 		VertexDeclarationElementList StandardMeshVertexDeclarationElementList;

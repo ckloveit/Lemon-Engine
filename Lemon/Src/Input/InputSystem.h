@@ -70,9 +70,9 @@ namespace Lemon
 		void EndOneFrame() { m_bNewframe = true; }
 		
 		// Keys
-		bool GetKey(const KeyCode key) { return m_Keys[static_cast<uint32_t>(key)]; }							        // Returns true while the button identified by KeyCode is held down.
-		bool GetKeyDown(const KeyCode key) { return GetKey(key) && !m_KeysPreviousFrame[static_cast<uint32_t>(key)]; }	// Returns true during the frame the user pressed down the button identified by KeyCode.
-		bool GetKeyUp(const KeyCode key) { return !GetKey(key) && m_KeysPreviousFrame[static_cast<uint32_t>(key)]; }	// Returns true the first frame the user releases the button identified by KeyCode.
+		bool GetKey(const KeyCode key) const { return m_Keys[static_cast<uint32_t>(key)]; }							        // Returns true while the button identified by KeyCode is held down.
+		bool GetKeyDown(const KeyCode key) const { return GetKey(key) && !m_KeysPreviousFrame[static_cast<uint32_t>(key)]; }	// Returns true during the frame the user pressed down the button identified by KeyCode.
+		bool GetKeyUp(const KeyCode key) const { return !GetKey(key) && m_KeysPreviousFrame[static_cast<uint32_t>(key)]; }	// Returns true the first frame the user releases the button identified by KeyCode.
 
 		// Mouse
 		const glm::vec2& GetMousePosition() const { return m_MousePosition; }

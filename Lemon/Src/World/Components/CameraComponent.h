@@ -39,6 +39,12 @@ namespace Lemon
         const glm::mat4& GetProjectionMatrix() const { return m_ProjectionMatrix; }
 		const glm::mat4& GetViewMatrix() const;
 
+		glm::vec3 GetForwardVector() const;
+		glm::vec3 GetRightVector() const;
+		glm::vec3 GetUpVector() const;
+
+		glm::vec3 GetPosition() const;
+		
 		//Debug InputHandle
 		void ProcessInputSystem(float deltaTime);
 

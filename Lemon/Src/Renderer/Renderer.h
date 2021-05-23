@@ -52,11 +52,17 @@ namespace Lemon
 	private:
 		void InitGeometry();
 
-		void DrawRenderer(Entity entity) const;
+		void DrawRenderer(Entity entity, bool bEnableDebug = false) const;
+
 
 		void DrawFullScreenQuad(FullScreenUniformParameters fullScreenParameter);
 
 		void PreComputeIBL(std::vector<Entity>& environment);
+
+		// ====IBL=======
+
+		void PreComputeDiffuseIrradiance(FullScreenUniformParameters fullScreenParameter);
+		//===============
 	private:
 		Viewport m_Viewport = { 0, 0, 1920, 1080 };
 		Ref<RHISwapChain> m_RHISwapChain;
@@ -65,7 +71,6 @@ namespace Lemon
 		Ref<SceneRenderTargets> m_SceneRenderTargets;
 		Ref<SceneUniformBuffers> m_SceneUniformBuffers;
 		Ref<SceneRenderStates> m_SceneRenderStates;
-		Ref<GlobalRenderResources> m_GlobalRenderResources;
 
 		// use for FullScreen
 		Ref<Quad> m_FullScreenQuad;

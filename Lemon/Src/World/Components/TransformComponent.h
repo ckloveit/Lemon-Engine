@@ -40,32 +40,32 @@ namespace Lemon
                 * glm::scale(glm::mat4(1.0f), Scale);
         }
 
-		glm::vec3 GetForwardVector()
+		glm::vec3 GetForwardVector() const
 		{
 			glm::quat rotation = glm::quat(glm::radians(Rotation));
 			return rotation * glm::vec3(0, 0, 1);
 		}
-		glm::vec3 GetBackVector()
+		glm::vec3 GetBackVector() const
 		{
 			glm::quat rotation = glm::quat(glm::radians(Rotation));
 			return rotation * glm::vec3(0, 0, -1);
 		}
-		glm::vec3 GetRightVector()
+		glm::vec3 GetRightVector() const
 		{
 			glm::quat rotation = glm::quat(glm::radians(Rotation));
 			return rotation * glm::vec3(1, 0, 0);
 		}
-		glm::vec3 GetLeftVector()
+		glm::vec3 GetLeftVector() const
 		{
 			glm::quat rotation = glm::quat(glm::radians(Rotation));
 			return rotation * glm::vec3(-1, 0, 0);
 		}
-		glm::vec3 GetUpVector()
+		glm::vec3 GetUpVector() const
 		{
 			glm::quat rotation = glm::quat(glm::radians(Rotation));
 			return rotation * glm::vec3(0, 1, 0);
 		}
-		glm::vec3 GetDownVector()
+		glm::vec3 GetDownVector() const
 		{
 			glm::quat rotation = glm::quat(glm::radians(Rotation));
 			return rotation * glm::vec3(0, -1, 0);

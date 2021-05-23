@@ -28,3 +28,8 @@ cbuffer LightUniformBuffer : register(b2)
     float4 g_DirectionalLightDir;
     float4 g_DirectionalLightColor;
 };
+
+cbuffer FullScreenUniformBuffer : register(b3)
+{
+	matrix g_FullScreen_LocalToWorldMatrix;
+};

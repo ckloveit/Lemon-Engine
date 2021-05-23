@@ -12,6 +12,11 @@ namespace Lemon
 
 	void GlobalRenderResources::Init()
 	{
+		if (s_Instance)
+			return;
+
+		s_Instance = new GlobalRenderResources();
+
 		// Init Vertex Declaration Element List
 		VertexDeclarationElementList vertexElements;
 		const uint32_t stride = sizeof(StandardMeshVertex);
@@ -26,7 +31,7 @@ namespace Lemon
 			const uint8_t offset = texcoordOffset + sizeof(glm::vec2) * i;
 			vertexElements.push_back(RHIVertexElement(0, offset, VET_Float2, texcoordAttributeOffset + i, stride));
 		}
-		StandardMeshVertexDeclarationElementList = std::move(vertexElements);
+		s_Instance->StandardMeshVertexDeclarationElementList = std::move(vertexElements);
 
 		// Init FullScreenVertexBuffer
 		std::vector<StandardMeshVertex> vertices;
@@ -42,7 +47,7 @@ namespace Lemon
 			verts.EmplaceBack(vertices[i]);
 		}
 		vertexCreateInfo.ResourceArray = &verts;
-		FullScreenVertexBuffer = RHICreateVertexBuffer(sizeof(StandardMeshVertex) * vertices.size(), BUF_Static, vertexCreateInfo);
+		s_Instance->FullScreenVertexBuffer = RHICreateVertexBuffer(sizeof(StandardMeshVertex) * vertices.size(), BUF_Static, vertexCreateInfo);
 
 		//Init FullScreenIndexBuffer
 		std::vector<uint32_t> indices;
@@ -61,6 +66,6 @@ namespace Lemon
 		}
 		RHIResourceCreateInfo indicesCreateInfo;
 		indicesCreateInfo.ResourceArray = &indiceResources;
-		FullScreenIndexBuffer = RHICreateIndexBuffer(sizeof(uint32_t) * indices.size(), BUF_Static, indicesCreateInfo);
+		s_Instance->FullScreenIndexBuffer = RHICreateIndexBuffer(sizeof(uint32_t) * indices.size(), BUF_Static, indicesCreateInfo);
 	}
 }

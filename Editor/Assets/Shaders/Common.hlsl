@@ -6,6 +6,8 @@
 #include "BRDF.hlsl"
 
 #define MAX_MESH_TEXTURE_COORDS 2
+
+
 struct VertexInput
 {
 	float3 Position : ATTRIBUTE0;

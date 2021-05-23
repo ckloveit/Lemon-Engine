@@ -83,6 +83,8 @@ void WidgetViewport::Tick(float deltaTime)
 	{
 		DrawGizmoHandle();
 	}
+
+	DrawAxisGizmo();
 }
 
 void WidgetViewport::DrawGizmoHandle()
@@ -135,7 +137,7 @@ void WidgetViewport::DrawGizmoHandle()
 	float snapValues[3] = { snapValue, snapValue, snapValue };
 
 	ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection),
-        (ImGuizmo::OPERATION)m_GizmoType, ImGuizmo::LOCAL, glm::value_ptr(transform),
+        (ImGuizmo::OPERATION)m_GizmoType, (ImGuizmo::MODE)m_GizmoMode, glm::value_ptr(transform),
         nullptr, snap ? snapValues : nullptr);
 
 	if (ImGuizmo::IsUsing())
@@ -149,19 +151,115 @@ void WidgetViewport::DrawGizmoHandle()
 		tc.Scale = scale;
 	}
 }
+
+glm::vec2 ScreenUVToScreenPosition(glm::vec2 screenUV, glm::vec2 ViewportOffset, glm::vec2 ViewportSize)
+{
+	glm::vec2 screenPos = glm::vec2(screenUV.x * ViewportSize.x, screenUV.y * ViewportSize.y);
+	screenPos += ViewportOffset;
+	return screenPos;
+}
+
+glm::vec2 WorldToScreenUV(glm::vec3 worldPos, glm::mat4 ViewProjection)
+{
+	glm::vec4 trans = ViewProjection * glm::vec4(worldPos, 1.0f);
+	float invZ = 1.0f / trans.w;
+	glm::vec2 ndcPos = glm::vec2(trans.x, trans.y) * invZ;
+	glm::vec2 screenUV = ndcPos * 0.5f + glm::vec2(0.5f, 0.5f);
+	screenUV.y = 1.0f - screenUV.y;
+	return screenUV;
+}
+
+glm::vec3 ScreenUVToWorld(glm::vec2 screenUV, float zNear, glm::mat4 viewProjection)
+{
+	glm::vec3 clipPos;
+	clipPos.x = screenUV.x * 2.0f - 1.0f;
+	clipPos.y = screenUV.y * -2.0f + 1.0f;
+	clipPos.z = zNear;
+
+	glm::mat4 viewProjectionInvert = glm::inverse(viewProjection);
+	glm::vec4 worldPos = viewProjectionInvert * glm::vec4(clipPos, 1.0);
+	worldPos *= 1.0f / worldPos.w;
+	return glm::vec3(worldPos.x, worldPos.y, worldPos.z);
+}
+
+void WidgetViewport::DrawAxisGizmo()
+{	
+	float windowWidth = (float)ImGui::GetWindowWidth();
+	float windowHeight = (float)ImGui::GetWindowHeight();
+	float diff = (windowHeight - m_ViewportSize.y);
+
+	// Editor camera
+	float viewportOffsetX = ImGui::GetWindowPos().x;
+	float viewportOffsetY = ImGui::GetWindowPos().y + diff;
+	float viewportWidth = m_ViewportSize.x;
+	float viewportHeight = m_ViewportSize.y;
+
+	// colors
+	static const ImU32 directionColor[3] = { 0xFF715ED8, 0xFF25AA25, 0xFFCC532C };
+
+	CameraComponent& camera = m_Engine->GetSystem<World>()->GetMainCamera().GetComponent<CameraComponent>();
+
+	glm::mat4 ViewMatrix = camera.GetViewMatrix();
+	glm::mat4 ProjectionMatrix = camera.GetProjectionMatrix();
+	glm::mat4 viewProjection = ProjectionMatrix * ViewMatrix;
+	
+	const glm::vec2 cameraOriginScreenUV = WorldToScreenUV(camera.GetPosition() + camera.GetForwardVector() * 100.0f, viewProjection);
+	glm::vec3 originWorldPos = ScreenUVToWorld(cameraOriginScreenUV, camera.GetPerspectiveNearClip(), viewProjection);
+	const glm::vec2 cameraOriginScreenPos = ScreenUVToScreenPosition(cameraOriginScreenUV, glm::vec2(viewportOffsetX, viewportOffsetY), glm::vec2(viewportWidth, viewportHeight));
+	
+
+	glm::vec2 axisOriginScreenUV = glm::vec2(40.0f / viewportWidth, 1.0f - 50.0f / viewportHeight);
+	const glm::vec2 Origin = ScreenUVToScreenPosition(axisOriginScreenUV, glm::vec2(viewportOffsetX, viewportOffsetY), glm::vec2(viewportWidth, viewportHeight));
+	ImVec2 axisOrigin = ImVec2(Origin.x, Origin.y);
+	ImVec2 axisOffset = ImVec2(cameraOriginScreenPos.x - axisOrigin.x , cameraOriginScreenPos.y - axisOrigin.y);
+
+	// X
+	glm::vec3 xAxisEndWorldPos = originWorldPos + glm::vec3(1, 0, 0) * 0.01f;
+
+	glm::vec2 xAxisEndScreenUV = WorldToScreenUV(xAxisEndWorldPos, viewProjection);
+	const glm::vec2 xAxisEndScreenPos = ScreenUVToScreenPosition(xAxisEndScreenUV, glm::vec2(viewportOffsetX, viewportOffsetY), glm::vec2(viewportWidth, viewportHeight));
+	const ImVec2 xAxisEnd = ImVec2(xAxisEndScreenPos.x - axisOffset.x, xAxisEndScreenPos.y - axisOffset.y);
+
+	ImGui::GetWindowDrawList()->AddLine(axisOrigin, xAxisEnd, directionColor[0], 3.0f);
+
+	char axisXName[] = "X";
+	ImGui::GetWindowDrawList()->AddText(ImVec2(xAxisEnd.x + 6, xAxisEnd.y + 6), directionColor[0], axisXName);
+
+	// Y
+	glm::vec3 yAxisEndWorldPos = originWorldPos + glm::vec3(0, 1, 0) * 0.01f;
+
+	glm::vec2 yAxisEndScreenUV = WorldToScreenUV(yAxisEndWorldPos, viewProjection);
+	const glm::vec2 yAxisEndScreenPos = ScreenUVToScreenPosition(yAxisEndScreenUV, glm::vec2(viewportOffsetX, viewportOffsetY), glm::vec2(viewportWidth, viewportHeight));
+	const ImVec2 yAxisEnd = ImVec2(yAxisEndScreenPos.x - axisOffset.x, yAxisEndScreenPos.y - axisOffset.y);
+
+	ImGui::GetWindowDrawList()->AddLine(axisOrigin, yAxisEnd, directionColor[1], 3.0f);
+	char axisYName[] = "Y";
+	ImGui::GetWindowDrawList()->AddText(ImVec2(yAxisEnd.x + 6, yAxisEnd.y + 6), directionColor[1], axisYName);
+	// Z
+	glm::vec3 zAxisEndWorldPos = originWorldPos + glm::vec3(0, 0, 1) * 0.01f;
+
+	glm::vec2 zAxisEndScreenUV = WorldToScreenUV(zAxisEndWorldPos, viewProjection);
+	const glm::vec2 zAxisEndScreenPos = ScreenUVToScreenPosition(zAxisEndScreenUV, glm::vec2(viewportOffsetX, viewportOffsetY), glm::vec2(viewportWidth, viewportHeight));
+	const ImVec2 zAxisEnd = ImVec2(zAxisEndScreenPos.x - axisOffset.x, zAxisEndScreenPos.y - axisOffset.y);
+
+	ImGui::GetWindowDrawList()->AddLine(axisOrigin, zAxisEnd, directionColor[2], 3.0f);
+	char axisZName[] = "Z";
+	ImGui::GetWindowDrawList()->AddText(ImVec2(zAxisEnd.x + 6, zAxisEnd.y + 6), directionColor[2], axisZName);
+}
+
 void WidgetViewport::DrawToolBar()
 {
 	ImGui::Indent();
 	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 0.0f, 0.0f, 0.0f));
 
-	bool selected = false;
+	static bool selected = false;
 	auto io = ImGui::GetIO();
 	// Select the Font which has ICON
 	auto IconFont = io.Fonts->Fonts[2];
 	ImGui::PushFont(IconFont);
 	{
 		if (selected)
-			ImGui::PushStyleColor(ImGuiCol_Text, ImGuiEx::GetSelectedColor());
+			ImGui::PushStyleColor(ImGuiCol_Button, ImGuiEx::GetSelectedColor());
 		ImGui::SameLine();
 
 		if (ImGui::Button(ICON_FA_ARROWS, ImVec2(32, 32)))
@@ -181,9 +279,29 @@ void WidgetViewport::DrawToolBar()
 	ImGui::SameLine();
 
 	{
-		selected = false;//m_Editor->GetImGuizmoOperation() == ImGuizmo::TRANSLATE;
-		if (selected)
-			ImGui::PushStyleColor(ImGuiCol_Text, ImGuiEx::GetSelectedColor());
+		//m_Editor->GetImGuizmoOperation() == ImGuizmo::TRANSLATE;
+	
+		ImGui::SameLine();
+		static char* label[2] = { ICON_FA_HOME, ICON_FA_GLOBE };
+		if (ImGui::Button(label[m_GizmoMode], ImVec2(32, 32)))
+		{
+			if (m_GizmoMode == ImGuizmo::MODE::WORLD)
+				m_GizmoMode = ImGuizmo::MODE::LOCAL;
+			else 
+				m_GizmoMode = ImGuizmo::MODE::WORLD;
+			//m_Editor->SetImGuizmoOperation(ImGuizmo::TRANSLATE);
+		}
+		ImGuiEx::Tooltip("Space Mode");
+	}
+
+	{
+		//m_Editor->GetImGuizmoOperation() == ImGuizmo::TRANSLATE;
+		bool bPushStyleColor = false;
+		if (m_GizmoType == ImGuizmo::OPERATION::TRANSLATE)
+		{
+			bPushStyleColor = true;
+			ImGui::PushStyleColor(ImGuiCol_Button, ImGuiEx::GetSelectedColor());
+		}
 		ImGui::SameLine(); 
 		if (ImGui::Button(ICON_FA_ARROWS_ALT, ImVec2(32, 32)))
 		{
@@ -191,15 +309,18 @@ void WidgetViewport::DrawToolBar()
 			//m_Editor->SetImGuizmoOperation(ImGuizmo::TRANSLATE);
 		}
 
-		if (selected)
+		if (bPushStyleColor)
 			ImGui::PopStyleColor();
 		ImGuiEx::Tooltip("Translate");
 	}
 
 	{
-		selected = false;// m_Editor->GetImGuizmoOperation() == ImGuizmo::ROTATE;
-		if (selected)
-			ImGui::PushStyleColor(ImGuiCol_Text, ImGuiEx::GetSelectedColor());
+		bool bPushStyleColor = false;
+		if (m_GizmoType == ImGuizmo::OPERATION::ROTATE)
+		{
+			bPushStyleColor = true;
+			ImGui::PushStyleColor(ImGuiCol_Button, ImGuiEx::GetSelectedColor());
+		}
 
 		ImGui::SameLine();
 		if (ImGui::Button(ICON_FA_UNDO, ImVec2(32, 32)))
@@ -207,15 +328,18 @@ void WidgetViewport::DrawToolBar()
 			m_GizmoType = ImGuizmo::OPERATION::ROTATE;
 			//m_Editor->SetImGuizmoOperation(ImGuizmo::ROTATE);
 		}
-		if (selected)
+		if (bPushStyleColor)
 			ImGui::PopStyleColor();
 		ImGuiEx::Tooltip("Rotate");
 	}
 
 	{
-		selected = false;//m_Editor->GetImGuizmoOperation() == ImGuizmo::SCALE;
-		if (selected)
-			ImGui::PushStyleColor(ImGuiCol_Text, ImGuiEx::GetSelectedColor());
+		bool bPushStyleColor = false;
+		if (m_GizmoType == ImGuizmo::OPERATION::SCALE)
+		{
+			bPushStyleColor = true;
+			ImGui::PushStyleColor(ImGuiCol_Button, ImGuiEx::GetSelectedColor());
+		}
 
 		ImGui::SameLine();
 		if (ImGui::Button(ICON_FA_EXPAND, ImVec2(32, 32)))
@@ -223,7 +347,7 @@ void WidgetViewport::DrawToolBar()
 			m_GizmoType = ImGuizmo::OPERATION::SCALE;
 			//m_Editor->SetImGuizmoOperation(ImGuizmo::SCALE);
 		}
-		if (selected)
+		if (bPushStyleColor)
 			ImGui::PopStyleColor();
 		ImGuiEx::Tooltip("Scale");
 	}

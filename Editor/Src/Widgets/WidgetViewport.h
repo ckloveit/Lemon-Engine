@@ -20,6 +20,7 @@ private:
 
 	void DrawGizmoHandle();
 
+	void DrawAxisGizmo();
 private:
 	Lemon::Renderer* m_Renderer = nullptr;
 
@@ -29,4 +30,6 @@ private:
 	
 	// GizmoType
 	int m_GizmoType = -1;
+	// GizmoMode
+	int m_GizmoMode = 0;// 0 -local ; 1 - world
 };

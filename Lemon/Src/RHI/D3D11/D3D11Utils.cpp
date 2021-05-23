@@ -295,7 +295,7 @@ namespace Lemon::D3D11
 		viewDesc.Format = format;
 		viewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DARRAY;
 		viewDesc.Texture2DArray.MipSlice = 0;
-		viewDesc.Texture2DArray.ArraySize = 6;
+		viewDesc.Texture2DArray.ArraySize = 1;
 		viewDesc.Texture2DArray.FirstArraySlice = 0;
 
 		// Create
