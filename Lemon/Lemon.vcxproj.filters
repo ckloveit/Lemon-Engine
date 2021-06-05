@@ -4,9 +4,6 @@
     <Filter Include="Src">
       <UniqueIdentifier>{0D23880B-792C-887C-02A8-9E7C6EB0937C}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Containers">
-      <UniqueIdentifier>{72C301E5-5E91-F5EA-4725-66113392D14F}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Src\Core">
       <UniqueIdentifier>{8537E246-7104-3D52-9A1D-2BFA864972E0}</UniqueIdentifier>
     </Filter>
@@ -30,6 +27,9 @@
     </Filter>
     <Filter Include="Src\RenderCore">
       <UniqueIdentifier>{852300CF-71F1-F3D4-5A85-64FB46F2CF39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\RenderCore\Containers">
+      <UniqueIdentifier>{EA888D7F-564B-C109-9FFB-4F960BFD99E7}</UniqueIdentifier>
     </Filter>
     <Filter Include="Src\RenderCore\Geometry">
       <UniqueIdentifier>{8016048D-EC4D-4C24-F557-B047610E731D}</UniqueIdentifier>
@@ -171,14 +171,26 @@
     <ClInclude Include="Src\RHI\RHISwapChain.h">
       <Filter>Src\RHI</Filter>
     </ClInclude>
+    <ClInclude Include="Src\RenderCore\Containers\DynamicRHIResourceArray.h">
+      <Filter>Src\RenderCore\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\RenderCore\Containers\ResourceArray.h">
+      <Filter>Src\RenderCore\Containers</Filter>
+    </ClInclude>
     <ClInclude Include="Src\RenderCore\Geometry\Cube.h">
       <Filter>Src\RenderCore\Geometry</Filter>
     </ClInclude>
     <ClInclude Include="Src\RenderCore\Geometry\GridGizmo.h">
       <Filter>Src\RenderCore\Geometry</Filter>
     </ClInclude>
+    <ClInclude Include="Src\RenderCore\Geometry\Quad.h">
+      <Filter>Src\RenderCore\Geometry</Filter>
+    </ClInclude>
     <ClInclude Include="Src\RenderCore\Geometry\Sphere.h">
       <Filter>Src\RenderCore\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\RenderCore\GlobalRenderResources.h">
+      <Filter>Src\RenderCore</Filter>
     </ClInclude>
     <ClInclude Include="Src\RenderCore\Material.h">
       <Filter>Src\RenderCore</Filter>
@@ -186,10 +198,16 @@
     <ClInclude Include="Src\RenderCore\Mesh.h">
       <Filter>Src\RenderCore</Filter>
     </ClInclude>
+    <ClInclude Include="Src\RenderCore\PixelShaderUtils.h">
+      <Filter>Src\RenderCore</Filter>
+    </ClInclude>
     <ClInclude Include="Src\RenderCore\RenderCore.h">
       <Filter>Src\RenderCore</Filter>
     </ClInclude>
     <ClInclude Include="Src\RenderCore\RenderUtils.h">
+      <Filter>Src\RenderCore</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\RenderCore\VertexDeclarationStruct.h">
       <Filter>Src\RenderCore</Filter>
     </ClInclude>
     <ClInclude Include="Src\RenderCore\Viewport.h">
@@ -1491,16 +1509,6 @@
     <ClInclude Include="ThirdParty\std_image\std_image.h">
       <Filter>ThirdParty\std_image</Filter>
     </ClInclude>
-    <ClInclude Include="Src\RenderCore\Geometry\Quad.h" />
-    <ClInclude Include="Src\RenderCore\PixelShaderUtils.h" />
-    <ClInclude Include="Src\RenderCore\GlobalRenderResources.h" />
-    <ClInclude Include="Src\RenderCore\VertexDeclarationStruct.h" />
-    <ClInclude Include="Src\RenderCore\Containers\DynamicRHIResourceArray.h">
-      <Filter>Src\Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\RenderCore\Containers\ResourceArray.h">
-      <Filter>Src\Containers</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Core\Engine.cpp">
@@ -1572,13 +1580,22 @@
     <ClCompile Include="Src\RenderCore\Geometry\GridGizmo.cpp">
       <Filter>Src\RenderCore\Geometry</Filter>
     </ClCompile>
+    <ClCompile Include="Src\RenderCore\Geometry\Quad.cpp">
+      <Filter>Src\RenderCore\Geometry</Filter>
+    </ClCompile>
     <ClCompile Include="Src\RenderCore\Geometry\Sphere.cpp">
       <Filter>Src\RenderCore\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\RenderCore\GlobalRenderResources.cpp">
+      <Filter>Src\RenderCore</Filter>
     </ClCompile>
     <ClCompile Include="Src\RenderCore\Material.cpp">
       <Filter>Src\RenderCore</Filter>
     </ClCompile>
     <ClCompile Include="Src\RenderCore\Mesh.cpp">
+      <Filter>Src\RenderCore</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\RenderCore\PixelShaderUtils.cpp">
       <Filter>Src\RenderCore</Filter>
     </ClCompile>
     <ClCompile Include="Src\RenderCore\RenderCore.cpp">
@@ -1644,8 +1661,5 @@
     <ClCompile Include="ThirdParty\std_image\std_image.cpp">
       <Filter>ThirdParty\std_image</Filter>
     </ClCompile>
-    <ClCompile Include="Src\RenderCore\Geometry\Quad.cpp" />
-    <ClCompile Include="Src\RenderCore\PixelShaderUtils.cpp" />
-    <ClCompile Include="Src\RenderCore\GlobalRenderResources.cpp" />
   </ItemGroup>
 </Project>

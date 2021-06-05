@@ -18,10 +18,15 @@ namespace Lemon
 		void InitEnvDiffuseIrradianceTexture();
 
 		Ref<RHITextureCube> GetEnvDiffuseIrradiance() const { return m_EnvironmentDiffuseIrradianceTexture; }
+
+	public:
+		//Debug
+		bool bDebugShowDiffuseIrradiance = false;
 	private:
 		Ref<RHITextureCube> m_EnvironmentTextureRHI;
 
 		//Image-Base-Lighting
 		Ref<RHITextureCube> m_EnvironmentDiffuseIrradianceTexture;
+
 	};
 }

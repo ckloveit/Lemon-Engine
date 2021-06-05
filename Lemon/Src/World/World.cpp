@@ -63,11 +63,13 @@ namespace Lemon
 			StaticMeshComponent& staticMesh = cube.AddComponent<StaticMeshComponent>();
 			Ref<Mesh> cubeMesh = CreateRef<Cube>();
 			staticMesh.SetMesh(cubeMesh);
+			staticMesh.SetVisiable(false);
 
 			cube = CreateEntity("Cube2");
 			StaticMeshComponent& staticMesh1 = cube.AddComponent<StaticMeshComponent>();
 			cubeMesh = CreateRef<Cube>();
 			staticMesh1.SetMesh(cubeMesh);
+			staticMesh1.SetVisiable(false);
 			cubeEntity = cube;
 
 			
@@ -162,12 +164,22 @@ namespace Lemon
     	EnvironmentComponent& EnvComp = EnvironmentEntity.AddComponent<EnvironmentComponent>();
 		std::vector<std::string> envFilePaths;
 		const auto dir_cubemaps = GetEngine()->GetSystem<ResourceSystem>()->GetAssetDataDirectory(Asset_Cubemaps) + "/";
+#define USE_TEST_ENV_PATH 0
+#if USE_TEST_ENV_PATH
     	envFilePaths.emplace_back(dir_cubemaps + "array/X+.tga");// Right
     	envFilePaths.emplace_back(dir_cubemaps + "array/X-.tga");// Left
     	envFilePaths.emplace_back(dir_cubemaps + "array/Y+.tga");// Up
     	envFilePaths.emplace_back(dir_cubemaps + "array/Y-.tga");// down
     	envFilePaths.emplace_back(dir_cubemaps + "array/Z-.tga");// back
     	envFilePaths.emplace_back(dir_cubemaps + "array/Z+.tga");// front
+#else
+		envFilePaths.emplace_back(dir_cubemaps + "Environment1.cubemap/posx.bmp");// Right
+		envFilePaths.emplace_back(dir_cubemaps + "Environment1.cubemap/negx.bmp");// Left
+		envFilePaths.emplace_back(dir_cubemaps + "Environment1.cubemap/posy.bmp");// Up
+		envFilePaths.emplace_back(dir_cubemaps + "Environment1.cubemap/negy.bmp");// down
+		envFilePaths.emplace_back(dir_cubemaps + "Environment1.cubemap/negz.bmp");// back
+		envFilePaths.emplace_back(dir_cubemaps + "Environment1.cubemap/posz.bmp");// front
+#endif
     	EnvComp.CreateFromFilePath(envFilePaths);
     	renderMaterial->GetTextures().emplace_back(EnvComp.GetEnvironmentTexture());
     	sphereMesh->SetMaterial(renderMaterial);
@@ -226,6 +238,7 @@ namespace Lemon
 				renderMaterial->Metallic = metallic;
 				renderMaterial->Roughness = roughness;
 				sphereMesh->SetMaterial(renderMaterial);
+				staticMesh2.SetVisiable(false);
 			}
 		}
 		

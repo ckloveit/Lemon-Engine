@@ -137,10 +137,12 @@ namespace Lemon
 		
 	}
 
-	void Renderer::DrawRenderer(Entity entity, bool bEnableDebug) const
+	void Renderer::DrawRenderer(Entity entity) const
 	{
 		TransformComponent& transformComp = entity.GetComponent<TransformComponent>();
 		StaticMeshComponent& staticMeshComp = entity.GetComponent<StaticMeshComponent>();
+		if (!staticMeshComp.IsVisiable())
+			return;
 
 		// Update ObjectBuffer
 		m_RHICommandList->SetUniformBuffer(m_SceneUniformBuffers->ObjectUniformBuffer->GetSlotIndex(),
@@ -192,11 +194,13 @@ namespace Lemon
 				m_RHICommandList->SetTexture(staticMeshComp.GetRenderMesh()->GetMaterial()->GetTextureStartSlot() + i, staticMeshComp.GetRenderMesh()->GetMaterial()->GetTextures()[i]);
 			}
 		}
-		if (bEnableDebug)
+
+		//Debug
+		if (entity.HasComponent<EnvironmentComponent>())
 		{
-			if (entity.HasComponent<EnvironmentComponent>())
+			EnvironmentComponent& envComp = entity.GetComponent<EnvironmentComponent>();
+			if (envComp.bDebugShowDiffuseIrradiance)
 			{
-				EnvironmentComponent& envComp = entity.GetComponent<EnvironmentComponent>();
 				m_RHICommandList->SetTexture(0, envComp.GetEnvDiffuseIrradiance());
 			}
 		}
@@ -252,7 +256,7 @@ namespace Lemon
 		if (!bHasPreComputeIBL)
 		{
 			PreComputeIBL(environmentEntitys);
-			//bHasPreComputeIBL = true;
+			bHasPreComputeIBL = true;
 		}
 
 		// Set Render Target
@@ -287,15 +291,9 @@ namespace Lemon
 			}
 		}
 		
-		//Draw Last
-		static bool bEnableDebug = false;
-		if (GetEngine()->GetInputSystem()->GetKeyDown(KeyCode::O))
-		{
-			bEnableDebug = !bEnableDebug;
-		}
 		for(int i = 0;i < environmentEntitys.size(); i++)
 		{
-			DrawRenderer(environmentEntitys[i], bEnableDebug);
+			DrawRenderer(environmentEntitys[i]);
 		}
 
 		//Draw Debug Gizmo

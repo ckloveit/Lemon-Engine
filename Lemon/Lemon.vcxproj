@@ -138,8 +138,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Src\RenderCore\Containers\DynamicRHIResourceArray.h" />
-    <ClInclude Include="Src\RenderCore\Containers\ResourceArray.h" />
     <ClInclude Include="Src\Core\Core.h" />
     <ClInclude Include="Src\Core\Delegate.h" />
     <ClInclude Include="Src\Core\Engine.h" />
@@ -153,10 +151,6 @@
     <ClInclude Include="Src\LemonPCH.h" />
     <ClInclude Include="Src\Log\Log.h" />
     <ClInclude Include="Src\Math\Math.h" />
-    <ClInclude Include="Src\RenderCore\Geometry\Quad.h" />
-    <ClInclude Include="Src\RenderCore\GlobalRenderResources.h" />
-    <ClInclude Include="Src\RenderCore\PixelShaderUtils.h" />
-    <ClInclude Include="Src\RenderCore\VertexDeclarationStruct.h" />
     <ClInclude Include="Src\RHI\D3D11\D3D11CommandList.h" />
     <ClInclude Include="Src\RHI\D3D11\D3D11DynamicRHI.h" />
     <ClInclude Include="Src\RHI\D3D11\D3D11RHI.h" />
@@ -172,13 +166,19 @@
     <ClInclude Include="Src\RHI\RHIResources.h" />
     <ClInclude Include="Src\RHI\RHIStaticStates.h" />
     <ClInclude Include="Src\RHI\RHISwapChain.h" />
+    <ClInclude Include="Src\RenderCore\Containers\DynamicRHIResourceArray.h" />
+    <ClInclude Include="Src\RenderCore\Containers\ResourceArray.h" />
     <ClInclude Include="Src\RenderCore\Geometry\Cube.h" />
     <ClInclude Include="Src\RenderCore\Geometry\GridGizmo.h" />
+    <ClInclude Include="Src\RenderCore\Geometry\Quad.h" />
     <ClInclude Include="Src\RenderCore\Geometry\Sphere.h" />
+    <ClInclude Include="Src\RenderCore\GlobalRenderResources.h" />
     <ClInclude Include="Src\RenderCore\Material.h" />
     <ClInclude Include="Src\RenderCore\Mesh.h" />
+    <ClInclude Include="Src\RenderCore\PixelShaderUtils.h" />
     <ClInclude Include="Src\RenderCore\RenderCore.h" />
     <ClInclude Include="Src\RenderCore\RenderUtils.h" />
+    <ClInclude Include="Src\RenderCore\VertexDeclarationStruct.h" />
     <ClInclude Include="Src\RenderCore\Viewport.h" />
     <ClInclude Include="Src\Renderer\Renderer.h" />
     <ClInclude Include="Src\Renderer\SceneRenderStates.h" />
@@ -623,9 +623,6 @@
     </ClCompile>
     <ClCompile Include="Src\Log\Log.cpp" />
     <ClCompile Include="Src\Math\Math.cpp" />
-    <ClCompile Include="Src\RenderCore\Geometry\Quad.cpp" />
-    <ClCompile Include="Src\RenderCore\GlobalRenderResources.cpp" />
-    <ClCompile Include="Src\RenderCore\PixelShaderUtils.cpp" />
     <ClCompile Include="Src\RHI\D3D11\D3D11CommandList.cpp" />
     <ClCompile Include="Src\RHI\D3D11\D3D11DynamicRHI.cpp" />
     <ClCompile Include="Src\RHI\D3D11\D3D11IndexBuffer.cpp" />
@@ -642,9 +639,12 @@
     <ClCompile Include="Src\RHI\RHICommandList.cpp" />
     <ClCompile Include="Src\RenderCore\Geometry\Cube.cpp" />
     <ClCompile Include="Src\RenderCore\Geometry\GridGizmo.cpp" />
+    <ClCompile Include="Src\RenderCore\Geometry\Quad.cpp" />
     <ClCompile Include="Src\RenderCore\Geometry\Sphere.cpp" />
+    <ClCompile Include="Src\RenderCore\GlobalRenderResources.cpp" />
     <ClCompile Include="Src\RenderCore\Material.cpp" />
     <ClCompile Include="Src\RenderCore\Mesh.cpp" />
+    <ClCompile Include="Src\RenderCore\PixelShaderUtils.cpp" />
     <ClCompile Include="Src\RenderCore\RenderCore.cpp" />
     <ClCompile Include="Src\RenderCore\RenderUtils.cpp" />
     <ClCompile Include="Src\RenderCore\Viewport.cpp" />

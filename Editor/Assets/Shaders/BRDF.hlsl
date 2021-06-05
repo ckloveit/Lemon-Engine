@@ -5,7 +5,7 @@
 
 // Microfacet specular = D*G*F / (4*NoL*NoV) = D*Vis*F
 // Vis = G / (4*NoL*NoV)
-#define PI 3.1415926f
+#define PI 3.14159265359
 
 float3 Diffuse_Lambert(float3 DiffuseColor)
 {

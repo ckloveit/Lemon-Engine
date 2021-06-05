@@ -5,6 +5,7 @@
 #include "World/Components/TransformComponent.h"
 #include "WidgetHelpers.h"
 #include "World/Components/DirectionalLightComponent.h"
+#include "World/Components/EnvironmentComponent.h"
 
 WidgetProperties::WidgetProperties(Lemon::Engine* engine)
 	:Widget(engine)
@@ -74,7 +75,7 @@ void WidgetProperties::DrawEntity(Lemon::Entity entity) const
 
 	if(entity.HasComponent<Lemon::StaticMeshComponent>())
 	{
-		bool open = ImGui::TreeNodeEx((void*)typeid(Lemon::TransformComponent).hash_code(), treeNodeFlags, "StaticMeshComponent");
+		bool open = ImGui::TreeNodeEx((void*)typeid(Lemon::StaticMeshComponent).hash_code(), treeNodeFlags, "StaticMeshComponent");
 		if(open)
 		{
 			Lemon::StaticMeshComponent& staticMeshComp = entity.GetComponent<Lemon::StaticMeshComponent>();
@@ -107,7 +108,7 @@ void WidgetProperties::DrawEntity(Lemon::Entity entity) const
 
 	if(entity.HasComponent<Lemon::DirectionalLightComponent>())
 	{
-		bool open = ImGui::TreeNodeEx((void*)typeid(Lemon::TransformComponent).hash_code(), treeNodeFlags, "StaticMeshComponent");
+		bool open = ImGui::TreeNodeEx((void*)typeid(Lemon::DirectionalLightComponent).hash_code(), treeNodeFlags, "DirectionalLightComponent");
 		if(open)
 		{
 			Lemon::DirectionalLightComponent& directionalLightComp = entity.GetComponent<Lemon::DirectionalLightComponent>();
@@ -129,6 +130,37 @@ void WidgetProperties::DrawEntity(Lemon::Entity entity) const
 			ImGui::ColorEdit3("##1", (float*)&LightColor.x, misc_flags);
 			directionalLightComp.SetLightColor(LightColor);
 			
+			ImGui::TreePop();
+		}
+	}
+
+	if (entity.HasComponent<Lemon::EnvironmentComponent>())
+	{
+		bool open = ImGui::TreeNodeEx((void*)typeid(Lemon::EnvironmentComponent).hash_code(), treeNodeFlags, "EnvironmentComponent");
+		if (open)
+		{
+			Lemon::EnvironmentComponent& environmentComponent = entity.GetComponent<Lemon::EnvironmentComponent>();
+			ImGui::Columns(2);
+			ImGui::SetColumnWidth(0, 200.0f);
+			ImGui::Text("ShowEnvDiffuseIrradiance");
+			ImGui::NextColumn();
+			static bool alpha_preview = true;
+			static bool alpha_half_preview = false;
+			static bool drag_and_drop = true;
+			static bool options_menu = true;
+			static bool hdr = false;
+			ImGuiColorEditFlags misc_flags = (hdr ? ImGuiColorEditFlags_HDR : 0)
+				| (drag_and_drop ? 0 : ImGuiColorEditFlags_NoDragDrop)
+				| (alpha_half_preview ? ImGuiColorEditFlags_AlphaPreviewHalf : (alpha_preview ? ImGuiColorEditFlags_AlphaPreview : 0))
+				| (options_menu ? 0 : ImGuiColorEditFlags_NoOptions);
+			char* labels[2] = { "ShowEnvDiffuseIrradiance", "ShowEnvTexture" };
+			int index = environmentComponent.bDebugShowDiffuseIrradiance ? 1 : 0;
+			float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+			ImVec2 buttonSize = { 150.0f, lineHeight };
+			if (ImGui::Button(labels[index], buttonSize))
+			{
+				environmentComponent.bDebugShowDiffuseIrradiance = !environmentComponent.bDebugShowDiffuseIrradiance;
+			}
 			ImGui::TreePop();
 		}
 	}

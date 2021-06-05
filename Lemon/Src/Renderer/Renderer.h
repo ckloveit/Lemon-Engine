@@ -52,7 +52,7 @@ namespace Lemon
 	private:
 		void InitGeometry();
 
-		void DrawRenderer(Entity entity, bool bEnableDebug = false) const;
+		void DrawRenderer(Entity entity) const;
 
 
 		void DrawFullScreenQuad(FullScreenUniformParameters fullScreenParameter);
