@@ -151,11 +151,12 @@ namespace Lemon
 		EnvironmentEntity = CreateEntity("Environment");
     	// Create Static Mesh Component
 		StaticMeshComponent& staticMesh = EnvironmentEntity.AddComponent<StaticMeshComponent>();
-		Ref<Mesh> sphereMesh = CreateRef<Sphere>(SkySphereRadius, false);
-		sphereMesh->CreateShader<SF_Vertex>("Assets/Shaders/SimpleEnvironmentCubeVertex.hlsl", "MainVS");
-		sphereMesh->CreateShader<SF_Pixel>("Assets/Shaders/SimpleEnvironmentCubePixel.hlsl", "MainPS");
-		sphereMesh->CreateRHIBuffers();
-		staticMesh.SetMesh(sphereMesh);
+		//Ref<Mesh> skyboxMesh = CreateRef<Sphere>(SkySphereRadius, false);
+		Ref<Mesh> skyboxMesh = CreateRef<Cube>(SkySphereRadius, false);
+		skyboxMesh->CreateShader<SF_Vertex>("Assets/Shaders/SimpleEnvironmentCubeVertex.hlsl", "MainVS");
+		skyboxMesh->CreateShader<SF_Pixel>("Assets/Shaders/SimpleEnvironmentCubePixel.hlsl", "MainPS");
+		skyboxMesh->CreateRHIBuffers();
+		staticMesh.SetMesh(skyboxMesh);
     	
     	Ref<RHIRasterizerState> CullFrontRS = GetEngine()->GetSystem<Renderer>()->GetSceneRenderStates()->SolidCullFrontRasterizerState;
 		Ref<Material> renderMaterial = CreateRef<Material>();
@@ -173,16 +174,16 @@ namespace Lemon
     	envFilePaths.emplace_back(dir_cubemaps + "array/Z-.tga");// back
     	envFilePaths.emplace_back(dir_cubemaps + "array/Z+.tga");// front
 #else
-		envFilePaths.emplace_back(dir_cubemaps + "Environment1.cubemap/posx.bmp");// Right
-		envFilePaths.emplace_back(dir_cubemaps + "Environment1.cubemap/negx.bmp");// Left
+		envFilePaths.emplace_back(dir_cubemaps + "Environment1.cubemap/negx.bmp");// Right
+		envFilePaths.emplace_back(dir_cubemaps + "Environment1.cubemap/posx.bmp");// Left
 		envFilePaths.emplace_back(dir_cubemaps + "Environment1.cubemap/posy.bmp");// Up
 		envFilePaths.emplace_back(dir_cubemaps + "Environment1.cubemap/negy.bmp");// down
-		envFilePaths.emplace_back(dir_cubemaps + "Environment1.cubemap/negz.bmp");// back
-		envFilePaths.emplace_back(dir_cubemaps + "Environment1.cubemap/posz.bmp");// front
+		envFilePaths.emplace_back(dir_cubemaps + "Environment1.cubemap/posz.bmp");// back
+		envFilePaths.emplace_back(dir_cubemaps + "Environment1.cubemap/negz.bmp");// front
 #endif
     	EnvComp.CreateFromFilePath(envFilePaths);
     	renderMaterial->GetTextures().emplace_back(EnvComp.GetEnvironmentTexture());
-    	sphereMesh->SetMaterial(renderMaterial);
+		skyboxMesh->SetMaterial(renderMaterial);
     	
     	m_EnvironmentEntitys.emplace_back(EnvironmentEntity);
     	

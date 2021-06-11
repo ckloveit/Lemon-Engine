@@ -301,7 +301,7 @@ namespace Lemon
 		{
 			if (gizmoDebugEntitys[i] && gizmoDebugEntitys[i].IsGizmo() && gizmoDebugEntitys[i].HasComponent<StaticMeshComponent>())
 			{
-				DrawRenderer(gizmoDebugEntitys[i]);
+				//DrawRenderer(gizmoDebugEntitys[i]);
 			}
 		}
 

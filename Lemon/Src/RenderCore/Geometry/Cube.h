@@ -7,7 +7,7 @@ namespace Lemon
 	class LEMON_API Cube : public Mesh
 	{
 	public:
-		Cube(float cubeSize = 1.0f);
+		Cube(float cubeSize = 1.0f, bool bCompileDefaultShader = true);
 
 	private:
 		void BuildCube(std::vector<StandardMeshVertex>* vertices, std::vector<uint32_t>* indices);

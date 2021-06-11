@@ -11,35 +11,6 @@ struct PixelInput
 
 float4 MainPS(PixelInput Input) : SV_TARGET
 {
-	/*
-	float3 Dir = normalize(Input.WorldPosition.xyz);
-	float3 Normal = normalize(Input.WorldPosition.xyz);
-	float3 Irradiance = 0;
-
-	float3 Up = float3(0.0f, 1.0f, 0.0f);
-	float3 Right = normalize(cross(Up, Normal));
-	Up = normalize(cross(Normal, Right));
-
-	float SampleDelta = 0.025f;
-	float nSamples = 0.0f;
-
-	for (float Phi = 0.0f; Phi < 2.0f * PI; Phi += SampleDelta)
-	{
-		for (float Theta = 0.0f; Theta < 0.5f * PI; Theta += SampleDelta)
-		{
-			// Spherical to cartesian
-			float3 TangentSample = float3(sin(Theta) * cos(Phi), sin(Theta) * sin(Phi), cos(Theta));
-
-			// Tangent to world
-			float3 SampleVec = TangentSample.x * Right + TangentSample.y * Up + TangentSample.z * Normal;
-
-			Irradiance += EnvironmentTexCube.SampleLevel(BilinearClampedSampler, SampleVec, 0).rgb * cos(Theta) * sin(Theta);
-
-			nSamples += 1.0f;
-		}
-	}
-	Irradiance = PI * Irradiance * (1.0f / nSamples);
-	*/
 	// The world vector acts as the normal of a tangent surface
 	// from the origin, aligned to WorldPos. Given this normal, calculate all
 	// incoming radiance of the environment. The result of this radiance

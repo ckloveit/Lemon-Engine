@@ -47,7 +47,7 @@ namespace Lemon
 		{
 			uint32_t sizeX = m_EnvironmentTextureRHI->GetSizeX();
 			uint32_t sizeY = m_EnvironmentTextureRHI->GetSizeY();
-			ERHIPixelFormat pixelFormat = m_EnvironmentTextureRHI->GetPixelFormat();
+			ERHIPixelFormat pixelFormat = RHI_PF_R16G16B16A16_Float;// m_EnvironmentTextureRHI->GetPixelFormat();
 			
 			RHITextureCubeCreateInfo createInfo;
 			m_EnvironmentDiffuseIrradianceTexture = RHICreateTextureCube(sizeX, sizeY, pixelFormat, 1, 

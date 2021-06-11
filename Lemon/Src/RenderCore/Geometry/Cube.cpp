@@ -4,18 +4,20 @@
 
 namespace Lemon
 {
-	Cube::Cube(float cubeSize /*= 1.0f*/)
+	Cube::Cube(float cubeSize /*= 1.0f*/, bool bCompileDefaultShader /* = true */)
 		:m_CubeSize(cubeSize)
 	{
 		std::vector<StandardMeshVertex> vertices;
 		std::vector<uint32_t> indices;
 		BuildCube(&vertices, &indices);
 		BuileMesh(vertices, indices);
-
 		// Shader And RHIResouce
-		CreateShader<SF_Vertex>("Assets/Shaders/SimpleStandardVertex.hlsl", "MainVS");
-		CreateShader<SF_Pixel>("Assets/Shaders/SimpleStandardPixel.hlsl", "MainPS");
-		CreateRHIBuffers();
+		if (bCompileDefaultShader)
+		{
+			CreateShader<SF_Vertex>("Assets/Shaders/SimpleStandardVertex.hlsl", "MainVS");
+			CreateShader<SF_Pixel>("Assets/Shaders/SimpleStandardPixel.hlsl", "MainPS");
+			CreateRHIBuffers();
+		}
 	}
 
 	void Cube::BuildCube(std::vector<StandardMeshVertex>* vertices, std::vector<uint32_t>* indices)
@@ -73,8 +75,5 @@ namespace Lemon
 		indices->emplace_back(6);
 		indices->emplace_back(2);
 	}
-
-
-
 
 }
