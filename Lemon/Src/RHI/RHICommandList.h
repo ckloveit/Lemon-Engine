@@ -53,7 +53,10 @@ namespace Lemon
 		virtual void SetSamplerState(uint32_t slot,const Ref<RHISamplerState>& samplerState) = 0;
 
 		// Texture
-		virtual void SetTexture(uint32_t slot, const Ref<RHITexture>& texture) = 0;
+		virtual void SetTexture(uint32_t slot, const Ref<RHITexture>& texture) = 0;	
+		
+		virtual void SetMipTexture(Ref<RHITextureCube> targetTex, int mipIndex, int mipWidth, int mipHeight, std::vector<Ref<RHITexture2D>> mipTextures) = 0;
+
 		//=======================================================================================================//
 	private:
 		static RHICommandList* s_Instance;

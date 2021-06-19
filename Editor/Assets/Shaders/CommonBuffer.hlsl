@@ -33,3 +33,23 @@ cbuffer FullScreenUniformBuffer : register(b3)
 {
 	matrix g_FullScreen_LocalToWorldMatrix;
 };
+
+// Custom Data for our some special usage
+cbuffer CustomDataFloat4UniformBuffer : register(b4)
+{
+    float4 g_CustomDataFloat4_CustomData0;
+};
+
+cbuffer CustomDataFloat8UniformBuffer : register(b5)
+{
+    float4 g_CustomDataFloat8_CustomData0;
+    float4 g_CustomDataFloat8_CustomData1;
+};
+
+cbuffer CustomDataFloat16UniformBuffer : register(b6)
+{
+    float4 g_CustomDataFloat16_CustomData0;
+    float4 g_CustomDataFloat16_CustomData1;
+    float4 g_CustomDataFloat16_CustomData2;
+};
+

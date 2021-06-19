@@ -15,18 +15,28 @@ namespace Lemon
 
 		Ref<RHITextureCube> GetEnvironmentTexture() const { return m_EnvironmentTextureRHI; }
 
-		void InitEnvDiffuseIrradianceTexture();
-
 		Ref<RHITextureCube> GetEnvDiffuseIrradiance() const { return m_EnvironmentDiffuseIrradianceTexture; }
 
+		Ref<RHITextureCube> GetEnvSpecularPrefilter() const { return m_EnvironmentSpecularPrefilterTexture; }
+
+		void InitEnvDiffuseIrradianceTexture();
+		void InitEnvSpecularPrefilterTexture();
 	public:
-		//Debug
-		bool bDebugShowDiffuseIrradiance = false;
+		//----------Debug IBL--------------//
+		// 0 : EnvCubemap
+		// 1 : EnvDiffuseIrradiance
+
+		int bDebugShowIBLType = 0;
 	private:
 		Ref<RHITextureCube> m_EnvironmentTextureRHI;
 
-		//Image-Base-Lighting
+		//=====Image-Base-Lighting===============
+		// Diffuse Irradiance CubeMap
 		Ref<RHITextureCube> m_EnvironmentDiffuseIrradianceTexture;
+		// Specular Prefilter CubeMap
+		Ref<RHITextureCube> m_EnvironmentSpecularPrefilterTexture;
+		
 
+		//=======================================
 	};
 }

@@ -142,7 +142,7 @@ void WidgetProperties::DrawEntity(Lemon::Entity entity) const
 			Lemon::EnvironmentComponent& environmentComponent = entity.GetComponent<Lemon::EnvironmentComponent>();
 			ImGui::Columns(2);
 			ImGui::SetColumnWidth(0, 200.0f);
-			ImGui::Text("ShowEnvDiffuseIrradiance");
+			ImGui::Text("ShowEnvTexture");
 			ImGui::NextColumn();
 			static bool alpha_preview = true;
 			static bool alpha_half_preview = false;
@@ -153,13 +153,18 @@ void WidgetProperties::DrawEntity(Lemon::Entity entity) const
 				| (drag_and_drop ? 0 : ImGuiColorEditFlags_NoDragDrop)
 				| (alpha_half_preview ? ImGuiColorEditFlags_AlphaPreviewHalf : (alpha_preview ? ImGuiColorEditFlags_AlphaPreview : 0))
 				| (options_menu ? 0 : ImGuiColorEditFlags_NoOptions);
-			char* labels[2] = { "ShowEnvDiffuseIrradiance", "ShowEnvTexture" };
-			int index = environmentComponent.bDebugShowDiffuseIrradiance ? 1 : 0;
+			char* labels[3] = {"ShowEnvTexture", "ShowEnvDiffuseIrradiance", "ShowEnvSpecularPrefilter" };
+			int index = environmentComponent.bDebugShowIBLType;
+			if (index > 3) { index = 2; }
+			if (index < 0) { index = 0; }
+
 			float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
 			ImVec2 buttonSize = { 150.0f, lineHeight };
+			
 			if (ImGui::Button(labels[index], buttonSize))
 			{
-				environmentComponent.bDebugShowDiffuseIrradiance = !environmentComponent.bDebugShowDiffuseIrradiance;
+				environmentComponent.bDebugShowIBLType++;
+				environmentComponent.bDebugShowIBLType %= 3;
 			}
 			ImGui::TreePop();
 		}

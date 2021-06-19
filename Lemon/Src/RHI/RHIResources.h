@@ -152,10 +152,7 @@ namespace Lemon
 		//=========Dynamic cast methods=============
 		virtual class RHITexture2D* GetTexture2D() { return nullptr; }
 		virtual class RHITextureCube* GetTextureCube() { return nullptr; }
-
-
 		//=========================================
-
 
 		//=========RHI Resource====================
 		virtual void* GetNativeResource() = 0;

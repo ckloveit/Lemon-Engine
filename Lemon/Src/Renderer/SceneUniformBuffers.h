@@ -55,7 +55,25 @@ namespace Lemon
 		glm::mat4 LocalToWorldMatrix;
 
 	};
-    
+
+    // High frequency - Updates at least as many times as there are many fullscreenquad drawcall in one frame
+    struct CustomDataFloat4UniformParameters
+    {
+        glm::vec4 CustomData0;
+    };
+    struct CustomDataFloat8UniformParameters
+    {
+        glm::vec4 CustomData0;
+        glm::vec4 CustomData1;
+    };
+    struct CustomDataFloat16UniformParameters
+    {
+        glm::vec4 CustomData0;
+        glm::vec4 CustomData1;
+        glm::vec4 CustomData2;
+        glm::vec4 CustomData3;
+    };
+
     
     struct LEMON_API SceneUniformBuffers
     {
@@ -68,6 +86,10 @@ namespace Lemon
         Ref<RHIUniformBuffer<ObjectUniformParameters>> ObjectUniformBuffer;
         Ref<RHIUniformBuffer<LightUniformParameters>> LightUniformBuffer;
 		Ref<RHIUniformBuffer<FullScreenUniformParameters>> FullScreenUniformBuffer;
+        // CustomUniformBuffers
+        Ref<RHIUniformBuffer<CustomDataFloat4UniformParameters>> CustomDataFloat4UniformBuffer;
+        Ref<RHIUniformBuffer<CustomDataFloat8UniformParameters>> CustomDataFloat8UniformBuffer;
+        Ref<RHIUniformBuffer<CustomDataFloat16UniformParameters>> CustomDataFloat16UniformBuffer;
         
     };
 

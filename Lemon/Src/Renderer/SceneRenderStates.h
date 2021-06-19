@@ -27,7 +27,10 @@ namespace Lemon
 
         Ref<RHISamplerState> PointClampedSamplerState;
         Ref<RHISamplerState> BilinerClampedSamplerState;
-
+        Ref<RHISamplerState> TrilinearClampedSamplerState;
+        Ref<RHISamplerState> PointWrapSamplerState;
+        Ref<RHISamplerState> BilinerWrapSamplerState;
+        Ref<RHISamplerState> TrilinearWrapSamplerState;
         
         
     };

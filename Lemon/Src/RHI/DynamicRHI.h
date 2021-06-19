@@ -66,6 +66,10 @@ namespace Lemon
 		//===SamplerState=======//
 		virtual Ref<RHISamplerState> RHICreateSamplerState(const SamplerStateInitializer& initializer) = 0;
 		
+		// ====Texture Settings====//
+		virtual void SetMipTexture(Ref<RHITextureCube> targetTex, int mipIndex, int mipWidth, int mipHeight, std::vector<Ref<RHITexture2D>> mipTextures) = 0;
+
+
 		//========Just Debug
 		virtual void RHIClearRenderTarget(Ref<RHISwapChain> swapChain, glm::vec4 backgroundColor) = 0;
 		//===================End RHI Methods ==================//

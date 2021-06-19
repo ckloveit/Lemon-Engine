@@ -31,9 +31,9 @@ namespace Lemon
 		{
 			createInfo.TextureArrayDatas.emplace_back(textureInfoDatas[i].RawData);
 		}
-		
+		int envNumMips = 1;
 		m_EnvironmentTextureRHI = RHICreateTextureCube(textureInfoDatas[0].Width, textureInfoDatas[0].Height, textureInfoDatas[0].Format,
-			1, RHI_TexCreate_ShaderResource, createInfo);
+			envNumMips, RHI_TexCreate_ShaderResource, createInfo);
 	}
 
 	void EnvironmentComponent::InitEnvDiffuseIrradianceTexture()
@@ -55,5 +55,26 @@ namespace Lemon
 				createInfo);
 		}
 
+	}
+
+
+	void EnvironmentComponent::InitEnvSpecularPrefilterTexture()
+	{
+		if (!m_EnvironmentTextureRHI)
+		{
+			return;
+		}
+
+		if (!m_EnvironmentSpecularPrefilterTexture)
+		{
+			uint32_t sizeX = m_EnvironmentTextureRHI->GetSizeX();
+			uint32_t sizeY = m_EnvironmentTextureRHI->GetSizeY();
+			ERHIPixelFormat pixelFormat = RHI_PF_R16G16B16A16_Float;// m_EnvironmentTextureRHI->GetPixelFormat();
+
+			RHITextureCubeCreateInfo createInfo;
+			m_EnvironmentSpecularPrefilterTexture = RHICreateTextureCube(sizeX, sizeY, pixelFormat, 5,
+				RHI_TexCreate_RenderTargetable | RHI_TexCreate_ShaderResource,
+				createInfo);
+		}
 	}
 }

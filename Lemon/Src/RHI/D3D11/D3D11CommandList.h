@@ -47,7 +47,9 @@ namespace Lemon
 		virtual void SetSamplerState(uint32_t slot, const Ref<RHISamplerState>& samplerState) override;
 		
 		virtual void SetTexture(uint32_t slot, const Ref<RHITexture>& texture) override;
-		
+
+		virtual void SetMipTexture(Ref<RHITextureCube> targetTex, int mipIndex, int mipWidth, int mipHeight, std::vector<Ref<RHITexture2D>> mipTextures) override;
+
 		//=======================================================================================================//
 	private:
 		D3D11DynamicRHI* m_D3D11RHI;

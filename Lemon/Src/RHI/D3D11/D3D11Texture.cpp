@@ -12,7 +12,7 @@ namespace Lemon
 
 	// Create D3D11 Texture2D
 	Ref<RHITexture2D> D3D11DynamicRHI::RHICreateTexture2D(uint32_t sizeX, uint32_t sizeY,
-		ERHIPixelFormat format, uint32_t numMips, 
+		ERHIPixelFormat format, uint32_t numMips,
 		uint32_t createFlags, RHIResourceCreateInfo& createInfo)
 	{
 		UINT bindFlags = D3D11::GetD3D11TextureResourceBindFlags(createFlags);
@@ -76,10 +76,11 @@ namespace Lemon
 		{
 			bSRVResult = D3D11::CreateShaderResourceViewCube(this, texture, numMips, D3DformatSRV, textureSRV);
 		}
-		
+
 		std::vector<ID3D11RenderTargetView*> textureRTVs;
 		if (IsRenderTarget(createFlags))
 		{
+			// TODO: Consider Mipmap
 			bRTVResult = D3D11::CreateRenderTargetViewCube(this, texture, 1, D3Dformat, textureRTVs);
 		}
 		ID3D11DepthStencilView* textureDSV = nullptr;
@@ -92,6 +93,27 @@ namespace Lemon
 			return CreateRef<D3D11TextureCube>(this, texture, textureSRV, textureRTVs, textureDSV, sizeX, sizeY, numMips, format);
 		}
 		return nullptr;
+	}
+
+	void D3D11DynamicRHI::SetMipTexture(Ref<RHITextureCube> targetTex, int mipIndex, int mipWidth, int mipHeight, std::vector<Ref<RHITexture2D>> mipTextures)
+	{
+		D3D11_BOX sourceRegion;
+		int numMips = targetTex->GetNumMip();
+		for (int i = 0; i < 6; ++i)
+		{
+			Ref<RHITexture> texture = mipTextures[i];
+
+			sourceRegion.left = 0;
+			sourceRegion.right = mipWidth;
+			sourceRegion.top = 0;
+			sourceRegion.bottom = mipHeight;
+			sourceRegion.front = 0;
+			sourceRegion.back = 1;
+
+			GetDeviceContext()->CopySubresourceRegion(static_cast<ID3D11Resource*>(targetTex->GetNativeResource()),
+				D3D11CalcSubresource(mipIndex, i, numMips), 0, 0, 0, static_cast<ID3D11Resource*>(texture->GetNativeResource()),
+				0, &sourceRegion);
+		}
 	}
 
 }

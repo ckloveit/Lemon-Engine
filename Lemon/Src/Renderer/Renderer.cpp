@@ -199,9 +199,13 @@ namespace Lemon
 		if (entity.HasComponent<EnvironmentComponent>())
 		{
 			EnvironmentComponent& envComp = entity.GetComponent<EnvironmentComponent>();
-			if (envComp.bDebugShowDiffuseIrradiance)
+			if (envComp.bDebugShowIBLType == 1)
 			{
 				m_RHICommandList->SetTexture(0, envComp.GetEnvDiffuseIrradiance());
+			}
+			else if (envComp.bDebugShowIBLType == 2)
+			{
+				m_RHICommandList->SetTexture(0, envComp.GetEnvSpecularPrefilter());
 			}
 		}
 		// Draw
@@ -256,7 +260,7 @@ namespace Lemon
 		if (!bHasPreComputeIBL)
 		{
 			PreComputeIBL(environmentEntitys);
-			bHasPreComputeIBL = true;
+			//bHasPreComputeIBL = true;
 		}
 
 		// Set Render Target
@@ -411,13 +415,75 @@ namespace Lemon
 				// DrawFullScreen
 				FullScreenUniformParameters fullScreenParameter;
 				fullScreenParameter.LocalToWorldMatrix = captureViews[j];
-				PreComputeDiffuseIrradiance(fullScreenParameter);
+				//ComputePreDiffuseIrradiance(fullScreenParameter);
+			}
+		}
+
+		// PreFilter for Specular
+		for (int i = 0; i < environmentEntitys.size(); i++)
+		{
+			EnvironmentComponent& envComp = environmentEntitys[i].GetComponent<EnvironmentComponent>();
+			envComp.InitEnvSpecularPrefilterTexture();
+			//
+			Ref<RHITextureCube> SpecularPrefilterTex = envComp.GetEnvSpecularPrefilter();
+
+			// Set Render Target
+			uint32_t PreFilterSizeX = SpecularPrefilterTex->GetSizeX();
+			uint32_t PreFilterSizeY = SpecularPrefilterTex->GetSizeY();
+			ERHIPixelFormat tempPrefilterFormat = SpecularPrefilterTex->GetPixelFormat();
+			unsigned int maxMipLevels = 5;
+			for (unsigned int mip = 0; mip < maxMipLevels; ++mip)
+			{
+				unsigned int mipWidth = PreFilterSizeX * std::pow(0.5, mip);
+				unsigned int mipHeight = PreFilterSizeY * std::pow(0.5, mip);
+				std::vector<Ref<RHITexture2D>> tempPrefilterTexures;
+				RHIResourceCreateInfo createInfo;
+				tempPrefilterTexures.emplace_back(RHICreateTexture2D(mipWidth, mipHeight, tempPrefilterFormat, 1,
+					RHI_TexCreate_ShaderResource | RHI_TexCreate_RenderTargetable, createInfo));
+				tempPrefilterTexures.emplace_back(RHICreateTexture2D(mipWidth, mipHeight, tempPrefilterFormat, 1,
+					RHI_TexCreate_ShaderResource | RHI_TexCreate_RenderTargetable, createInfo));
+				tempPrefilterTexures.emplace_back(RHICreateTexture2D(mipWidth, mipHeight, tempPrefilterFormat, 1,
+					RHI_TexCreate_ShaderResource | RHI_TexCreate_RenderTargetable, createInfo));
+				tempPrefilterTexures.emplace_back(RHICreateTexture2D(mipWidth, mipHeight, tempPrefilterFormat, 1,
+					RHI_TexCreate_ShaderResource | RHI_TexCreate_RenderTargetable, createInfo));
+				tempPrefilterTexures.emplace_back(RHICreateTexture2D(mipWidth, mipHeight, tempPrefilterFormat, 1,
+					RHI_TexCreate_ShaderResource | RHI_TexCreate_RenderTargetable, createInfo));
+				tempPrefilterTexures.emplace_back(RHICreateTexture2D(mipWidth, mipHeight, tempPrefilterFormat, 1,
+					RHI_TexCreate_ShaderResource | RHI_TexCreate_RenderTargetable, createInfo));
+
+				Viewport viewport(0, 0, mipWidth, mipHeight);
+				m_RHICommandList->SetViewport(viewport);
+				glm::mat4 captureViews[6];
+				captureViews[0] = glm::toMat4(glm::quat(glm::radians(glm::vec3(0, 90, 0))));
+				captureViews[1] = glm::toMat4(glm::quat(glm::radians(glm::vec3(0, -90, 0))));
+				captureViews[2] = glm::toMat4(glm::quat(glm::radians(glm::vec3(-90, 0, 0))));
+				captureViews[3] = glm::toMat4(glm::quat(glm::radians(glm::vec3(90, 0, 0))));
+				captureViews[4] = glm::toMat4(glm::quat(glm::radians(glm::vec3(0, 0, 0))));
+				captureViews[5] = glm::toMat4(glm::quat(glm::radians(glm::vec3(0, 180, 0))));
+
+				//PreFilter Env Cubemap
+				StaticMeshComponent& staticMeshComp = environmentEntitys[i].GetComponent<StaticMeshComponent>();
+				m_RHICommandList->SetTexture(0, staticMeshComp.GetRenderMesh()->GetMaterial()->GetTextures()[0]);
+				CustomDataFloat4UniformParameters customDataFloat4Parameter;
+				const float roughness = float(mip) / float(maxMipLevels - 1);
+				customDataFloat4Parameter.CustomData0.x = roughness;
+				for (int j = 0; j < 6; j++)
+				{
+					m_RHICommandList->SetRenderTarget(tempPrefilterTexures[j], nullptr);
+					m_RHICommandList->RHIClearRenderTarget(tempPrefilterTexures[j], glm::vec4(0.0f, 0.0f, 0.0f, 1.0f),
+						nullptr);
+					// DrawFullScreen
+					FullScreenUniformParameters fullScreenParameter;
+					fullScreenParameter.LocalToWorldMatrix = captureViews[j];
+					ComputePreFilterSepcualr(fullScreenParameter, customDataFloat4Parameter);
+				}
+				// Set the Mip Texture
+				m_RHICommandList->SetMipTexture(SpecularPrefilterTex, mip, mipWidth, mipHeight, tempPrefilterTexures);
 			}
 		}
 	}
 
-
-	void Renderer::PreComputeDiffuseIrradiance(FullScreenUniformParameters fullScreenParameter)
+	void Renderer::ComputePreDiffuseIrradiance(FullScreenUniformParameters fullScreenParameter)
 	{
 		// Update ObjectBuffer
 		m_RHICommandList->SetUniformBuffer(m_SceneUniformBuffers->FullScreenUniformBuffer->GetSlotIndex(),
@@ -442,6 +508,37 @@ namespace Lemon
 		PixelShaderUtils::DrawFullScreenQuad(m_RHICommandList, FullScreenVertexDeclaration, FullScreenVertexShader, FullScreenPixelShader);
 
 	}
+
+	void Renderer::ComputePreFilterSepcualr(FullScreenUniformParameters fullScreenParameter, CustomDataFloat4UniformParameters customDataFloat4Parameter)
+	{
+		// Update ObjectBuffer
+		m_RHICommandList->SetUniformBuffer(m_SceneUniformBuffers->FullScreenUniformBuffer->GetSlotIndex(),
+			EUniformBufferUsageScope::UBUS_Vertex | EUniformBufferUsageScope::UBUS_Pixel,
+			m_SceneUniformBuffers->FullScreenUniformBuffer->UniformBuffer());
+		m_SceneUniformBuffers->FullScreenUniformBuffer->UpdateUniformBufferImmediate(fullScreenParameter);
+
+		m_RHICommandList->SetUniformBuffer(m_SceneUniformBuffers->CustomDataFloat4UniformBuffer->GetSlotIndex(),
+			EUniformBufferUsageScope::UBUS_Vertex | EUniformBufferUsageScope::UBUS_Pixel,
+			m_SceneUniformBuffers->CustomDataFloat4UniformBuffer->UniformBuffer());
+		m_SceneUniformBuffers->CustomDataFloat4UniformBuffer->UpdateUniformBufferImmediate(customDataFloat4Parameter);
+
+		//
+		static std::shared_ptr<RHIVertexShader> FullScreenVertexShader = nullptr;
+		static std::shared_ptr<RHIPixelShader> FullScreenPixelShader = nullptr;
+		static std::shared_ptr<RHIVertexDeclaration> FullScreenVertexDeclaration = nullptr;
+		if (FullScreenVertexShader == nullptr)
+		{
+			RHIShaderCreateInfo shaderCreateInfo;
+			FullScreenVertexShader = RHICreateVertexShader("Assets/Shaders/ComputePreFilterSpecularVertex.hlsl", "MainVS", shaderCreateInfo);
+			FullScreenPixelShader = RHICreatePixelShader("Assets/Shaders/ComputePreFilterSpecularPixel.hlsl", "MainPS", shaderCreateInfo);
+			if (GlobalRenderResources::GetInstance())
+			{
+				FullScreenVertexDeclaration = RHICreateVertexDeclaration(FullScreenVertexShader, GlobalRenderResources::GetInstance()->StandardMeshVertexDeclarationElementList);
+			}
+		}
+		PixelShaderUtils::DrawFullScreenQuad(m_RHICommandList, FullScreenVertexDeclaration, FullScreenVertexShader, FullScreenPixelShader);
+	}
+
 
 	void Renderer::DrawFullScreenQuad(FullScreenUniformParameters fullScreenParameter)
 	{

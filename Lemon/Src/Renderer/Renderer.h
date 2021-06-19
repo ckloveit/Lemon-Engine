@@ -61,7 +61,9 @@ namespace Lemon
 
 		// ====IBL=======
 
-		void PreComputeDiffuseIrradiance(FullScreenUniformParameters fullScreenParameter);
+		void ComputePreDiffuseIrradiance(FullScreenUniformParameters fullScreenParameter);
+		void ComputePreFilterSepcualr(FullScreenUniformParameters fullScreenParameter, CustomDataFloat4UniformParameters customDataFloat4Parameter);
+
 		//===============
 	private:
 		Viewport m_Viewport = { 0, 0, 1920, 1080 };

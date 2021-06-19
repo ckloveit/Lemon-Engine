@@ -322,4 +322,10 @@ namespace Lemon
             );
 		}
 	}
+
+	void D3D11CommandList::SetMipTexture(Ref<RHITextureCube> targetTex, int mipIndex, int mipWidth, int mipHeight, std::vector<Ref<RHITexture2D>> mipTextures)
+	{
+		m_D3D11RHI->SetMipTexture(targetTex, mipIndex, mipWidth, mipHeight, mipTextures);
+	}
+
 }

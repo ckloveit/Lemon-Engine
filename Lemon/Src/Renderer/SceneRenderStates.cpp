@@ -25,6 +25,11 @@ namespace Lemon
     {
         PointClampedSamplerState = TStaticSamplerState<SF_Point>::CreateRHI();
         BilinerClampedSamplerState = TStaticSamplerState<SF_Bilinear>::CreateRHI();
+        TrilinearClampedSamplerState = TStaticSamplerState<SF_Trilinear>::CreateRHI();
+
+        PointWrapSamplerState = TStaticSamplerState<SF_Point, AM_Wrap, AM_Wrap, AM_Wrap>::CreateRHI();
+        BilinerWrapSamplerState = TStaticSamplerState<SF_Bilinear, AM_Wrap, AM_Wrap, AM_Wrap>::CreateRHI();
+        TrilinearWrapSamplerState = TStaticSamplerState<SF_Trilinear, AM_Wrap, AM_Wrap, AM_Wrap>::CreateRHI();
     }
 
 
@@ -32,6 +37,9 @@ namespace Lemon
     {
         CmdList->SetSamplerState(0, PointClampedSamplerState);
         CmdList->SetSamplerState(1, BilinerClampedSamplerState);
-        
+        CmdList->SetSamplerState(2, TrilinearClampedSamplerState);
+        CmdList->SetSamplerState(3, PointWrapSamplerState);
+        CmdList->SetSamplerState(4, BilinerWrapSamplerState);
+        CmdList->SetSamplerState(5, TrilinearWrapSamplerState);
     }
 }

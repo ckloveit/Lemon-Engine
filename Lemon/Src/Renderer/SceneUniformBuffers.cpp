@@ -11,6 +11,11 @@ namespace Lemon
         LightUniformBuffer = RHIUniformBuffer<LightUniformParameters>::CreateUniformBufferImmediate(2, "LightUniform");
 		FullScreenUniformBuffer = RHIUniformBuffer<FullScreenUniformParameters>::CreateUniformBufferImmediate(3, "FullScreenUniform");
 
+        //CustomData
+        CustomDataFloat4UniformBuffer = RHIUniformBuffer<CustomDataFloat4UniformParameters>::CreateUniformBufferImmediate(4, "CustomDataFloat4");
+        CustomDataFloat8UniformBuffer = RHIUniformBuffer<CustomDataFloat8UniformParameters>::CreateUniformBufferImmediate(5, "CustomDataFloat4");
+        CustomDataFloat16UniformBuffer = RHIUniformBuffer<CustomDataFloat16UniformParameters>::CreateUniformBufferImmediate(6, "CustomDataFloat4");
+
         // Upload
         ViewUniformParameters viewParameters;
         viewParameters.ViewMatrix = glm::mat4();
@@ -33,6 +38,10 @@ namespace Lemon
 		FullScreenUniformParameters fullScreenParameters;
 		fullScreenParameters.LocalToWorldMatrix = glm::mat4();
 		FullScreenUniformBuffer->UpdateUniformBufferImmediate(fullScreenParameters);
+
+        CustomDataFloat4UniformParameters customDataFloat4Parameters;
+        customDataFloat4Parameters.CustomData0 = glm::vec4(0, 0, 0, 0);
+        CustomDataFloat4UniformBuffer->UpdateUniformBufferImmediate(customDataFloat4Parameters);
 
 
     }
