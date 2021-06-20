@@ -37,7 +37,7 @@ float4 MainPS(PixelInput Input) : SV_TARGET
 			// tangent space to world
 			float3 sampleVec = tangentSample.x * right + tangentSample.y * up + tangentSample.z * N;
 
-			irradiance += EnvironmentTexCube.Sample(BilinearClampedSampler, sampleVec).rgb * cos(theta) * sin(theta);
+			irradiance += EnvironmentTexCube.Sample(BilinearWrapSampler, sampleVec).rgb * cos(theta) * sin(theta);
 			nrSamples++;
 		}
 	}

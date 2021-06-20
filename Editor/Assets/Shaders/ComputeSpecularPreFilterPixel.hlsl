@@ -29,7 +29,7 @@ float4 MainPS(PixelInput Input) : SV_TARGET
 		float NdotL = max(dot(N, L), 0.0);
 		if (NdotL > 0.0)
 		{
-			prefilteredColor += EnvironmentTexCube.Sample(TrilinearWrapSampler, L).rgb * NdotL;
+			prefilteredColor += EnvironmentTexCube.Sample(BilinearWrapSampler, L).rgb * NdotL;
 			totalWeight += NdotL;
 		}
 	}

@@ -16,6 +16,7 @@
 #include "RenderCore/Geometry/Cube.h"
 #include "RenderCore/Geometry/Quad.h"
 #include "World/Entity.h"
+#include "World/Components/EnvironmentComponent.h"
 
 namespace Lemon
 {
@@ -29,9 +30,12 @@ namespace Lemon
 		Renderer(Engine* engine);
 		~Renderer();
 
-
 		bool Initialize() override;
 		void Tick(float deltaTime) override;
+
+
+		void PreRender(float deltaTime);
+		void Render(float deltaTime);
 
 		void OnResize(uint32_t newWidth, uint32_t newHeight);
 		
@@ -53,12 +57,14 @@ namespace Lemon
 		void InitGeometry();
 
 		void DrawRenderer(Entity entity) const;
+		void DrawSky(Entity entity) const;
 
 
 		void DrawFullScreenQuad(FullScreenUniformParameters fullScreenParameter, std::vector<std::shared_ptr<RHITexture>> Textures = std::vector<std::shared_ptr<RHITexture>>());
 
 		void PreComputeIBL(std::vector<Entity>& environment);
 
+		void EnvEquirectangularToCubeMap(EnvironmentComponent& envComp);
 		// ====IBL=======
 
 		void ComputePreDiffuseIrradiance(FullScreenUniformParameters fullScreenParameter);
@@ -86,6 +92,12 @@ namespace Lemon
 		Ref<RHIVertexBuffer> simpleVertexBuffer;
 		Ref<RHIIndexBuffer> simpleIndexBuffer;
 		Ref<RHIVertexDeclaration> vertexDeclaration;
+
+		// ---------classfiy entitys
+		std::vector<Entity> gizmoDebugEntitys;
+		std::vector<Entity> environmentEntitys;
+		std::vector<Entity> normalEntitys;
+		std::vector<Entity> lightEntitys;
 
 	};
 }

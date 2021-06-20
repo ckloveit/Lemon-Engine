@@ -23,6 +23,7 @@ namespace Lemon
 		void DestroyEntity(Entity& entity);
         
         Entity GetMainCamera() const { return MainCameraEntity; }
+		Entity GetMainEnvironment() const { return MainEnvironmentEntity; }
                 
         std::vector<Entity> GetAllEntities() const;
     private:
@@ -40,7 +41,7 @@ namespace Lemon
         entt::registry m_Registry;
         Entity MainCameraEntity;
 		Entity GridGizmoEntity;
-		Entity EnvironmentEntity;
+		Entity MainEnvironmentEntity;
 
         std::vector<Entity> m_Entitys;
 

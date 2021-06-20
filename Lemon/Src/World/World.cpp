@@ -148,9 +148,9 @@ namespace Lemon
 
 	void World::CreateEnvironment(float SkySphereRadius /* = 1000.0f*/)
 	{
-		EnvironmentEntity = CreateEntity("Environment");
+		MainEnvironmentEntity = CreateEntity("Environment");
     	// Create Static Mesh Component
-		StaticMeshComponent& staticMesh = EnvironmentEntity.AddComponent<StaticMeshComponent>();
+		StaticMeshComponent& staticMesh = MainEnvironmentEntity.AddComponent<StaticMeshComponent>();
 		//Ref<Mesh> skyboxMesh = CreateRef<Sphere>(SkySphereRadius, false);
 		Ref<Mesh> skyboxMesh = CreateRef<Cube>(SkySphereRadius, false);
 		skyboxMesh->CreateShader<SF_Vertex>("Assets/Shaders/SimpleEnvironmentCubeVertex.hlsl", "MainVS");
@@ -162,9 +162,10 @@ namespace Lemon
 		Ref<Material> renderMaterial = CreateRef<Material>();
     	renderMaterial->SetRasterizerState(CullFrontRS);
 		// Create Environment Component
-    	EnvironmentComponent& EnvComp = EnvironmentEntity.AddComponent<EnvironmentComponent>();
+    	EnvironmentComponent& EnvComp = MainEnvironmentEntity.AddComponent<EnvironmentComponent>();
 		std::vector<std::string> envFilePaths;
 		const auto dir_cubemaps = GetEngine()->GetSystem<ResourceSystem>()->GetAssetDataDirectory(Asset_Cubemaps) + "/";
+		bool bUseSixCubeMap = false;
 #define USE_TEST_ENV_PATH 0
 #if USE_TEST_ENV_PATH
     	envFilePaths.emplace_back(dir_cubemaps + "array/X+.tga");// Right
@@ -174,18 +175,25 @@ namespace Lemon
     	envFilePaths.emplace_back(dir_cubemaps + "array/Z-.tga");// back
     	envFilePaths.emplace_back(dir_cubemaps + "array/Z+.tga");// front
 #else
-		envFilePaths.emplace_back(dir_cubemaps + "Environment1.cubemap/negx.bmp");// Right
-		envFilePaths.emplace_back(dir_cubemaps + "Environment1.cubemap/posx.bmp");// Left
-		envFilePaths.emplace_back(dir_cubemaps + "Environment1.cubemap/posy.bmp");// Up
-		envFilePaths.emplace_back(dir_cubemaps + "Environment1.cubemap/negy.bmp");// down
-		envFilePaths.emplace_back(dir_cubemaps + "Environment1.cubemap/posz.bmp");// back
-		envFilePaths.emplace_back(dir_cubemaps + "Environment1.cubemap/negz.bmp");// front
+		if (bUseSixCubeMap)
+		{
+			envFilePaths.emplace_back(dir_cubemaps + "Environment1.cubemap/negx.bmp");// Right
+			envFilePaths.emplace_back(dir_cubemaps + "Environment1.cubemap/posx.bmp");// Left
+			envFilePaths.emplace_back(dir_cubemaps + "Environment1.cubemap/posy.bmp");// Up
+			envFilePaths.emplace_back(dir_cubemaps + "Environment1.cubemap/negy.bmp");// down
+			envFilePaths.emplace_back(dir_cubemaps + "Environment1.cubemap/posz.bmp");// back
+			envFilePaths.emplace_back(dir_cubemaps + "Environment1.cubemap/negz.bmp");// front
+		}
+		else
+		{
+			envFilePaths.emplace_back(dir_cubemaps + "environment.bmp");// Right
+		}
 #endif
     	EnvComp.CreateFromFilePath(envFilePaths);
     	renderMaterial->GetTextures().emplace_back(EnvComp.GetEnvironmentTexture());
 		skyboxMesh->SetMaterial(renderMaterial);
     	
-    	m_EnvironmentEntitys.emplace_back(EnvironmentEntity);
+    	m_EnvironmentEntitys.emplace_back(MainEnvironmentEntity);
     	
 	}
 
@@ -239,7 +247,7 @@ namespace Lemon
 				renderMaterial->Metallic = metallic;
 				renderMaterial->Roughness = roughness;
 				sphereMesh->SetMaterial(renderMaterial);
-				staticMesh2.SetVisiable(false);
+				//staticMesh2.SetVisiable(false);
 			}
 		}
 		

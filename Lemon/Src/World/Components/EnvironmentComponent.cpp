@@ -9,7 +9,7 @@ namespace Lemon
 {
 	void EnvironmentComponent::CreateFromFilePath(const std::vector<std::string>& filePaths)
 	{
-		if (filePaths.empty() || filePaths.size() != 6)
+		if (filePaths.empty() || !(filePaths.size() == 1 || filePaths.size() == 6))
 			return;
 
 		ResourceSystem* resourceSystem = m_Entity.GetWorld()->GetEngine()->GetSystem<ResourceSystem>();
@@ -18,6 +18,7 @@ namespace Lemon
 			LEMON_CORE_ERROR("resourceSystem is not Exist");
 			return;
 		}
+		
 		std::vector<TextureInfoData> textureInfoDatas;
 		for (int i = 0; i < filePaths.size(); i++)
 		{
@@ -25,15 +26,38 @@ namespace Lemon
 			resourceSystem->GetImageImporter()->LoadImage(filePaths[i], textureInfoDatas[i]);
 		}
 
-		//
-		RHITextureCubeCreateInfo createInfo;
-		for (int i = 0; i < textureInfoDatas.size(); i++)
+		if (filePaths.size() == 1)
 		{
-			createInfo.TextureArrayDatas.emplace_back(textureInfoDatas[i].RawData);
+			m_EnvIsEquirectangular = true;
+			RHIResourceCreateInfo createInfo;
+			createInfo.Texture2DDatas = textureInfoDatas[0].RawData;
+			m_EnvEquirectangularTexture = RHICreateTexture2D(textureInfoDatas[0].Width, textureInfoDatas[0].Height, textureInfoDatas[0].Format,
+				1, RHI_TexCreate_ShaderResource, createInfo);
+
+			// Equirectangular EnvMap
+			uint32_t sizeX = 512;
+			uint32_t sizeY = 512;
+			ERHIPixelFormat pixelFormat = RHI_PF_R8G8B8A8_Unorm;// RHI_PF_R16G16B16A16_Float;// m_EnvironmentTextureRHI->GetPixelFormat();
+
+			RHITextureCubeCreateInfo cubeCreateInfo;
+			m_EnvTextureRHI = RHICreateTextureCube(sizeX, sizeY, pixelFormat, 1,
+				RHI_TexCreate_RenderTargetable | RHI_TexCreate_ShaderResource,
+				cubeCreateInfo);
 		}
-		int envNumMips = 1;
-		m_EnvTextureRHI = RHICreateTextureCube(textureInfoDatas[0].Width, textureInfoDatas[0].Height, textureInfoDatas[0].Format,
-			envNumMips, RHI_TexCreate_ShaderResource, createInfo);
+		else if (filePaths.size() == 6)
+		{
+			m_EnvIsEquirectangular = true;
+			//
+			RHITextureCubeCreateInfo createInfo;
+			for (int i = 0; i < textureInfoDatas.size(); i++)
+			{
+				createInfo.TextureArrayDatas.emplace_back(textureInfoDatas[i].RawData);
+			}
+			int envNumMips = 1;
+			m_EnvTextureRHI = RHICreateTextureCube(textureInfoDatas[0].Width, textureInfoDatas[0].Height, textureInfoDatas[0].Format,
+				envNumMips, RHI_TexCreate_ShaderResource, createInfo);
+		}
+		
 	}
 
 	void EnvironmentComponent::InitEnvDiffuseIrradianceTexture()

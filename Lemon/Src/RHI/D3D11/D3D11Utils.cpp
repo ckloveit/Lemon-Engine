@@ -44,7 +44,7 @@ namespace Lemon::D3D11
 			{
 				D3D11_SUBRESOURCE_DATA& subresourceData = subresourceDatas.emplace_back(D3D11_SUBRESOURCE_DATA{});
 				subresourceData.pSysMem = i < data.MipDatas.size() ? data.MipDatas[i].TextureData.data() : nullptr;        // Data pointer
-				subresourceData.SysMemPitch = (width >> i) * channelCount * (bitsPerChannel / 8); // Line width in bytes
+				subresourceData.SysMemPitch = (width >> i) * channelCount * bitsPerChannel;// (bitsPerChannel / 8); // Line width in bytes
 				subresourceData.SysMemSlicePitch = 0;  // This is only used for 3D textures
 			}
 		}

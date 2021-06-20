@@ -187,8 +187,82 @@ namespace Lemon
 		// Set VertexBuffer and IndexBuffer
 		m_RHICommandList->SetIndexBuffer(staticMeshComp.GetRenderMesh()->GetIndexBuffer());
 		m_RHICommandList->SetVertexBuffer(0, staticMeshComp.GetRenderMesh()->GetVertexBuffer());
-		// Set Textures
 	
+		// IBL
+		if (m_World->GetMainEnvironment())
+		{
+			Entity envEntity = m_World->GetMainEnvironment();
+			EnvironmentComponent& envComp = envEntity.GetComponent<EnvironmentComponent>();
+			m_RHICommandList->SetTexture(0, envComp.GetEnvDiffuseIrradiance());
+			m_RHICommandList->SetTexture(1, envComp.GetEnvSpecularPrefilter());
+			m_RHICommandList->SetTexture(2, envComp.GetEnvSpecularIntegrateBRDF());
+		}
+		// Set PBR Textures
+		int textureOffset = 3;
+		if (staticMeshComp.GetRenderMesh()->GetMaterial())
+		{
+			for (int i = 0; i < staticMeshComp.GetRenderMesh()->GetMaterial()->GetTextures().size(); i++)
+			{
+				m_RHICommandList->SetTexture(textureOffset + staticMeshComp.GetRenderMesh()->GetMaterial()->GetTextureStartSlot() + i, staticMeshComp.GetRenderMesh()->GetMaterial()->GetTextures()[i]);
+			}
+		}
+
+		// Draw
+		m_RHICommandList->DrawIndexPrimitive(0, 0, staticMeshComp.GetRenderMesh()->GetIndexCount() / 3);
+	}
+
+
+	void Renderer::DrawSky(Entity entity) const
+	{
+		TransformComponent& transformComp = entity.GetComponent<TransformComponent>();
+		StaticMeshComponent& staticMeshComp = entity.GetComponent<StaticMeshComponent>();
+		if (!staticMeshComp.IsVisiable())
+			return;
+
+		// Update ObjectBuffer
+		m_RHICommandList->SetUniformBuffer(m_SceneUniformBuffers->ObjectUniformBuffer->GetSlotIndex(),
+			EUniformBufferUsageScope::UBUS_Vertex | EUniformBufferUsageScope::UBUS_Pixel,
+			m_SceneUniformBuffers->ObjectUniformBuffer->UniformBuffer());
+
+		ObjectUniformParameters parameters;
+		parameters.LocalToWorldMatrix = transformComp.GetTransform();
+		parameters.WorldToWorldMatrix = glm::inverse(transformComp.GetTransform());
+		parameters.WorldToWorldTransposeMatrix = glm::transpose(parameters.WorldToWorldMatrix);
+
+		parameters.Color = glm::vec4(1.0f, 1.0f, 0.0f, 1.0f);
+
+		// Set PSO
+		GraphicsPipelineStateInitializer PSOInit;
+		PSOInit.BoundShaderState.PixelShaderRHI = staticMeshComp.GetRenderMesh()->GetPixelShader();
+		PSOInit.BoundShaderState.VertexShaderRHI = staticMeshComp.GetRenderMesh()->GetVertexShader();
+		PSOInit.BoundShaderState.VertexDeclarationRHI = staticMeshComp.GetRenderMesh()->GetVertexDeclaration();
+		if (staticMeshComp.GetRenderMesh()->GetMaterial())
+		{
+			Ref<Material> mat = staticMeshComp.GetRenderMesh()->GetMaterial();
+			PSOInit.PrimitiveType = staticMeshComp.GetRenderMesh()->GetMaterial()->GetPrimitiveType();//EPrimitiveType::PT_TriangleList;
+			PSOInit.BlendState = staticMeshComp.GetRenderMesh()->GetMaterial()->GetBlendState();
+			PSOInit.RasterizerState = staticMeshComp.GetRenderMesh()->GetMaterial()->GetRasterizerState();
+			PSOInit.DepthStencilState = staticMeshComp.GetRenderMesh()->GetMaterial()->GetDepthStencilState();
+			//PBR Properties
+			parameters.Albedo = glm::vec4(mat->Albedo, 1.0f);
+			parameters.PBRParameters = glm::vec4(mat->Metallic, mat->Roughness, mat->AO, 1.0f);
+		}
+		else
+		{
+			parameters.Albedo = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);// default 
+			parameters.PBRParameters = glm::vec4(0.0f, 1.0f, 1.0f, 1.0f);// default 
+			PSOInit.PrimitiveType = EPrimitiveType::PT_TriangleList;
+		}
+
+		m_SceneUniformBuffers->ObjectUniformBuffer->UpdateUniformBufferImmediate(parameters);
+
+		m_RHICommandList->SetGraphicsPipelineState(PSOInit);
+
+		// Set VertexBuffer and IndexBuffer
+		m_RHICommandList->SetIndexBuffer(staticMeshComp.GetRenderMesh()->GetIndexBuffer());
+		m_RHICommandList->SetVertexBuffer(0, staticMeshComp.GetRenderMesh()->GetVertexBuffer());
+		// Set Textures
+
 		if (staticMeshComp.GetRenderMesh()->GetMaterial())
 		{
 			for (int i = 0; i < staticMeshComp.GetRenderMesh()->GetMaterial()->GetTextures().size(); i++)
@@ -198,17 +272,14 @@ namespace Lemon
 		}
 
 		//Debug
-		if (entity.HasComponent<EnvironmentComponent>())
+		EnvironmentComponent& envComp = entity.GetComponent<EnvironmentComponent>();
+		if (envComp.bDebugShowIBLType == 1)
 		{
-			EnvironmentComponent& envComp = entity.GetComponent<EnvironmentComponent>();
-			if (envComp.bDebugShowIBLType == 1)
-			{
-				m_RHICommandList->SetTexture(0, envComp.GetEnvDiffuseIrradiance());
-			}
-			else if (envComp.bDebugShowIBLType == 2)
-			{
-				m_RHICommandList->SetTexture(0, envComp.GetEnvSpecularPrefilter());
-			}
+			m_RHICommandList->SetTexture(0, envComp.GetEnvDiffuseIrradiance());
+		}
+		else if (envComp.bDebugShowIBLType == 2)
+		{
+			m_RHICommandList->SetTexture(0, envComp.GetEnvSpecularPrefilter());
 		}
 		// Draw
 		m_RHICommandList->DrawIndexPrimitive(0, 0, staticMeshComp.GetRenderMesh()->GetIndexCount() / 3);
@@ -232,12 +303,12 @@ namespace Lemon
 		std::vector<Entity> entitys = m_World->GetAllEntities();
 		
 		// classify the entity types
-		std::vector<Entity> gizmoDebugEntitys;
-		std::vector<Entity> environmentEntitys;
-		std::vector<Entity> normalEntitys;
+		gizmoDebugEntitys.clear();
+		environmentEntitys.clear();
+		normalEntitys.clear();
+		lightEntitys.clear();
 
-		std::vector<Entity> lightEntitys;
-		for(int i =0;i < entitys.size(); i++)
+		for(int i = 0;i < entitys.size(); i++)
 		{
 			if(entitys[i].IsGizmo())
 			{
@@ -257,6 +328,23 @@ namespace Lemon
 			}
 		}
 
+		PreRender(deltaTime);
+
+		Render(deltaTime);
+	}
+
+	void Renderer::PreRender(float deltaTime)
+	{
+		// EquirectangularToCubeMap if exist
+		for (int i = 0; i < environmentEntitys.size(); i++)
+		{
+			EnvironmentComponent& envComp = environmentEntitys[i].GetComponent<EnvironmentComponent>();
+			if (envComp.m_EnvIsEquirectangular)
+			{
+				EnvEquirectangularToCubeMap(envComp);
+				envComp.m_EnvIsEquirectangular = false;
+			}
+		}
 		static bool bHasPreComputeIBL = false;
 		// Image-Base-Lighting
 		if (!bHasPreComputeIBL)
@@ -264,7 +352,9 @@ namespace Lemon
 			PreComputeIBL(environmentEntitys);
 			bHasPreComputeIBL = true;
 		}
-
+	}
+	void Renderer::Render(float deltaTime)
+	{
 		// Set Render Target
 		m_RHICommandList->SetViewport(m_Viewport);
 		m_RHICommandList->SetRenderTarget(GetSceneRenderTargets()->GetSceneColorTexture(), GetSceneRenderTargets()->GetSceneDepthTexture());
@@ -277,29 +367,29 @@ namespace Lemon
 
 		// Update Light UniformBuffer
 		UpdateLightUniformBuffer(lightEntitys);
-		
+
 		/*
 			consider EnvironmentEntity to snap transform to camera transform
 		*/
-		for(int i = 0; i < environmentEntitys.size(); i++)
+		for (int i = 0; i < environmentEntitys.size(); i++)
 		{
 			Entity& envEntity = environmentEntitys[i];
-			envEntity.GetComponent<TransformComponent>().Position =  mainCameraEntity.GetComponent<TransformComponent>().Position;
+			envEntity.GetComponent<TransformComponent>().Position = mainCameraEntity.GetComponent<TransformComponent>().Position;
 			envEntity.GetComponent<TransformComponent>().Rotation = glm::vec3(0, 0, 0);
 			envEntity.GetComponent<TransformComponent>().Scale = glm::vec3(1, 1, 1);
 		}
-		
-		for(int i = 0;i < normalEntitys.size(); i++)
+
+		for (int i = 0; i < normalEntitys.size(); i++)
 		{
-			if(normalEntitys[i] && !normalEntitys[i].IsGizmo() && normalEntitys[i].HasComponent<StaticMeshComponent>())
+			if (normalEntitys[i] && !normalEntitys[i].IsGizmo() && normalEntitys[i].HasComponent<StaticMeshComponent>())
 			{
 				DrawRenderer(normalEntitys[i]);
 			}
 		}
-		
-		for(int i = 0;i < environmentEntitys.size(); i++)
+
+		for (int i = 0; i < environmentEntitys.size(); i++)
 		{
-			DrawRenderer(environmentEntitys[i]);
+			DrawSky(environmentEntitys[i]);
 		}
 
 		//Draw Debug Gizmo
@@ -307,7 +397,7 @@ namespace Lemon
 		{
 			if (gizmoDebugEntitys[i] && gizmoDebugEntitys[i].IsGizmo() && gizmoDebugEntitys[i].HasComponent<StaticMeshComponent>())
 			{
-				//DrawRenderer(gizmoDebugEntitys[i]);
+				DrawRenderer(gizmoDebugEntitys[i]);
 			}
 		}
 
@@ -380,6 +470,57 @@ namespace Lemon
 		}
 
 		m_SceneUniformBuffers->LightUniformBuffer->UpdateUniformBufferImmediate(parameters);
+	}
+
+	void Renderer::EnvEquirectangularToCubeMap(EnvironmentComponent& envComp)
+	{
+		Ref<RHITexture2D> EnvEquirectangularTex = envComp.m_EnvEquirectangularTexture;
+		Ref<RHITextureCube> EnvTexture = envComp.GetEnvironmentTexture();
+
+		Viewport viewport(0, 0, EnvTexture->GetSizeX(), EnvTexture->GetSizeY());
+		m_RHICommandList->SetViewport(viewport);
+		m_RHICommandList->SetTexture(0, EnvEquirectangularTex);
+
+		// Set Render Target
+		glm::mat4 captureViews[6];
+		captureViews[0] = glm::toMat4(glm::quat(glm::radians(glm::vec3(0, 90, 0))));
+		captureViews[1] = glm::toMat4(glm::quat(glm::radians(glm::vec3(0, -90, 0))));
+		captureViews[2] = glm::toMat4(glm::quat(glm::radians(glm::vec3(-90, 0, 0))));
+		captureViews[3] = glm::toMat4(glm::quat(glm::radians(glm::vec3(90, 0, 0))));
+		captureViews[4] = glm::toMat4(glm::quat(glm::radians(glm::vec3(0, 0, 0))));
+		captureViews[5] = glm::toMat4(glm::quat(glm::radians(glm::vec3(0, 180, 0))));
+
+		// DrawFullScreen
+		for (int j = 0; j < 6; j++)
+		{
+			m_RHICommandList->SetRenderTarget(EnvTexture, j, nullptr);
+			m_RHICommandList->RHIClearRenderTarget(EnvTexture, j, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f),
+				nullptr);
+			// DrawFullScreen
+			FullScreenUniformParameters fullScreenParameter;
+			fullScreenParameter.LocalToWorldMatrix = captureViews[j];
+			// Update ObjectBuffer
+			m_RHICommandList->SetUniformBuffer(m_SceneUniformBuffers->FullScreenUniformBuffer->GetSlotIndex(),
+				EUniformBufferUsageScope::UBUS_Vertex | EUniformBufferUsageScope::UBUS_Pixel,
+				m_SceneUniformBuffers->FullScreenUniformBuffer->UniformBuffer());
+
+			m_SceneUniformBuffers->FullScreenUniformBuffer->UpdateUniformBufferImmediate(fullScreenParameter);
+			//
+			static std::shared_ptr<RHIVertexShader> FullScreenVertexShader = nullptr;
+			static std::shared_ptr<RHIPixelShader> FullScreenPixelShader = nullptr;
+			static std::shared_ptr<RHIVertexDeclaration> FullScreenVertexDeclaration = nullptr;
+			if (FullScreenVertexShader == nullptr)
+			{
+				RHIShaderCreateInfo shaderCreateInfo;
+				FullScreenVertexShader = RHICreateVertexShader("Assets/Shaders/EquirectangularToCubeMapVertex.hlsl", "MainVS", shaderCreateInfo);
+				FullScreenPixelShader = RHICreatePixelShader("Assets/Shaders/EquirectangularToCubeMapPixel.hlsl", "MainPS", shaderCreateInfo);
+				if (GlobalRenderResources::GetInstance())
+				{
+					FullScreenVertexDeclaration = RHICreateVertexDeclaration(FullScreenVertexShader, GlobalRenderResources::GetInstance()->StandardMeshVertexDeclarationElementList);
+				}
+			}
+			PixelShaderUtils::DrawFullScreenQuad(m_RHICommandList, FullScreenVertexDeclaration, FullScreenVertexShader, FullScreenPixelShader);
+		}
 	}
 
 	void Renderer::PreComputeIBL(std::vector<Entity>& environmentEntitys)

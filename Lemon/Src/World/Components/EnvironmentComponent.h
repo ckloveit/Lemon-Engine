@@ -25,6 +25,8 @@ namespace Lemon
 		void InitEnvSpecularPrefilterTexture();
 		void InitEnvSpecularIntegrateBRDFTexture();
 	public:
+		bool m_EnvIsEquirectangular = false;
+		Ref<RHITexture2D> m_EnvEquirectangularTexture;
 		//----------Debug IBL--------------//
 		// 0 : EnvCubemap
 		// 1 : EnvDiffuseIrradiance

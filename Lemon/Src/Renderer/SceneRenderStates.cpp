@@ -30,6 +30,7 @@ namespace Lemon
         PointWrapSamplerState = TStaticSamplerState<SF_Point, AM_Wrap, AM_Wrap, AM_Wrap>::CreateRHI();
         BilinerWrapSamplerState = TStaticSamplerState<SF_Bilinear, AM_Wrap, AM_Wrap, AM_Wrap>::CreateRHI();
         TrilinearWrapSamplerState = TStaticSamplerState<SF_Trilinear, AM_Wrap, AM_Wrap, AM_Wrap>::CreateRHI();
+
     }
 
 
