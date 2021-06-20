@@ -148,6 +148,8 @@ namespace Lemon
 		m_RHICommandList->SetUniformBuffer(m_SceneUniformBuffers->ObjectUniformBuffer->GetSlotIndex(),
             EUniformBufferUsageScope::UBUS_Vertex | EUniformBufferUsageScope::UBUS_Pixel,
             m_SceneUniformBuffers->ObjectUniformBuffer->UniformBuffer());
+
+
 		ObjectUniformParameters parameters;
 		parameters.LocalToWorldMatrix = transformComp.GetTransform();
 		parameters.WorldToWorldMatrix = glm::inverse(transformComp.GetTransform());
@@ -260,7 +262,7 @@ namespace Lemon
 		if (!bHasPreComputeIBL)
 		{
 			PreComputeIBL(environmentEntitys);
-			//bHasPreComputeIBL = true;
+			bHasPreComputeIBL = true;
 		}
 
 		// Set Render Target
@@ -309,8 +311,19 @@ namespace Lemon
 			}
 		}
 
-		// Test
-		//PreComputeIBL(environmentEntitys);
+		// Debug 
+		if (environmentEntitys[0].HasComponent<EnvironmentComponent>())
+		{
+			EnvironmentComponent& envComp = environmentEntitys[0].GetComponent<EnvironmentComponent>();
+			if (envComp.bDebugShowIBLType == 3)
+			{
+				FullScreenUniformParameters fullScreenParameter;
+				fullScreenParameter.LocalToWorldMatrix = glm::mat4();
+				std::vector<std::shared_ptr<RHITexture>> textures;
+				textures.emplace_back(envComp.GetEnvSpecularIntegrateBRDF());
+				DrawFullScreenQuad(fullScreenParameter, textures);
+			}
+		}
 	}
 
 	void Renderer::UpdateViewUniformBuffer(Entity mainCameraEntity) const
@@ -415,7 +428,7 @@ namespace Lemon
 				// DrawFullScreen
 				FullScreenUniformParameters fullScreenParameter;
 				fullScreenParameter.LocalToWorldMatrix = captureViews[j];
-				//ComputePreDiffuseIrradiance(fullScreenParameter);
+				ComputePreDiffuseIrradiance(fullScreenParameter);
 			}
 		}
 
@@ -481,6 +494,24 @@ namespace Lemon
 				m_RHICommandList->SetMipTexture(SpecularPrefilterTex, mip, mipWidth, mipHeight, tempPrefilterTexures);
 			}
 		}
+
+		// Specular BRDF Integrate
+		for (int i = 0; i < environmentEntitys.size(); i++)
+		{
+			EnvironmentComponent& envComp = environmentEntitys[i].GetComponent<EnvironmentComponent>();
+			envComp.InitEnvSpecularIntegrateBRDFTexture();
+			Ref<RHITexture2D> SpecularIntegrateBRDFTex = envComp.GetEnvSpecularIntegrateBRDF();
+			Viewport viewport(0, 0, SpecularIntegrateBRDFTex->GetSizeX(), SpecularIntegrateBRDFTex->GetSizeY());
+			m_RHICommandList->SetViewport(viewport);
+			m_RHICommandList->SetRenderTarget(SpecularIntegrateBRDFTex, nullptr);
+			m_RHICommandList->RHIClearRenderTarget(SpecularIntegrateBRDFTex, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f),
+				nullptr);
+			// DrawFullScreen
+			FullScreenUniformParameters fullScreenParameter;
+			fullScreenParameter.LocalToWorldMatrix = glm::mat4();
+			ComputePreIntegrateBRDF(fullScreenParameter);
+		}
+
 	}
 
 	void Renderer::ComputePreDiffuseIrradiance(FullScreenUniformParameters fullScreenParameter)
@@ -529,8 +560,8 @@ namespace Lemon
 		if (FullScreenVertexShader == nullptr)
 		{
 			RHIShaderCreateInfo shaderCreateInfo;
-			FullScreenVertexShader = RHICreateVertexShader("Assets/Shaders/ComputePreFilterSpecularVertex.hlsl", "MainVS", shaderCreateInfo);
-			FullScreenPixelShader = RHICreatePixelShader("Assets/Shaders/ComputePreFilterSpecularPixel.hlsl", "MainPS", shaderCreateInfo);
+			FullScreenVertexShader = RHICreateVertexShader("Assets/Shaders/ComputeSpecularPreFilterVertex.hlsl", "MainVS", shaderCreateInfo);
+			FullScreenPixelShader = RHICreatePixelShader("Assets/Shaders/ComputeSpecularPreFilterPixel.hlsl", "MainPS", shaderCreateInfo);
 			if (GlobalRenderResources::GetInstance())
 			{
 				FullScreenVertexDeclaration = RHICreateVertexDeclaration(FullScreenVertexShader, GlobalRenderResources::GetInstance()->StandardMeshVertexDeclarationElementList);
@@ -539,8 +570,32 @@ namespace Lemon
 		PixelShaderUtils::DrawFullScreenQuad(m_RHICommandList, FullScreenVertexDeclaration, FullScreenVertexShader, FullScreenPixelShader);
 	}
 
+	void Renderer::ComputePreIntegrateBRDF(FullScreenUniformParameters fullScreenParameter)
+	{
+		// Update ObjectBuffer
+		m_RHICommandList->SetUniformBuffer(m_SceneUniformBuffers->FullScreenUniformBuffer->GetSlotIndex(),
+			EUniformBufferUsageScope::UBUS_Vertex | EUniformBufferUsageScope::UBUS_Pixel,
+			m_SceneUniformBuffers->FullScreenUniformBuffer->UniformBuffer());
+		m_SceneUniformBuffers->FullScreenUniformBuffer->UpdateUniformBufferImmediate(fullScreenParameter);
 
-	void Renderer::DrawFullScreenQuad(FullScreenUniformParameters fullScreenParameter)
+		static std::shared_ptr<RHIVertexShader> FullScreenVertexShader = nullptr;
+		static std::shared_ptr<RHIPixelShader> FullScreenPixelShader = nullptr;
+		static std::shared_ptr<RHIVertexDeclaration> FullScreenVertexDeclaration = nullptr;
+		if (FullScreenVertexShader == nullptr)
+		{
+			RHIShaderCreateInfo shaderCreateInfo;
+			FullScreenVertexShader = RHICreateVertexShader("Assets/Shaders/ComputeSpecularIntegrateBRDFVertex.hlsl", "MainVS", shaderCreateInfo);
+			FullScreenPixelShader = RHICreatePixelShader("Assets/Shaders/ComputeSpecularIntegrateBRDFPixel.hlsl", "MainPS", shaderCreateInfo);
+			if (GlobalRenderResources::GetInstance())
+			{
+				FullScreenVertexDeclaration = RHICreateVertexDeclaration(FullScreenVertexShader, GlobalRenderResources::GetInstance()->StandardMeshVertexDeclarationElementList);
+			}
+		}
+		PixelShaderUtils::DrawFullScreenQuad(m_RHICommandList, FullScreenVertexDeclaration, FullScreenVertexShader, FullScreenPixelShader);
+	}
+
+	void Renderer::DrawFullScreenQuad(FullScreenUniformParameters fullScreenParameter, 
+		std::vector<std::shared_ptr<RHITexture>> Textures /*= std::vector<std::shared_ptr<RHITexture>>()*/)
 	{
 		// Update ObjectBuffer
 		m_RHICommandList->SetUniformBuffer(m_SceneUniformBuffers->FullScreenUniformBuffer->GetSlotIndex(),
@@ -562,7 +617,8 @@ namespace Lemon
 				FullScreenVertexDeclaration = RHICreateVertexDeclaration(FullScreenVertexShader, GlobalRenderResources::GetInstance()->StandardMeshVertexDeclarationElementList);
 			}
 		}
-		PixelShaderUtils::DrawFullScreenQuad(m_RHICommandList, FullScreenVertexDeclaration, FullScreenVertexShader, FullScreenPixelShader);
+
+		PixelShaderUtils::DrawFullScreenQuad(m_RHICommandList, FullScreenVertexDeclaration, FullScreenVertexShader, FullScreenPixelShader, Textures);
 		
 	}
 }

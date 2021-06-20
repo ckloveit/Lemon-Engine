@@ -55,7 +55,7 @@ namespace Lemon
 		void DrawRenderer(Entity entity) const;
 
 
-		void DrawFullScreenQuad(FullScreenUniformParameters fullScreenParameter);
+		void DrawFullScreenQuad(FullScreenUniformParameters fullScreenParameter, std::vector<std::shared_ptr<RHITexture>> Textures = std::vector<std::shared_ptr<RHITexture>>());
 
 		void PreComputeIBL(std::vector<Entity>& environment);
 
@@ -63,6 +63,7 @@ namespace Lemon
 
 		void ComputePreDiffuseIrradiance(FullScreenUniformParameters fullScreenParameter);
 		void ComputePreFilterSepcualr(FullScreenUniformParameters fullScreenParameter, CustomDataFloat4UniformParameters customDataFloat4Parameter);
+		void ComputePreIntegrateBRDF(FullScreenUniformParameters fullScreenParameter);
 
 		//===============
 	private:

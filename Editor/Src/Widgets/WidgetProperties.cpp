@@ -153,9 +153,9 @@ void WidgetProperties::DrawEntity(Lemon::Entity entity) const
 				| (drag_and_drop ? 0 : ImGuiColorEditFlags_NoDragDrop)
 				| (alpha_half_preview ? ImGuiColorEditFlags_AlphaPreviewHalf : (alpha_preview ? ImGuiColorEditFlags_AlphaPreview : 0))
 				| (options_menu ? 0 : ImGuiColorEditFlags_NoOptions);
-			char* labels[3] = {"ShowEnvTexture", "ShowEnvDiffuseIrradiance", "ShowEnvSpecularPrefilter" };
+			char* labels[4] = {"ShowEnvTexture", "ShowEnvDiffuseIrradiance", "ShowEnvSpecularPrefilter" , "ShowIntegrateBRDF"};
 			int index = environmentComponent.bDebugShowIBLType;
-			if (index > 3) { index = 2; }
+			if (index > 4) { index = 3; }
 			if (index < 0) { index = 0; }
 
 			float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
@@ -164,7 +164,7 @@ void WidgetProperties::DrawEntity(Lemon::Entity entity) const
 			if (ImGui::Button(labels[index], buttonSize))
 			{
 				environmentComponent.bDebugShowIBLType++;
-				environmentComponent.bDebugShowIBLType %= 3;
+				environmentComponent.bDebugShowIBLType %= 4;
 			}
 			ImGui::TreePop();
 		}

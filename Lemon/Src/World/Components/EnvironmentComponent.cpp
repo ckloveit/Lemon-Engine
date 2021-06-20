@@ -32,25 +32,25 @@ namespace Lemon
 			createInfo.TextureArrayDatas.emplace_back(textureInfoDatas[i].RawData);
 		}
 		int envNumMips = 1;
-		m_EnvironmentTextureRHI = RHICreateTextureCube(textureInfoDatas[0].Width, textureInfoDatas[0].Height, textureInfoDatas[0].Format,
+		m_EnvTextureRHI = RHICreateTextureCube(textureInfoDatas[0].Width, textureInfoDatas[0].Height, textureInfoDatas[0].Format,
 			envNumMips, RHI_TexCreate_ShaderResource, createInfo);
 	}
 
 	void EnvironmentComponent::InitEnvDiffuseIrradianceTexture()
 	{
-		if (!m_EnvironmentTextureRHI)
+		if (!m_EnvTextureRHI)
 		{
 			return;
 		}
 
-		if (!m_EnvironmentDiffuseIrradianceTexture)
+		if (!m_EnvDiffuseIrradianceTexture)
 		{
-			uint32_t sizeX = m_EnvironmentTextureRHI->GetSizeX();
-			uint32_t sizeY = m_EnvironmentTextureRHI->GetSizeY();
+			uint32_t sizeX = m_EnvTextureRHI->GetSizeX();
+			uint32_t sizeY = m_EnvTextureRHI->GetSizeY();
 			ERHIPixelFormat pixelFormat = RHI_PF_R16G16B16A16_Float;// m_EnvironmentTextureRHI->GetPixelFormat();
 			
 			RHITextureCubeCreateInfo createInfo;
-			m_EnvironmentDiffuseIrradianceTexture = RHICreateTextureCube(sizeX, sizeY, pixelFormat, 1, 
+			m_EnvDiffuseIrradianceTexture = RHICreateTextureCube(sizeX, sizeY, pixelFormat, 1, 
 				RHI_TexCreate_RenderTargetable | RHI_TexCreate_ShaderResource,
 				createInfo);
 		}
@@ -60,19 +60,39 @@ namespace Lemon
 
 	void EnvironmentComponent::InitEnvSpecularPrefilterTexture()
 	{
-		if (!m_EnvironmentTextureRHI)
+		if (!m_EnvTextureRHI)
 		{
 			return;
 		}
 
-		if (!m_EnvironmentSpecularPrefilterTexture)
+		if (!m_EnvSpecularPrefilterTexture)
 		{
-			uint32_t sizeX = m_EnvironmentTextureRHI->GetSizeX();
-			uint32_t sizeY = m_EnvironmentTextureRHI->GetSizeY();
+			uint32_t sizeX = m_EnvTextureRHI->GetSizeX() / 2;
+			uint32_t sizeY = m_EnvTextureRHI->GetSizeY() / 2;
 			ERHIPixelFormat pixelFormat = RHI_PF_R16G16B16A16_Float;// m_EnvironmentTextureRHI->GetPixelFormat();
 
 			RHITextureCubeCreateInfo createInfo;
-			m_EnvironmentSpecularPrefilterTexture = RHICreateTextureCube(sizeX, sizeY, pixelFormat, 5,
+			m_EnvSpecularPrefilterTexture = RHICreateTextureCube(sizeX, sizeY, pixelFormat, 5,
+				RHI_TexCreate_RenderTargetable | RHI_TexCreate_ShaderResource,
+				createInfo);
+		}
+	}
+
+
+	void EnvironmentComponent::InitEnvSpecularIntegrateBRDFTexture()
+	{
+		if (!m_EnvTextureRHI)
+		{
+			return;
+		}
+		if (!m_EnvSpecularIntegrateBRDFTexture)
+		{
+			uint32_t sizeX = m_EnvTextureRHI->GetSizeX();
+			uint32_t sizeY = m_EnvTextureRHI->GetSizeY();
+			ERHIPixelFormat pixelFormat = RHI_PF_R16G16B16A16_Float;// m_EnvironmentTextureRHI->GetPixelFormat();
+
+			RHIResourceCreateInfo createInfo;
+			m_EnvSpecularIntegrateBRDFTexture = RHICreateTexture2D(sizeX, sizeY, pixelFormat, 1,
 				RHI_TexCreate_RenderTargetable | RHI_TexCreate_ShaderResource,
 				createInfo);
 		}

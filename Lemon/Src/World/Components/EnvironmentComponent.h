@@ -13,14 +13,17 @@ namespace Lemon
 
 		void CreateFromFilePath(const std::vector<std::string>& filePaths);
 
-		Ref<RHITextureCube> GetEnvironmentTexture() const { return m_EnvironmentTextureRHI; }
+		Ref<RHITextureCube> GetEnvironmentTexture() const { return m_EnvTextureRHI; }
 
-		Ref<RHITextureCube> GetEnvDiffuseIrradiance() const { return m_EnvironmentDiffuseIrradianceTexture; }
+		Ref<RHITextureCube> GetEnvDiffuseIrradiance() const { return m_EnvDiffuseIrradianceTexture; }
 
-		Ref<RHITextureCube> GetEnvSpecularPrefilter() const { return m_EnvironmentSpecularPrefilterTexture; }
+		Ref<RHITextureCube> GetEnvSpecularPrefilter() const { return m_EnvSpecularPrefilterTexture; }
+
+		Ref<RHITexture2D> GetEnvSpecularIntegrateBRDF() const { return m_EnvSpecularIntegrateBRDFTexture; }
 
 		void InitEnvDiffuseIrradianceTexture();
 		void InitEnvSpecularPrefilterTexture();
+		void InitEnvSpecularIntegrateBRDFTexture();
 	public:
 		//----------Debug IBL--------------//
 		// 0 : EnvCubemap
@@ -28,14 +31,15 @@ namespace Lemon
 
 		int bDebugShowIBLType = 0;
 	private:
-		Ref<RHITextureCube> m_EnvironmentTextureRHI;
+		Ref<RHITextureCube> m_EnvTextureRHI;
 
 		//=====Image-Base-Lighting===============
 		// Diffuse Irradiance CubeMap
-		Ref<RHITextureCube> m_EnvironmentDiffuseIrradianceTexture;
+		Ref<RHITextureCube> m_EnvDiffuseIrradianceTexture;
 		// Specular Prefilter CubeMap
-		Ref<RHITextureCube> m_EnvironmentSpecularPrefilterTexture;
-		
+		Ref<RHITextureCube> m_EnvSpecularPrefilterTexture;
+		// Specular IntegrateBRDF
+		Ref<RHITexture2D> m_EnvSpecularIntegrateBRDFTexture;
 
 		//=======================================
 	};

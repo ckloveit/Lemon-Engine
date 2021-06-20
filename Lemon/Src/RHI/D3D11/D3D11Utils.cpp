@@ -266,7 +266,7 @@ namespace Lemon::D3D11
 		srvDesc.TextureCube.MostDetailedMip = 0;
 		srvDesc.Texture2DArray.FirstArraySlice = 0;
 		srvDesc.Texture2DArray.MostDetailedMip = 0;
-		srvDesc.Texture2DArray.MipLevels = 1;
+		srvDesc.Texture2DArray.MipLevels = numMips;// 1;
 		srvDesc.Texture2DArray.ArraySize = 6;
 
 		// Create
