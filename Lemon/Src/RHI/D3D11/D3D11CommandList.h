@@ -28,7 +28,7 @@ namespace Lemon
 		
 		virtual void SetRenderTarget(Ref<RHITextureCube> colorTargets, int colorTargetIndex, Ref<RHITexture2D> depthTarget = nullptr) override;
 
-		virtual void SetRenderTarget(Ref<RHISwapChain> swapChain) override;
+		virtual void SetRenderTarget(Ref<RHISwapChain> swapChain, float depthClear = 1.0f, float stencilClear = 0) override;
 
 		virtual void SetGraphicsPipelineState(const GraphicsPipelineStateInitializer& GraphicsPSOInit) override;
 

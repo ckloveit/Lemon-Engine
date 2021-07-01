@@ -10,6 +10,6 @@ struct PixelInput
 float4 MainPS(PixelInput Input) : SV_TARGET
 {
 	float roughness = g_PBRParameters.y;
-	float mipLvel = roughness * 5.0f;
+	float mipLvel = 0;//roughness * 5.0f;
 	return EnvironmentTexCube.SampleLevel(TrilinearWrapSampler, Input.Dir, mipLvel);
 }

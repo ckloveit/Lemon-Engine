@@ -81,13 +81,78 @@ namespace Lemon
 			LEMON_CORE_ERROR("%s", D3D11::DXGIErrorToString(result));
 			return;
 		}
+
+		// create the depth stencil
+		ResizeDepthStencilBuffer(width, height);
+
+	}
+
+	HRESULT D3D11SwapChain::ResizeDepthStencilBuffer(uint32_t width, uint32_t height)
+	{
+		// if has allocated, we need first release it
+		if (m_DepthStencilBuffer)
+		{
+			D3D11_TEXTURE2D_DESC currentDesc;
+			m_DepthStencilBuffer->GetDesc(&currentDesc);
+
+			if (currentDesc.Width == width && currentDesc.Height == height)
+			{
+				return S_OK;
+			}
+
+			m_DepthStencilBuffer->Release();
+		}
+
+		// Create Depth Stencil View
+		D3D11_TEXTURE2D_DESC depthBufferDesc;
+		D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
+
+		// Initialize the description of the depth buffer.
+		ZeroMemory(&depthBufferDesc, sizeof depthBufferDesc);
+
+		// Set up the description of the depth buffer.
+		depthBufferDesc.Width = width;
+		depthBufferDesc.Height = height;
+		depthBufferDesc.MipLevels = 1;
+		depthBufferDesc.ArraySize = 1;
+		depthBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		depthBufferDesc.SampleDesc.Count = 1;
+		depthBufferDesc.SampleDesc.Quality = 0;
+		depthBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+		depthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+		depthBufferDesc.CPUAccessFlags = 0;
+		depthBufferDesc.MiscFlags = 0;
+
+		// Create the texture for the depth buffer using the filled out description.
+		HRESULT result = m_D3DRHI->GetDevice()->CreateTexture2D(&depthBufferDesc, nullptr, &m_DepthStencilBuffer);
+		if (FAILED(result))
+		{
+			return result;
+		}
+		// Initailze the depth stencil view.
+		ZeroMemory(&depthStencilViewDesc, sizeof depthStencilViewDesc);
+
+		// Set up the depth stencil view description.
+		depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+		depthStencilViewDesc.Texture2D.MipSlice = 0;
+
+		if (m_DepthStencilView)
+		{
+			m_DepthStencilView->Release();
+		}
+
+		// Create the depth stencil view.
+		result = m_D3DRHI->GetDevice()->CreateDepthStencilView(m_DepthStencilBuffer, &depthStencilViewDesc, &m_DepthStencilView);
+		return result;
 	}
 
 	D3D11SwapChain::~D3D11SwapChain()
 	{
 		D3D11::SafeRelease(m_SwapChain);
 		D3D11::SafeRelease(m_RenderTargetView);
-
+		D3D11::SafeRelease(m_DepthStencilBuffer);
+		D3D11::SafeRelease(m_DepthStencilView);
 	}
 
 	bool D3D11SwapChain::Present()
@@ -143,17 +208,28 @@ namespace Lemon
 			LEMON_CORE_ERROR("Failed to create render target view, {0}.", D3D11::DXGIErrorToString(result));
 			return false;
 		}
+
+		// Resize depth stencil
+		result = ResizeDepthStencilBuffer(width, height);
+		if(FAILED(result))
+		{
+			LEMON_CORE_ERROR("Failed to create depth stencil view view, {0}.", D3D11::DXGIErrorToString(result));
+			return false;
+		}
+
 		return true;
 	}
-
 
 	void* D3D11SwapChain::GetRHISwapChain()
 	{
 		return (void*)m_SwapChain;
-
 	}
 	void* D3D11SwapChain::GetRHIRenderTargetView()
 	{
 		return (void*)m_RenderTargetView;
+	}
+	void* D3D11SwapChain::GetRHIDepthStencilView()
+	{
+		return (void*)m_DepthStencilView;
 	}
 }

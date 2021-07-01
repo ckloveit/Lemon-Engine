@@ -50,6 +50,9 @@ namespace Lemon
 	
 	void InputSystem::OnWindowData(WindowData windowData)
 	{
+		HWND windowHandle = static_cast<HWND>(windowData.Handle);
+		m_bIsFocused = windowHandle == ::GetActiveWindow();
+
 		// OnWindowData can run multiple times per frame (for each window message)
 		// So only code within the if statement scope will run once per frame
 		if (m_bNewframe)
@@ -58,14 +61,12 @@ namespace Lemon
 			m_KeysPreviousFrame = m_Keys;
 		}
 
-		HWND windowHandle = static_cast<HWND>(windowData.Handle);
-
 		// Mouse
 		{
 			// Keys
-			m_Keys[m_StartIndexMouse] = (::GetKeyState(VK_LBUTTON) & 0x8000) != 0; // Left button pressed
-			m_Keys[(uint32_t)(m_StartIndexMouse + 1)] = (::GetKeyState(VK_MBUTTON) & 0x8000) != 0; // Middle button pressed
-			m_Keys[(uint32_t)(m_StartIndexMouse + 2)] = (::GetKeyState(VK_RBUTTON) & 0x8000) != 0; // Right button pressed
+			m_Keys[KeyCode::Mouse_Left] = (::GetKeyState(VK_LBUTTON) & 0x8000) != 0; // Left button pressed
+			m_Keys[KeyCode::Mouse_Middle] = (::GetKeyState(VK_MBUTTON) & 0x8000) != 0; // Middle button pressed
+			m_Keys[KeyCode::Mouse_Right] = (::GetKeyState(VK_RBUTTON) & 0x8000) != 0; // Right button pressed
 
 			// Delta
 			if (windowData.Message == WM_INPUT)
@@ -78,10 +79,9 @@ namespace Lemon
 				{
 					m_MouseDelta.x = static_cast<float>(raw->data.mouse.lLastX);
 					m_MouseDelta.y = static_cast<float>(raw->data.mouse.lLastY);
-					//LEMON_CORE_INFO("inputSystem->GetMouseDelta() = {0} , {1}", m_MouseDelta.x, m_MouseDelta.y);
 				}
 			}
-
+			
 			// Position
 			if (windowHandle == ::GetActiveWindow())
 			{
@@ -103,7 +103,7 @@ namespace Lemon
 		// KEYBOARD
 		{
 #define is_pressed(keyCode) (::GetKeyState(keyCode) & 0x8000) != 0
-
+			
 			// FUNCTION
 			m_Keys[0] = is_pressed(VK_F1);
 			m_Keys[1] = is_pressed(VK_F2);
@@ -205,9 +205,14 @@ namespace Lemon
 
 	void InputSystem::Tick(float deltaTime)
 	{
-		//m_bNewframe = true;
+	
 	}
 
+	void InputSystem::EndOneFrame()
+	{
+		m_bNewframe = true; m_MouseDelta = glm::vec2(0, 0);
+		m_Keys[KeyCode::Enter] = false;
+	}
 }
 
 #endif

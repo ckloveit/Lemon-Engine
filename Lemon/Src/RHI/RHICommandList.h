@@ -30,7 +30,7 @@ namespace Lemon
 		virtual void SetRenderTarget(Ref<RHITexture2D> colorTarget, Ref<RHITexture2D> depthTarget = nullptr) = 0;
 		virtual void SetRenderTarget(Ref<RHITextureCube> colorTargets, int colorTargetIndex, Ref<RHITexture2D> depthTarget = nullptr) = 0;
 
-		virtual void SetRenderTarget(Ref<RHISwapChain> swapChain) = 0;
+		virtual void SetRenderTarget(Ref<RHISwapChain> swapChain, float depthClear = 1.0f, float stencilClear = 0) = 0;
 
 		virtual void SetGraphicsPipelineState(const GraphicsPipelineStateInitializer& GraphicsPSOInit) = 0;
 

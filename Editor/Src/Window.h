@@ -61,6 +61,11 @@ namespace Window
 		const std::wstring windowTitle = Lemon::FileUtils::StringToWstring(title);
 		const int windowWidth = 1600;// GetSystemMetrics(SM_CXSCREEN);
 		const int windowHeight = 900;// GetSystemMetrics(SM_CYSCREEN);
+	// Place the window in the middle of the screen.
+		int posX, posY;
+		posX = (GetSystemMetrics(SM_CXSCREEN) - windowWidth) / 2;
+		posY = (GetSystemMetrics(SM_CYSCREEN) - windowHeight) / 2;
+
 		const LPCWSTR className = L"MyLemonWindowClass";
 
 		// Register the Window Class
@@ -87,11 +92,11 @@ namespace Window
 		// Create the Window
 		g_Handle = CreateWindowEx
 		(
-			WS_EX_CLIENTEDGE,
+			WS_EX_APPWINDOW,
 			className,
 			windowTitle.c_str(),
 			WS_OVERLAPPEDWINDOW,
-			CW_USEDEFAULT, CW_USEDEFAULT, windowWidth, windowHeight,
+			posX, posY, windowWidth, windowHeight,
 			nullptr, nullptr, g_Instance, nullptr
 		);
 

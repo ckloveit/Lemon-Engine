@@ -10,7 +10,7 @@ namespace Lemon
 		Cube(float cubeSize = 1.0f, bool bCompileDefaultShader = true);
 
 	private:
-		void BuildCube(std::vector<StandardMeshVertex>* vertices, std::vector<uint32_t>* indices);
+		void BuildCube(std::vector<StandardMeshVertex>& vertices, std::vector<uint32_t>& indices);
 
 	private:
 		float m_CubeSize = 1.0f;

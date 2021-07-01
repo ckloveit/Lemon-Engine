@@ -36,8 +36,8 @@ namespace Lemon
 
 			// Equirectangular EnvMap
 			uint32_t sizeX = 512;
-			uint32_t sizeY = 512;
-			ERHIPixelFormat pixelFormat = RHI_PF_R8G8B8A8_Unorm;// RHI_PF_R16G16B16A16_Float;// m_EnvironmentTextureRHI->GetPixelFormat();
+			uint32_t sizeY = 512;//RHI_PF_R8G8B8A8_Unorm;//
+			ERHIPixelFormat pixelFormat = RHI_PF_R16G16B16A16_Float;// m_EnvironmentTextureRHI->GetPixelFormat();
 
 			RHITextureCubeCreateInfo cubeCreateInfo;
 			m_EnvTextureRHI = RHICreateTextureCube(sizeX, sizeY, pixelFormat, 1,
@@ -46,7 +46,6 @@ namespace Lemon
 		}
 		else if (filePaths.size() == 6)
 		{
-			m_EnvIsEquirectangular = true;
 			//
 			RHITextureCubeCreateInfo createInfo;
 			for (int i = 0; i < textureInfoDatas.size(); i++)

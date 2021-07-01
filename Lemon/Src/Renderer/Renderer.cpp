@@ -66,6 +66,8 @@ namespace Lemon
 		// Create RenderTargetTextures
 		m_SceneRenderTargets = CreateRef<SceneRenderTargets>(m_Viewport.Width, m_Viewport.Height);
 		m_SceneRenderTargets->Allocate(m_RHICommandList);
+		// ReSize Renderer
+		this->OnResize(m_Viewport.Width, m_Viewport.Height);
 
 		// Create RenderStates tp initalize some RenderStates
 		m_SceneRenderStates = CreateRef<SceneRenderStates>();
@@ -76,7 +78,6 @@ namespace Lemon
 		
 		// Init Global Render Resources
 		GlobalRenderResources::Init();
-
 		// Init Others
 		InitGeometry();
 		return true;
@@ -273,6 +274,7 @@ namespace Lemon
 
 		//Debug
 		EnvironmentComponent& envComp = entity.GetComponent<EnvironmentComponent>();
+		
 		if (envComp.bDebugShowIBLType == 1)
 		{
 			m_RHICommandList->SetTexture(0, envComp.GetEnvDiffuseIrradiance());
@@ -345,6 +347,7 @@ namespace Lemon
 				envComp.m_EnvIsEquirectangular = false;
 			}
 		}
+
 		static bool bHasPreComputeIBL = false;
 		// Image-Base-Lighting
 		if (!bHasPreComputeIBL)
@@ -352,14 +355,23 @@ namespace Lemon
 			PreComputeIBL(environmentEntitys);
 			bHasPreComputeIBL = true;
 		}
+		
 	}
 	void Renderer::Render(float deltaTime)
 	{
 		// Set Render Target
 		m_RHICommandList->SetViewport(m_Viewport);
-		m_RHICommandList->SetRenderTarget(GetSceneRenderTargets()->GetSceneColorTexture(), GetSceneRenderTargets()->GetSceneDepthTexture());
-		m_RHICommandList->RHIClearRenderTarget(GetSceneRenderTargets()->GetSceneColorTexture(), glm::vec4(0.1f, 0.4f, 0.7f, 1.0f),
-			GetSceneRenderTargets()->GetSceneDepthTexture());
+		
+		if (m_Engine->bShowImGuiEditor)
+		{
+			m_RHICommandList->SetRenderTarget(GetSceneRenderTargets()->GetSceneColorTexture(), GetSceneRenderTargets()->GetSceneDepthTexture());
+			m_RHICommandList->RHIClearRenderTarget(GetSceneRenderTargets()->GetSceneColorTexture(), glm::vec4(0.1f, 0.4f, 0.7f, 1.0f),
+				GetSceneRenderTargets()->GetSceneDepthTexture());
+		}
+		else
+		{
+			m_RHICommandList->SetRenderTarget(GetSwapChain());
+		}
 
 		Entity mainCameraEntity = m_World->GetMainCamera();
 		// Update View UniformBuffer
@@ -391,7 +403,7 @@ namespace Lemon
 		{
 			DrawSky(environmentEntitys[i]);
 		}
-
+		/*
 		//Draw Debug Gizmo
 		for (int i = 0; i < gizmoDebugEntitys.size(); i++)
 		{
@@ -400,7 +412,7 @@ namespace Lemon
 				DrawRenderer(gizmoDebugEntitys[i]);
 			}
 		}
-
+		*/
 		// Debug 
 		if (environmentEntitys[0].HasComponent<EnvironmentComponent>())
 		{
@@ -479,7 +491,6 @@ namespace Lemon
 
 		Viewport viewport(0, 0, EnvTexture->GetSizeX(), EnvTexture->GetSizeY());
 		m_RHICommandList->SetViewport(viewport);
-		m_RHICommandList->SetTexture(0, EnvEquirectangularTex);
 
 		// Set Render Target
 		glm::mat4 captureViews[6];
@@ -494,6 +505,7 @@ namespace Lemon
 		for (int j = 0; j < 6; j++)
 		{
 			m_RHICommandList->SetRenderTarget(EnvTexture, j, nullptr);
+			m_RHICommandList->SetTexture(0, EnvEquirectangularTex);
 			m_RHICommandList->RHIClearRenderTarget(EnvTexture, j, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f),
 				nullptr);
 			// DrawFullScreen
@@ -521,6 +533,7 @@ namespace Lemon
 			}
 			PixelShaderUtils::DrawFullScreenQuad(m_RHICommandList, FullScreenVertexDeclaration, FullScreenVertexShader, FullScreenPixelShader);
 		}
+		m_RHICommandList->SetTexture(0, EnvEquirectangularTex);
 	}
 
 	void Renderer::PreComputeIBL(std::vector<Entity>& environmentEntitys)
@@ -537,6 +550,7 @@ namespace Lemon
 		*/
 
 		// Pre-Compute-Diffuse-irradiance
+		
 		for (int i = 0; i < environmentEntitys.size(); i++)
 		{
 			EnvironmentComponent& envComp = environmentEntitys[i].GetComponent<EnvironmentComponent>();
@@ -559,11 +573,17 @@ namespace Lemon
 
 			//PreFilter Env Cubemap
 			StaticMeshComponent& staticMeshComp = environmentEntitys[i].GetComponent<StaticMeshComponent>();
-			m_RHICommandList->SetTexture(0, staticMeshComp.GetRenderMesh()->GetMaterial()->GetTextures()[0]);
+			/*
+			* TODO:
+			* caution: we should SetTexture after SetRenderTarget. if the texture is RenderTarget and bound to ShaderResource. 
+			* we need unbound rendertarget.so we should SetTexture after SetRenderTarget
+			*/
+			//m_RHICommandList->SetTexture(0, envComp.GetEnvironmentTexture());
 
 			for (int j = 0; j < 6; j++)
 			{
 				m_RHICommandList->SetRenderTarget(IrradianceDiffuseTex, j, nullptr);
+				m_RHICommandList->SetTexture(0, envComp.GetEnvironmentTexture());
 				m_RHICommandList->RHIClearRenderTarget(IrradianceDiffuseTex, j, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f),
 					nullptr);
 				// DrawFullScreen

@@ -20,11 +20,16 @@ namespace Lemon
 		//=========RHI Resource====================
 		virtual void* GetRHISwapChain() override;
 		virtual void* GetRHIRenderTargetView() override;
+		virtual void* GetRHIDepthStencilView() override;
 		//=========================================
+	private:
+		HRESULT ResizeDepthStencilBuffer(uint32_t width, uint32_t height);
 
 	private:
 		IDXGISwapChain* m_SwapChain;
-		ID3D11RenderTargetView* m_RenderTargetView;
+		ID3D11RenderTargetView* m_RenderTargetView = nullptr;
+		ID3D11Texture2D* m_DepthStencilBuffer = nullptr;
+		ID3D11DepthStencilView* m_DepthStencilView = nullptr;
 
 		D3D11DynamicRHI* m_D3DRHI;
 		uint32_t m_BackBufferCount;

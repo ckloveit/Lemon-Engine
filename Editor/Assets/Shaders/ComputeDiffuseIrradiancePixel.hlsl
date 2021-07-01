@@ -16,15 +16,13 @@ float4 MainPS(PixelInput Input) : SV_TARGET
 	// incoming radiance of the environment. The result of this radiance
 	// is the radiance of light coming from -Normal direction, which is what
 	// we use in the PBR shader to sample irradiance.
-	float3 WorldPos = Input.WorldPosition.xyz;
-	float3 N = normalize(WorldPos);
-
+	float3 normal = normalize(Input.WorldPosition.xyz);
 	float3 irradiance = float3(0.0, 0.0, 0.0);
 
 	// tangent space calculation from origin point
 	float3 up = float3(0.0, 1.0, 0.0);
-	float3 right = normalize(cross(up, N));
-	up = normalize(cross(N, right));
+	float3 right = normalize(cross(up, normal));
+	up = normalize(cross(normal, right));
 
 	float sampleDelta = 0.025;
 	float nrSamples = 0.0;
@@ -33,9 +31,9 @@ float4 MainPS(PixelInput Input) : SV_TARGET
 		for (float theta = 0.0; theta < 0.5 * PI; theta += sampleDelta)
 		{
 			// spherical to cartesian (in tangent space)
-			float3 tangentSample = float3(sin(theta) * cos(phi),  sin(theta) * sin(phi), cos(theta));
+			float3 tangentSample = float3(sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta));
 			// tangent space to world
-			float3 sampleVec = tangentSample.x * right + tangentSample.y * up + tangentSample.z * N;
+			float3 sampleVec = tangentSample.x * right + tangentSample.y * up + tangentSample.z * normal;
 
 			irradiance += EnvironmentTexCube.Sample(BilinearWrapSampler, sampleVec).rgb * cos(theta) * sin(theta);
 			nrSamples++;

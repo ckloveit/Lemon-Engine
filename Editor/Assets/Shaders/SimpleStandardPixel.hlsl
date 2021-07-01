@@ -23,6 +23,12 @@ float4 MainPS(PixelInput Input) : SV_TARGET
 
 	float3 albedo = g_Albedo.xyz;
 
+	//Debug
+	//roughness = 0;
+	//metallic = 0.0f;
+ 	//ao = 1.0;
+	//albedo = float3(1.0f, 0.0f, 0.0f);
+
 	float3 Lo = 0;
 	float3 F0 = float3(0.04f, 0.04f, 0.04f);
 	F0 = lerp(F0, albedo, metallic);
@@ -34,10 +40,10 @@ float4 MainPS(PixelInput Input) : SV_TARGET
 	[branch]
 	if(g_DirectionalLightDir.w > 0.0f)
 	{
-		float3 L = g_DirectionalLightDir.xyz;
+		float3 L = normalize(g_DirectionalLightDir.xyz);
 		float3 H = normalize(V + L);
 
-		float attenuation = 1.0f;//DirectionLight has no transport attenuation
+		float attenuation = 1.0f; //DirectionLight has no transport attenuation
 		float3 radiance = g_DirectionalLightColor.rgb * attenuation;// Get the L(p, wi)
 
 		// Cook-Torrance BRDF
@@ -57,24 +63,23 @@ float4 MainPS(PixelInput Input) : SV_TARGET
 		float NDotL = max(dot(N, L), 0.0f);
 		Lo += (KD * albedo / PI + specular) * radiance * NDotL;
 	}
+
 	float3 F = FresnelSchlickRoughness(max(dot(N, V), 0.0), F0, roughness);
 	float3 kS = F;
 	float3 kD = 1.0 - kS;
 	kD *= 1.0 - metallic;
 
-
 	// -------------IBL Lighting-----------------------//
 	float3 irradiance = diffuseIrradianceMap.Sample(BilinearWrapSampler, N).rgb;
 	float3 indirectDiffuse = irradiance * albedo;
 
-	const float MAX_REFLECTION_LOD = 4.0;
+	const float MAX_REFLECTION_LOD = 4.0f;
 	float3 prefilteredColor = specularPrefilterMap.SampleLevel(TrilinearWrapSampler, R, roughness * MAX_REFLECTION_LOD).rgb;
-	float2 envBRDF = specularBRDFLutMap.Sample(BilinearWrapSampler, float2(max(dot(N, V), 0.0), roughness)).rg;
+	float2 envBRDF = specularBRDFLutMap.Sample(TrilinearWrapSampler, float2(max(dot(N, V), 0.0), roughness)).rg;
 	float3 indirectSpecular = prefilteredColor * (F * envBRDF.x + envBRDF.y);
 	// ------------------------------------------------//
-
 	float3 ambient = (kD * indirectDiffuse + indirectSpecular) * ao;
-
+	
 	//float3 ambient = float3(0.03, 0.03, 0.03) * Albedo * ao;
 	float3 color = ambient + Lo;
 	
@@ -86,5 +91,4 @@ float4 MainPS(PixelInput Input) : SV_TARGET
 	color = pow(color, float3(invGamma, invGamma, invGamma));
 
 	return float4(color, 1.0f);
-	//return float4(Input.Normal, 1.0f);//float4(g_TestColor, 1.0f);//
 }

@@ -32,6 +32,7 @@ private:
 
 private:
 	bool m_Initialized = false;
+	bool m_bHasInitImGui = false;
 
 	std::unique_ptr<Lemon::Engine> m_Engine;
 	std::vector<std::unique_ptr<Widget>> m_Widgets;

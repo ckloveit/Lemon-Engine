@@ -67,7 +67,7 @@ namespace Lemon
 		
 		//===================================
 
-		void EndOneFrame() { m_bNewframe = true; }
+		void EndOneFrame();
 		
 		// Keys
 		bool GetKey(const KeyCode key) const { return m_Keys[static_cast<uint32_t>(key)]; }							        // Returns true while the button identified by KeyCode is held down.
@@ -78,6 +78,7 @@ namespace Lemon
 		const glm::vec2& GetMousePosition() const { return m_MousePosition; }
 		const glm::vec2& GetMouseDelta() const { return m_MouseDelta; }
 
+		bool IsFocused() const { return m_bIsFocused; }
 	private:
 		// Keys
 		std::array<bool, 99> m_Keys;
@@ -93,5 +94,6 @@ namespace Lemon
 		// Misc
 		bool m_bNewframe = false;
 
+		bool m_bIsFocused = true;
 	};
 }

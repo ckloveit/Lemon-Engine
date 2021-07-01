@@ -52,6 +52,8 @@ namespace Lemon
 		//Delegate
 		MultiDelegate<void, WindowData> OnWindowMessageEvent;
 
+		//
+		bool bShowImGuiEditor = true;
 	private:
 		WindowData m_WindowData;
 		Ref<SystemManager> m_SystemManager;

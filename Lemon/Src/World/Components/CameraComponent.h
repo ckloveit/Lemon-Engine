@@ -48,9 +48,12 @@ namespace Lemon
 		//Debug InputHandle
 		void ProcessInputSystem(float deltaTime);
 
+        float FovScale = 1.0f;
+        void RecalculateProjection();
+
      private:
-        void RecalculateProjection();   
 		float GetFovVerticalRadian() const;
+
      private:
         ProjectionType m_ProjectionType = ProjectionType::Perspective;   
         float m_AspectRatio = 1.0f;
@@ -70,6 +73,6 @@ namespace Lemon
 		float m_ViewportSizeY = 1.0f;
 
 		// Input
-		glm::vec3 m_MovementSpeed;
+		glm::vec3 m_MovementSpeed = glm::vec3(0, 0, 0);// we should initialize zero it.otherwise it will init invalid value
     };
 }

@@ -48,19 +48,24 @@ namespace Lemon
 		}
 	}
 
-	void D3D11CommandList::SetRenderTarget(Ref<RHISwapChain> swapChain)
+	void D3D11CommandList::SetRenderTarget(Ref<RHISwapChain> swapChain, float depthClear /*= 1.0f*/, float stencilClear /*= 0*/)
 	{
 		const void* rtvs[1] = { swapChain->GetRHIRenderTargetView() };
 
 		ID3D11RenderTargetView* renderTargetView = static_cast<ID3D11RenderTargetView*>(swapChain->GetRHIRenderTargetView());
-		void* depthStencil = nullptr;
+		ID3D11DepthStencilView* depthStencilView = static_cast<ID3D11DepthStencilView*>(swapChain->GetRHIDepthStencilView());
 		m_D3D11RHI->GetDeviceContext()->OMSetRenderTargets
 		(
 			1,
 			&renderTargetView,
-			static_cast<ID3D11DepthStencilView*>(depthStencil)
+			depthStencilView
 		); 
 		m_D3D11RHI->GetDeviceContext()->ClearRenderTargetView(renderTargetView, glm::value_ptr(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f)));
+		if (depthStencilView)
+		{
+			m_D3D11RHI->GetDeviceContext()->ClearDepthStencilView(depthStencilView,
+				D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, depthClear, stencilClear);
+		}
 	}
 
 	void D3D11CommandList::SetGraphicsPipelineState(const GraphicsPipelineStateInitializer& GraphicsPSOInit)

@@ -20,6 +20,7 @@ namespace Lemon
 		//=========RHI Resource====================
 		virtual void* GetRHISwapChain() = 0;
 		virtual void* GetRHIRenderTargetView() = 0;
+		virtual void* GetRHIDepthStencilView() = 0;
 		//=========================================
 
 		//=========Misc============================

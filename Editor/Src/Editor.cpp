@@ -25,6 +25,11 @@
 using namespace std;
 using namespace Lemon;
 
+#define USE_IMGUI 1
+
+#include "World/Components/CameraComponent.h"
+
+
 namespace EditorGlobal
 {
 	Lemon::Renderer* g_Renderer = nullptr;
@@ -33,6 +38,9 @@ namespace EditorGlobal
 
 	WidgetViewport* g_EditorViewport = nullptr;
 	
+	Lemon::InputSystem* g_InputSystem = nullptr;
+
+	void* g_Handle = nullptr;
 }
 
 
@@ -49,27 +57,41 @@ void Editor::OnWindowMessage(WindowData& windowData)
 		// Create engine
 		m_Engine = make_unique<Engine>(windowData);
 
+#if !USE_IMGUI
+		m_Engine->bShowImGuiEditor = false;
+#endif
+
 		// Acquire the System we need
 		EditorGlobal::g_Renderer = m_Engine->GetSystem<Lemon::Renderer>();
+		// Acquire Input System
+		EditorGlobal::g_InputSystem = m_Engine->GetSystem<Lemon::InputSystem>();
+		EditorGlobal::g_Handle = windowData.Handle;
 
-		InitImGui(windowData);
+		if (m_Engine->bShowImGuiEditor)
+		{
+			InitImGui(windowData);
+		}
 
 		m_Initialized = true;
 	}
 	else if (m_Initialized)
 	{
-		// Updated ImGui with message (if showing)
-		if (true)
+		if (m_Engine->bShowImGuiEditor)
 		{
+			// Updated ImGui with message (if showing)
+			if (true)
+			{
 #if LEMON_GRAPHICS_D3D11
-			ImGui_ImplWin32_WndProcHandler(
-				static_cast<HWND>(windowData.Handle),
-				static_cast<uint32_t>(windowData.Message),
-				static_cast<int64_t>(windowData.Wparam),
-				static_cast<uint64_t>(windowData.Lparam)
-			);
+				ImGui_ImplWin32_WndProcHandler(
+					static_cast<HWND>(windowData.Handle),
+					static_cast<uint32_t>(windowData.Message),
+					static_cast<int64_t>(windowData.Wparam),
+					static_cast<uint64_t>(windowData.Lparam)
+				);
 #endif
+			}
 		}
+
 		// Passing zero dimensions will cause the swapchain to not present at all
 		uint32_t width = static_cast<uint32_t>(windowData.Width);
 		uint32_t height = static_cast<uint32_t>(windowData.Height);
@@ -78,6 +100,10 @@ void Editor::OnWindowMessage(WindowData& windowData)
 		if (EditorGlobal::g_Renderer->GetSwapChain()->GetWidth() != width || EditorGlobal::g_Renderer->GetSwapChain()->GetHeight() != height)
 		{
 			EditorGlobal::g_Renderer->GetSwapChain()->ReSize(static_cast<uint32_t>(width), static_cast<uint32_t>(height));
+			if (!m_Engine->bShowImGuiEditor)
+			{
+				EditorGlobal::g_Renderer->OnResize(width, height);
+			}
 		}
 
 		m_Engine->SetWindowData(windowData);
@@ -87,18 +113,54 @@ void Editor::OnTick()
 {
 	// Check if OnResize
 	Lemon::Viewport viewport = m_Engine->GetSystem<Renderer>()->GetViewport();
-	glm::vec2 editorViewportSize = EditorGlobal::g_EditorViewport->GetViewportSize();
-	
-	if((viewport.Width > 0.0f && viewport.Height > 0.0f && editorViewportSize.x > 0.0f && editorViewportSize.y > 0.0f) &&  // zero sized framebuffer is invalid
-	   (viewport.Width != EditorGlobal::g_EditorViewport->GetViewportSize().x ||
-		viewport.Height != EditorGlobal::g_EditorViewport->GetViewportSize().y))
+
+	// process mouse input
+	if (EditorGlobal::g_InputSystem &&
+		EditorGlobal::g_InputSystem->GetKey(KeyCode::Enter) /*&& EditorGlobal::g_InputSystem->GetKey(KeyCode::Alt_Left)*/)
 	{
-		EditorGlobal::g_Renderer->OnResize(EditorGlobal::g_EditorViewport->GetViewportSize().x, EditorGlobal::g_EditorViewport->GetViewportSize().y);
+		EditorGlobal::g_Renderer->GetEngine()->bShowImGuiEditor = !EditorGlobal::g_Renderer->GetEngine()->bShowImGuiEditor;
+		if (EditorGlobal::g_Renderer->GetEngine()->bShowImGuiEditor)
+		{
+			if (!m_bHasInitImGui)
+			{
+				WindowData tempData;
+				tempData.Handle = EditorGlobal::g_Handle;
+				tempData.Width = viewport.Width;
+				tempData.Height = viewport.Height;
+				InitImGui(tempData);
+			}
+		}
+	}
+
+	if (m_Engine->bShowImGuiEditor)
+	{
+		glm::vec2 editorViewportSize = EditorGlobal::g_EditorViewport->GetViewportSize();
+
+		if ((viewport.Width > 0.0f && viewport.Height > 0.0f && editorViewportSize.x > 0.0f && editorViewportSize.y > 0.0f) &&  // zero sized framebuffer is invalid
+			(viewport.Width != EditorGlobal::g_EditorViewport->GetViewportSize().x ||
+				viewport.Height != EditorGlobal::g_EditorViewport->GetViewportSize().y))
+		{
+			EditorGlobal::g_Renderer->OnResize(EditorGlobal::g_EditorViewport->GetViewportSize().x, EditorGlobal::g_EditorViewport->GetViewportSize().y);
+		}
+	}
+	else
+	{
+		// if size change
+		if (EditorGlobal::g_Renderer->GetSwapChain()->GetWidth() != viewport.Width || EditorGlobal::g_Renderer->GetSwapChain()->GetHeight() != viewport.Height)
+		{
+			EditorGlobal::g_Renderer->GetSwapChain()->ReSize(static_cast<uint32_t>(viewport.Width), static_cast<uint32_t>(viewport.Height));
+			if (!m_Engine->bShowImGuiEditor)
+			{
+				EditorGlobal::g_Renderer->OnResize(viewport.Width, viewport.Height);
+			}
+		}
 	}
 	
 	// Engine - tick
 	m_Engine->Tick();
+
 	//Editor Tick
+	if (m_Engine->bShowImGuiEditor)
 	{
 		// ImGui - start frame
 		ImGuiRHI::NewFrame();
@@ -122,11 +184,25 @@ void Editor::OnTick()
 			ImGui::RenderPlatformWindowsDefault();
 		}
 	}
-	
+	else
+	{
+		//
+		m_Engine->GetSystem<Renderer>()->GetSwapChain()->Present();
+
+		// process mouse input
+		if (EditorGlobal::g_InputSystem && EditorGlobal::g_InputSystem->GetKey(KeyCode::Mouse_Left))
+		{
+			EditorGlobal::g_Renderer->GetEngine()->GetSystem<World>()->GetMainCamera().GetComponent<CameraComponent>().ProcessInputSystem(m_Engine->GetSystem<Timer>()->GetDeltaTimeSec());
+		}
+
+		// EndOneFrame
+		m_Engine->EndOneFrame();
+	}
 }
 
 void Editor::InitImGui(const WindowData& windowData)
 {
+	m_bHasInitImGui = true;
 	// @Copy code from Dear ImGui Demo
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();

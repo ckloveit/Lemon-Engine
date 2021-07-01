@@ -1,5 +1,8 @@
-[01:41:36] [info] Lemon: Create new Direct3DDevice
-[01:41:36] [info] Lemon: NVIDIA GeForce GTX 1070 (3992 MB)
-[01:41:36] [info] Lemon: Microsoft Basic Render Driver (0 MB)
-[01:41:36] [info] Lemon: NVIDIA GeForce GTX 1070 (3992 MB)
-[01:41:36] [info] Lemon: LemonEngine Initialize
+[00:17:25] [info] Lemon: Create new Direct3DDevice
+[00:17:25] [info] Lemon: NVIDIA GeForce GTX 1070 (3992 MB)
+[00:17:25] [info] Lemon: Microsoft Basic Render Driver (0 MB)
+[00:17:25] [info] Lemon: NVIDIA GeForce GTX 1070 (3992 MB)
+[00:17:25] [info] Lemon: LemonEngine Initialize
+[00:29:15] [error] Lemon: Failed to create depth stencil view view, E_INVALIDARG.
+[00:29:15] [error] Lemon: Failed to create depth stencil view view, E_INVALIDARG.
+[00:29:56] [error] Lemon: Failed to create depth stencil view view, E_INVALIDARG.

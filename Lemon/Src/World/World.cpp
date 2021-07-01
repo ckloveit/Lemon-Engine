@@ -94,7 +94,7 @@ namespace Lemon
 			gridMesh->SetMaterial(renderMaterial);
 			
 			// Create Env
-			CreateEnvironment();
+			CreateEnvironment(1.0f);
 			// Create Light
 			CreateLight();
 		}
@@ -107,7 +107,7 @@ namespace Lemon
     	Entity directionalLightEntity = CreateEntity("DirectionalLight");
     	DirectionalLightComponent& directionalLightComp = directionalLightEntity.AddComponent<DirectionalLightComponent>();
 		TransformComponent& transformComp = directionalLightEntity.GetComponent<TransformComponent>();
-    	transformComp.Rotation = glm::vec3(0,0,45); // set light dir
+    	transformComp.Rotation = glm::vec3(0, 0, 45); // set light dir
     }
 	
     void World::Tick(float deltaTime)
@@ -140,8 +140,8 @@ namespace Lemon
     void World::CreateMainCamera()
     {
 		MainCameraEntity = CreateEntity("MainCamera");
-		MainCameraEntity.GetComponent<TransformComponent>().Rotation = glm::vec3(0, 180.0f, 0);
-		MainCameraEntity.GetComponent<TransformComponent>().Position = glm::vec3(0, 0,  1.5f);
+		//MainCameraEntity.GetComponent<TransformComponent>().Rotation = glm::vec3(0, 180.0f, 0);
+		MainCameraEntity.GetComponent<TransformComponent>().Position = glm::vec3(10, 10, -20.0f);
         CameraComponent& camera = MainCameraEntity.AddComponent<CameraComponent>();
         camera.SetProjectionType(CameraComponent::ProjectionType::Perspective);
     }
@@ -227,10 +227,10 @@ namespace Lemon
 		float metallic = 0.0f;
 		float roughness = 0.0f;
 		glm::vec3 position = glm::vec3(0, 0, 0);
-		for (int i = 0; i < 1; i++)
+		for (int i = 0; i < 10; i++)
 		{
 			metallic = i * 0.1f;
-			for (int j = 0; j < 1; j++)
+			for (int j = 0; j < 10; j++)
 			{
 				roughness = j * 0.1f;
 
@@ -240,7 +240,7 @@ namespace Lemon
 				
 				StaticMeshComponent& staticMesh2 = sphere.AddComponent<StaticMeshComponent>();
 				TransformComponent& transformComp = sphere.GetComponent<TransformComponent>();
-				transformComp.Position = position + glm::vec3(i * 2.5f, 0.0f, 0.0f) + glm::vec3(0.0f, j * 2.5f, 0);
+				transformComp.Position = position + glm::vec3(i * 2, 0.0f, 0.0f) + glm::vec3(0.0f, j * 2, 0);
 				Ref<Mesh> sphereMesh = CreateRef<Sphere>();
 				staticMesh2.SetMesh(sphereMesh);
 				Ref<Material> renderMaterial = CreateRef<Material>();

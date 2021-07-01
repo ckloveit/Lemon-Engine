@@ -6,6 +6,7 @@
 #include "WidgetHelpers.h"
 #include "World/Components/DirectionalLightComponent.h"
 #include "World/Components/EnvironmentComponent.h"
+#include "World/Components/CameraComponent.h"
 
 WidgetProperties::WidgetProperties(Lemon::Engine* engine)
 	:Widget(engine)
@@ -69,6 +70,23 @@ void WidgetProperties::DrawEntity(Lemon::Entity entity) const
 			WidgetHelpers::DrawVec3Control("Translation", tc.Position);
 			WidgetHelpers::DrawVec3Control("Rotation", tc.Rotation);
 			WidgetHelpers::DrawVec3Control("Scale", tc.Scale, 1.0f);
+			ImGui::TreePop();
+		}
+	}
+	if (entity.HasComponent<Lemon::CameraComponent>())
+	{
+		bool open = ImGui::TreeNodeEx((void*)typeid(Lemon::CameraComponent).hash_code(), treeNodeFlags, "Camera");
+
+		if (open)
+		{
+			Lemon::CameraComponent& cameraComp = entity.GetComponent<Lemon::CameraComponent>();
+			ImGui::Text("FOV Scale");
+			ImGui::SameLine(120.0f);
+			if (ImGui::DragFloat("##1", (float*)&cameraComp.FovScale, 0.1, 0.1, 10))
+			{
+				cameraComp.RecalculateProjection();
+			}
+
 			ImGui::TreePop();
 		}
 	}

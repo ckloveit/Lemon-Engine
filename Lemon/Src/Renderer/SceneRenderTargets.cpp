@@ -25,6 +25,11 @@ namespace Lemon
 	
 	void SceneRenderTargets::OnResize(uint32_t newSizeX, uint32_t newSizeY)
 	{
+		if (m_SizeX == newSizeX && m_SizeY == newSizeY)
+		{
+			return;
+		}
+
 		m_SizeX = newSizeX;
 		m_SizeY = newSizeY;
 		
