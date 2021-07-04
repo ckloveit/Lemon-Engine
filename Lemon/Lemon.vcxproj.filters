@@ -213,6 +213,9 @@
     <ClInclude Include="Src\RenderCore\Viewport.h">
       <Filter>Src\RenderCore</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Renderer\ForwardShadingRenderer.h">
+      <Filter>Src\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="Src\Renderer\Renderer.h">
       <Filter>Src\Renderer</Filter>
     </ClInclude>
@@ -222,7 +225,7 @@
     <ClInclude Include="Src\Renderer\SceneRenderTargets.h">
       <Filter>Src\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Renderer\SceneRendering.h">
+    <ClInclude Include="Src\Renderer\SceneRenderer.h">
       <Filter>Src\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Src\Renderer\SceneUniformBuffers.h">
@@ -1616,7 +1619,7 @@
     <ClCompile Include="Src\Renderer\SceneRenderTargets.cpp">
       <Filter>Src\Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Renderer\SceneRendering.cpp">
+    <ClCompile Include="Src\Renderer\SceneRenderer.cpp">
       <Filter>Src\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="Src\Renderer\SceneUniformBuffers.cpp">
@@ -1660,6 +1663,9 @@
     </ClCompile>
     <ClCompile Include="ThirdParty\std_image\std_image.cpp">
       <Filter>ThirdParty\std_image</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Renderer\ForwardShadingRenderer.cpp">
+      <Filter>Src\Renderer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

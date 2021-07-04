@@ -15,17 +15,28 @@
 #include "RenderCore/Mesh.h"
 #include "RenderCore/Geometry/Cube.h"
 #include "RenderCore/Geometry/Quad.h"
+#include "ForwardShadingRenderer.h"
+
 #include "World/Entity.h"
 #include "World/Components/EnvironmentComponent.h"
 
+
 namespace Lemon
 {
+	enum EShadingPath
+	{
+		Forward,
+		Deferred
+	};
+
 	class DynamicRHI;
 	class World;
 	class GlobalRenderResources;
 
 	class LEMON_API Renderer : public ISystem
 	{
+		friend class ForwardShadingRenderer;
+
 	public:
 		Renderer(Engine* engine);
 		~Renderer();
@@ -33,12 +44,11 @@ namespace Lemon
 		bool Initialize() override;
 		void Tick(float deltaTime) override;
 
-
 		void PreRender(float deltaTime);
-		void Render(float deltaTime);
 
 		void OnResize(uint32_t newWidth, uint32_t newHeight);
 		
+		Engine* GetEngine() { return m_Engine; }
 		//====SwapChain=============================//
 		const auto& GetSwapChain() const { return m_RHISwapChain; }
 
@@ -48,20 +58,25 @@ namespace Lemon
 		void SetViewport(const Viewport& inViewport) { m_Viewport = inViewport; }
 		Viewport GetViewport() const { return m_Viewport;}
 
-		//ConstantBuffer Update
-		void UpdateViewUniformBuffer(Entity mainCameraEntity) const;
 
-		void UpdateLightUniformBuffer(const std::vector<Entity>& lightEntitys) const;
-		
+
+	public:
+		static Renderer* Get() { return s_Instance; }
+		static void DrawRenderer(Ref<RHICommandList> RHICmdList, Entity entity);
+		static void DrawSky(Ref<RHICommandList> RHICmdList, Entity entity);
+		//ConstantBuffer Update
+		static void UpdateViewUniformBuffer(Ref<RHICommandList> RHICmdList, Entity mainCameraEntity);
+		static void UpdateLightUniformBuffer(Ref<RHICommandList> RHICmdList, const std::vector<Entity>& lightEntitys);
+		static void DrawFullScreenQuad(Ref<RHICommandList> RHICmdList, FullScreenUniformParameters fullScreenParameter,
+			std::vector<std::shared_ptr<RHITexture>> Textures = std::vector<std::shared_ptr<RHITexture>>());
+
+
+
 	private:
 		void InitGeometry();
 
-		void DrawRenderer(Entity entity) const;
-		void DrawSky(Entity entity) const;
 
-
-		void DrawFullScreenQuad(FullScreenUniformParameters fullScreenParameter, std::vector<std::shared_ptr<RHITexture>> Textures = std::vector<std::shared_ptr<RHITexture>>());
-
+		
 		void PreComputeIBL(std::vector<Entity>& environment);
 
 		void EnvEquirectangularToCubeMap(EnvironmentComponent& envComp);
@@ -99,5 +114,11 @@ namespace Lemon
 		std::vector<Entity> normalEntitys;
 		std::vector<Entity> lightEntitys;
 
+		// Render Shading Path
+		Ref<SceneRenderer> m_ShadingRenderer = nullptr;
+		EShadingPath m_ShadingPath = EShadingPath::Forward;
+
+		// Static Instance
+		static Renderer* s_Instance;
 	};
 }

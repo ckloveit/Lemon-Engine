@@ -81,6 +81,8 @@ namespace Lemon
         SceneUniformBuffers();
         ~SceneUniformBuffers() = default;
 
+        static SceneUniformBuffers* Get() { return s_Instance; }
+
         // UniformBuffers
         Ref<RHIUniformBuffer<ViewUniformParameters>> ViewUniformBuffer;
         Ref<RHIUniformBuffer<ObjectUniformParameters>> ObjectUniformBuffer;
@@ -91,6 +93,8 @@ namespace Lemon
         Ref<RHIUniformBuffer<CustomDataFloat8UniformParameters>> CustomDataFloat8UniformBuffer;
         Ref<RHIUniformBuffer<CustomDataFloat16UniformParameters>> CustomDataFloat16UniformBuffer;
         
+    private:
+        static SceneUniformBuffers* s_Instance;
     };
 
 

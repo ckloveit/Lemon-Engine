@@ -25,9 +25,12 @@
 #include <glm/gtx/quaternion.hpp>
 namespace Lemon
 {
+	Renderer* Renderer::s_Instance = nullptr;
+
 	Renderer::Renderer(Engine* engine)
 		:ISystem(engine)
 	{
+		s_Instance = this;
 
 	}
 	Renderer::~Renderer()
@@ -80,6 +83,8 @@ namespace Lemon
 		GlobalRenderResources::Init();
 		// Init Others
 		InitGeometry();
+
+		
 		return true;
 	}
 	struct SimpleVertex
@@ -138,18 +143,21 @@ namespace Lemon
 		
 	}
 
-	void Renderer::DrawRenderer(Entity entity) const
+	void Renderer::DrawRenderer(Ref<RHICommandList> RHICmdList, Entity entity)
 	{
 		TransformComponent& transformComp = entity.GetComponent<TransformComponent>();
 		StaticMeshComponent& staticMeshComp = entity.GetComponent<StaticMeshComponent>();
 		if (!staticMeshComp.IsVisiable())
 			return;
-
+		SceneUniformBuffers* UniformBuffer = SceneUniformBuffers::Get();
+		if (!UniformBuffer || !Renderer::Get())
+		{
+			return;
+		}
 		// Update ObjectBuffer
-		m_RHICommandList->SetUniformBuffer(m_SceneUniformBuffers->ObjectUniformBuffer->GetSlotIndex(),
+		RHICmdList->SetUniformBuffer(UniformBuffer->ObjectUniformBuffer->GetSlotIndex(),
             EUniformBufferUsageScope::UBUS_Vertex | EUniformBufferUsageScope::UBUS_Pixel,
-            m_SceneUniformBuffers->ObjectUniformBuffer->UniformBuffer());
-
+			UniformBuffer->ObjectUniformBuffer->UniformBuffer());
 
 		ObjectUniformParameters parameters;
 		parameters.LocalToWorldMatrix = transformComp.GetTransform();
@@ -181,22 +189,22 @@ namespace Lemon
 			PSOInit.PrimitiveType = EPrimitiveType::PT_TriangleList;
 		}
 
-		m_SceneUniformBuffers->ObjectUniformBuffer->UpdateUniformBufferImmediate(parameters);
+		UniformBuffer->ObjectUniformBuffer->UpdateUniformBufferImmediate(parameters);
 		
-		m_RHICommandList->SetGraphicsPipelineState(PSOInit);
+		RHICmdList->SetGraphicsPipelineState(PSOInit);
 
 		// Set VertexBuffer and IndexBuffer
-		m_RHICommandList->SetIndexBuffer(staticMeshComp.GetRenderMesh()->GetIndexBuffer());
-		m_RHICommandList->SetVertexBuffer(0, staticMeshComp.GetRenderMesh()->GetVertexBuffer());
+		RHICmdList->SetIndexBuffer(staticMeshComp.GetRenderMesh()->GetIndexBuffer());
+		RHICmdList->SetVertexBuffer(0, staticMeshComp.GetRenderMesh()->GetVertexBuffer());
 	
 		// IBL
-		if (m_World->GetMainEnvironment())
+		if (Renderer::Get()->m_World->GetMainEnvironment())
 		{
-			Entity envEntity = m_World->GetMainEnvironment();
+			Entity envEntity = Renderer::Get()->m_World->GetMainEnvironment();
 			EnvironmentComponent& envComp = envEntity.GetComponent<EnvironmentComponent>();
-			m_RHICommandList->SetTexture(0, envComp.GetEnvDiffuseIrradiance());
-			m_RHICommandList->SetTexture(1, envComp.GetEnvSpecularPrefilter());
-			m_RHICommandList->SetTexture(2, envComp.GetEnvSpecularIntegrateBRDF());
+			RHICmdList->SetTexture(0, envComp.GetEnvDiffuseIrradiance());
+			RHICmdList->SetTexture(1, envComp.GetEnvSpecularPrefilter());
+			RHICmdList->SetTexture(2, envComp.GetEnvSpecularIntegrateBRDF());
 		}
 		// Set PBR Textures
 		int textureOffset = 3;
@@ -204,26 +212,29 @@ namespace Lemon
 		{
 			for (int i = 0; i < staticMeshComp.GetRenderMesh()->GetMaterial()->GetTextures().size(); i++)
 			{
-				m_RHICommandList->SetTexture(textureOffset + staticMeshComp.GetRenderMesh()->GetMaterial()->GetTextureStartSlot() + i, staticMeshComp.GetRenderMesh()->GetMaterial()->GetTextures()[i]);
+				RHICmdList->SetTexture(textureOffset + staticMeshComp.GetRenderMesh()->GetMaterial()->GetTextureStartSlot() + i, staticMeshComp.GetRenderMesh()->GetMaterial()->GetTextures()[i]);
 			}
 		}
 
 		// Draw
-		m_RHICommandList->DrawIndexPrimitive(0, 0, staticMeshComp.GetRenderMesh()->GetIndexCount() / 3);
+		RHICmdList->DrawIndexPrimitive(0, 0, staticMeshComp.GetRenderMesh()->GetIndexCount() / 3);
 	}
 
-
-	void Renderer::DrawSky(Entity entity) const
+	void Renderer::DrawSky(Ref<RHICommandList> RHICmdList, Entity entity)
 	{
 		TransformComponent& transformComp = entity.GetComponent<TransformComponent>();
 		StaticMeshComponent& staticMeshComp = entity.GetComponent<StaticMeshComponent>();
 		if (!staticMeshComp.IsVisiable())
 			return;
-
+		SceneUniformBuffers* UniformBuffer = SceneUniformBuffers::Get();
+		if (!UniformBuffer || !Renderer::Get())
+		{
+			return;
+		}
 		// Update ObjectBuffer
-		m_RHICommandList->SetUniformBuffer(m_SceneUniformBuffers->ObjectUniformBuffer->GetSlotIndex(),
+		RHICmdList->SetUniformBuffer(UniformBuffer->ObjectUniformBuffer->GetSlotIndex(),
 			EUniformBufferUsageScope::UBUS_Vertex | EUniformBufferUsageScope::UBUS_Pixel,
-			m_SceneUniformBuffers->ObjectUniformBuffer->UniformBuffer());
+			UniformBuffer->ObjectUniformBuffer->UniformBuffer());
 
 		ObjectUniformParameters parameters;
 		parameters.LocalToWorldMatrix = transformComp.GetTransform();
@@ -255,20 +266,20 @@ namespace Lemon
 			PSOInit.PrimitiveType = EPrimitiveType::PT_TriangleList;
 		}
 
-		m_SceneUniformBuffers->ObjectUniformBuffer->UpdateUniformBufferImmediate(parameters);
+		UniformBuffer->ObjectUniformBuffer->UpdateUniformBufferImmediate(parameters);
 
-		m_RHICommandList->SetGraphicsPipelineState(PSOInit);
+		RHICmdList->SetGraphicsPipelineState(PSOInit);
 
 		// Set VertexBuffer and IndexBuffer
-		m_RHICommandList->SetIndexBuffer(staticMeshComp.GetRenderMesh()->GetIndexBuffer());
-		m_RHICommandList->SetVertexBuffer(0, staticMeshComp.GetRenderMesh()->GetVertexBuffer());
+		RHICmdList->SetIndexBuffer(staticMeshComp.GetRenderMesh()->GetIndexBuffer());
+		RHICmdList->SetVertexBuffer(0, staticMeshComp.GetRenderMesh()->GetVertexBuffer());
 		// Set Textures
 
 		if (staticMeshComp.GetRenderMesh()->GetMaterial())
 		{
 			for (int i = 0; i < staticMeshComp.GetRenderMesh()->GetMaterial()->GetTextures().size(); i++)
 			{
-				m_RHICommandList->SetTexture(staticMeshComp.GetRenderMesh()->GetMaterial()->GetTextureStartSlot() + i, staticMeshComp.GetRenderMesh()->GetMaterial()->GetTextures()[i]);
+				RHICmdList->SetTexture(staticMeshComp.GetRenderMesh()->GetMaterial()->GetTextureStartSlot() + i, staticMeshComp.GetRenderMesh()->GetMaterial()->GetTextures()[i]);
 			}
 		}
 
@@ -277,14 +288,14 @@ namespace Lemon
 		
 		if (envComp.bDebugShowIBLType == 1)
 		{
-			m_RHICommandList->SetTexture(0, envComp.GetEnvDiffuseIrradiance());
+			RHICmdList->SetTexture(0, envComp.GetEnvDiffuseIrradiance());
 		}
 		else if (envComp.bDebugShowIBLType == 2)
 		{
-			m_RHICommandList->SetTexture(0, envComp.GetEnvSpecularPrefilter());
+			RHICmdList->SetTexture(0, envComp.GetEnvSpecularPrefilter());
 		}
 		// Draw
-		m_RHICommandList->DrawIndexPrimitive(0, 0, staticMeshComp.GetRenderMesh()->GetIndexCount() / 3);
+		RHICmdList->DrawIndexPrimitive(0, 0, staticMeshComp.GetRenderMesh()->GetIndexCount() / 3);
 	}
 
 	void Renderer::OnResize(uint32_t newWidth, uint32_t newHeight)
@@ -298,7 +309,6 @@ namespace Lemon
 		{
 			m_World->GetMainCamera().GetComponent<CameraComponent>().SetViewportSize(newWidth, newHeight);
 		}
-
 	}
 	void Renderer::Tick(float deltaTime)
 	{
@@ -332,7 +342,19 @@ namespace Lemon
 
 		PreRender(deltaTime);
 
-		Render(deltaTime);
+		ViewInfo viewinfo;
+		viewinfo.ViewSize = m_Viewport;
+
+		if (m_ShadingPath == EShadingPath::Forward)
+		{
+			m_ShadingRenderer = CreateRef<ForwardShadingRenderer>(viewinfo);
+		}
+		else if (m_ShadingPath == EShadingPath::Deferred)
+		{
+
+		}
+		
+		m_ShadingRenderer->Render(m_RHICommandList);
 	}
 
 	void Renderer::PreRender(float deltaTime)
@@ -357,89 +379,24 @@ namespace Lemon
 		}
 		
 	}
-	void Renderer::Render(float deltaTime)
+	
+	void Renderer::UpdateViewUniformBuffer(Ref<RHICommandList> RHICmdList, Entity mainCameraEntity)
 	{
-		// Set Render Target
-		m_RHICommandList->SetViewport(m_Viewport);
-		
-		if (m_Engine->bShowImGuiEditor)
+		SceneUniformBuffers* UniformBuffer = SceneUniformBuffers::Get();
+		if (!UniformBuffer || !Renderer::Get())
 		{
-			m_RHICommandList->SetRenderTarget(GetSceneRenderTargets()->GetSceneColorTexture(), GetSceneRenderTargets()->GetSceneDepthTexture());
-			m_RHICommandList->RHIClearRenderTarget(GetSceneRenderTargets()->GetSceneColorTexture(), glm::vec4(0.1f, 0.4f, 0.7f, 1.0f),
-				GetSceneRenderTargets()->GetSceneDepthTexture());
+			return;
 		}
-		else
-		{
-			m_RHICommandList->SetRenderTarget(GetSwapChain());
-		}
-
-		Entity mainCameraEntity = m_World->GetMainCamera();
-		// Update View UniformBuffer
-		UpdateViewUniformBuffer(mainCameraEntity);
-
-		// Update Light UniformBuffer
-		UpdateLightUniformBuffer(lightEntitys);
-
-		/*
-			consider EnvironmentEntity to snap transform to camera transform
-		*/
-		for (int i = 0; i < environmentEntitys.size(); i++)
-		{
-			Entity& envEntity = environmentEntitys[i];
-			envEntity.GetComponent<TransformComponent>().Position = mainCameraEntity.GetComponent<TransformComponent>().Position;
-			envEntity.GetComponent<TransformComponent>().Rotation = glm::vec3(0, 0, 0);
-			envEntity.GetComponent<TransformComponent>().Scale = glm::vec3(1, 1, 1);
-		}
-
-		for (int i = 0; i < normalEntitys.size(); i++)
-		{
-			if (normalEntitys[i] && !normalEntitys[i].IsGizmo() && normalEntitys[i].HasComponent<StaticMeshComponent>())
-			{
-				DrawRenderer(normalEntitys[i]);
-			}
-		}
-
-		for (int i = 0; i < environmentEntitys.size(); i++)
-		{
-			DrawSky(environmentEntitys[i]);
-		}
-		/*
-		//Draw Debug Gizmo
-		for (int i = 0; i < gizmoDebugEntitys.size(); i++)
-		{
-			if (gizmoDebugEntitys[i] && gizmoDebugEntitys[i].IsGizmo() && gizmoDebugEntitys[i].HasComponent<StaticMeshComponent>())
-			{
-				DrawRenderer(gizmoDebugEntitys[i]);
-			}
-		}
-		*/
-		// Debug 
-		if (environmentEntitys[0].HasComponent<EnvironmentComponent>())
-		{
-			EnvironmentComponent& envComp = environmentEntitys[0].GetComponent<EnvironmentComponent>();
-			if (envComp.bDebugShowIBLType == 3)
-			{
-				FullScreenUniformParameters fullScreenParameter;
-				fullScreenParameter.LocalToWorldMatrix = glm::mat4();
-				std::vector<std::shared_ptr<RHITexture>> textures;
-				textures.emplace_back(envComp.GetEnvSpecularIntegrateBRDF());
-				DrawFullScreenQuad(fullScreenParameter, textures);
-			}
-		}
-	}
-
-	void Renderer::UpdateViewUniformBuffer(Entity mainCameraEntity) const
-	{
-		m_RHICommandList->SetUniformBuffer(m_SceneUniformBuffers->ViewUniformBuffer->GetSlotIndex(),
+		RHICmdList->SetUniformBuffer(UniformBuffer->ViewUniformBuffer->GetSlotIndex(),
 			EUniformBufferUsageScope::UBUS_Vertex | EUniformBufferUsageScope::UBUS_Pixel,
-			m_SceneUniformBuffers->ViewUniformBuffer->UniformBuffer());
+			UniformBuffer->ViewUniformBuffer->UniformBuffer());
 		
 		ViewUniformParameters parameters;
 		static float accTime = 0;
 		static float preRColorValue = 1.0f;
 		static float preGColorValue = 0.0f;
 		static float preBColorValue = 0.0f;
-		accTime += m_Engine->GetSystem<Timer>()->GetDeltaTimeSec();
+		accTime += Renderer::Get()->GetEngine()->GetSystem<Timer>()->GetDeltaTimeSec();
 		if(accTime > 1.0f)
 		{
 			accTime = 0;
@@ -458,14 +415,19 @@ namespace Lemon
 		
 		
 		parameters.TestColor = glm::vec3(preRColorValue,accTime,accTime);
-		m_SceneUniformBuffers->ViewUniformBuffer->UpdateUniformBufferImmediate(parameters);
+		UniformBuffer->ViewUniformBuffer->UpdateUniformBufferImmediate(parameters);
 	}
 
-	void Renderer::UpdateLightUniformBuffer(const std::vector<Entity>& lightEntitys) const
+	void Renderer::UpdateLightUniformBuffer(Ref<RHICommandList> RHICmdList, const std::vector<Entity>& lightEntitys)
 	{
-		m_RHICommandList->SetUniformBuffer(m_SceneUniformBuffers->LightUniformBuffer->GetSlotIndex(),
+		SceneUniformBuffers* UniformBuffer = SceneUniformBuffers::Get();
+		if (!UniformBuffer || !Renderer::Get())
+		{
+			return;
+		}
+		RHICmdList->SetUniformBuffer(UniformBuffer->LightUniformBuffer->GetSlotIndex(),
         EUniformBufferUsageScope::UBUS_Vertex | EUniformBufferUsageScope::UBUS_Pixel,
-			m_SceneUniformBuffers->LightUniformBuffer->UniformBuffer());
+			UniformBuffer->LightUniformBuffer->UniformBuffer());
 
 		LightUniformParameters parameters;
 		for(int i = 0;i < lightEntitys.size(); i++)
@@ -480,10 +442,43 @@ namespace Lemon
 				parameters.DirectionalLightDir = glm::vec4(directionalLightComp.GetLightDirection(), 1.0f);
 			}
 		}
-
-		m_SceneUniformBuffers->LightUniformBuffer->UpdateUniformBufferImmediate(parameters);
+		UniformBuffer->LightUniformBuffer->UpdateUniformBufferImmediate(parameters);
 	}
 
+	void Renderer::DrawFullScreenQuad(Ref<RHICommandList> RHICmdList, FullScreenUniformParameters fullScreenParameter,
+		std::vector<std::shared_ptr<RHITexture>> Textures /*= std::vector<std::shared_ptr<RHITexture>>()*/)
+	{
+		SceneUniformBuffers* UniformBuffer = SceneUniformBuffers::Get();
+		if (!UniformBuffer || !Renderer::Get())
+		{
+			return;
+		}
+		// Update ObjectBuffer
+		RHICmdList->SetUniformBuffer(UniformBuffer->FullScreenUniformBuffer->GetSlotIndex(),
+			EUniformBufferUsageScope::UBUS_Vertex | EUniformBufferUsageScope::UBUS_Pixel,
+			UniformBuffer->FullScreenUniformBuffer->UniformBuffer());
+
+		UniformBuffer->FullScreenUniformBuffer->UpdateUniformBufferImmediate(fullScreenParameter);
+		//
+		static std::shared_ptr<RHIVertexShader> FullScreenVertexShader = nullptr;
+		static std::shared_ptr<RHIPixelShader> FullScreenPixelShader = nullptr;
+		static std::shared_ptr<RHIVertexDeclaration> FullScreenVertexDeclaration = nullptr;
+		if (FullScreenVertexShader == nullptr)
+		{
+			RHIShaderCreateInfo shaderCreateInfo;
+			FullScreenVertexShader = RHICreateVertexShader("Assets/Shaders/SimpleFullScreenVertex.hlsl", "MainVS", shaderCreateInfo);
+			FullScreenPixelShader = RHICreatePixelShader("Assets/Shaders/SimpleFullScreenPixel.hlsl", "MainPS", shaderCreateInfo);
+			if (GlobalRenderResources::GetInstance())
+			{
+				FullScreenVertexDeclaration = RHICreateVertexDeclaration(FullScreenVertexShader, GlobalRenderResources::GetInstance()->StandardMeshVertexDeclarationElementList);
+			}
+		}
+
+		PixelShaderUtils::DrawFullScreenQuad(RHICmdList, FullScreenVertexDeclaration, FullScreenVertexShader, FullScreenPixelShader, Textures);
+	}
+
+
+	//--------------------------IBL--------------------------------
 	void Renderer::EnvEquirectangularToCubeMap(EnvironmentComponent& envComp)
 	{
 		Ref<RHITexture2D> EnvEquirectangularTex = envComp.m_EnvEquirectangularTexture;
@@ -550,7 +545,7 @@ namespace Lemon
 		*/
 
 		// Pre-Compute-Diffuse-irradiance
-		
+
 		for (int i = 0; i < environmentEntitys.size(); i++)
 		{
 			EnvironmentComponent& envComp = environmentEntitys[i].GetComponent<EnvironmentComponent>();
@@ -575,7 +570,7 @@ namespace Lemon
 			StaticMeshComponent& staticMeshComp = environmentEntitys[i].GetComponent<StaticMeshComponent>();
 			/*
 			* TODO:
-			* caution: we should SetTexture after SetRenderTarget. if the texture is RenderTarget and bound to ShaderResource. 
+			* caution: we should SetTexture after SetRenderTarget. if the texture is RenderTarget and bound to ShaderResource.
 			* we need unbound rendertarget.so we should SetTexture after SetRenderTarget
 			*/
 			//m_RHICommandList->SetTexture(0, envComp.GetEnvironmentTexture());
@@ -754,32 +749,5 @@ namespace Lemon
 		}
 		PixelShaderUtils::DrawFullScreenQuad(m_RHICommandList, FullScreenVertexDeclaration, FullScreenVertexShader, FullScreenPixelShader);
 	}
-
-	void Renderer::DrawFullScreenQuad(FullScreenUniformParameters fullScreenParameter, 
-		std::vector<std::shared_ptr<RHITexture>> Textures /*= std::vector<std::shared_ptr<RHITexture>>()*/)
-	{
-		// Update ObjectBuffer
-		m_RHICommandList->SetUniformBuffer(m_SceneUniformBuffers->FullScreenUniformBuffer->GetSlotIndex(),
-			EUniformBufferUsageScope::UBUS_Vertex | EUniformBufferUsageScope::UBUS_Pixel,
-			m_SceneUniformBuffers->FullScreenUniformBuffer->UniformBuffer());
-
-		m_SceneUniformBuffers->FullScreenUniformBuffer->UpdateUniformBufferImmediate(fullScreenParameter);
-		//
-		static std::shared_ptr<RHIVertexShader> FullScreenVertexShader = nullptr;
-		static std::shared_ptr<RHIPixelShader> FullScreenPixelShader = nullptr;
-		static std::shared_ptr<RHIVertexDeclaration> FullScreenVertexDeclaration = nullptr;
-		if (FullScreenVertexShader == nullptr)
-		{
-			RHIShaderCreateInfo shaderCreateInfo;
-			FullScreenVertexShader = RHICreateVertexShader("Assets/Shaders/SimpleFullScreenVertex.hlsl", "MainVS", shaderCreateInfo);
-			FullScreenPixelShader = RHICreatePixelShader("Assets/Shaders/SimpleFullScreenPixel.hlsl", "MainPS", shaderCreateInfo);
-			if (GlobalRenderResources::GetInstance())
-			{
-				FullScreenVertexDeclaration = RHICreateVertexDeclaration(FullScreenVertexShader, GlobalRenderResources::GetInstance()->StandardMeshVertexDeclarationElementList);
-			}
-		}
-
-		PixelShaderUtils::DrawFullScreenQuad(m_RHICommandList, FullScreenVertexDeclaration, FullScreenVertexShader, FullScreenPixelShader, Textures);
-		
-	}
+	//--------------------------IBL--------------------------------
 }

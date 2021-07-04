@@ -3,9 +3,12 @@
 
 namespace Lemon
 {
-    
+    SceneUniformBuffers* SceneUniformBuffers::s_Instance = nullptr;
+
     SceneUniformBuffers::SceneUniformBuffers()
     {
+        s_Instance = this;
+
         ViewUniformBuffer = RHIUniformBuffer<ViewUniformParameters>::CreateUniformBufferImmediate(0, "ViewUniform");
         ObjectUniformBuffer = RHIUniformBuffer<ObjectUniformParameters>::CreateUniformBufferImmediate(1, "ObjectUniform");
         LightUniformBuffer = RHIUniformBuffer<LightUniformParameters>::CreateUniformBufferImmediate(2, "LightUniform");
