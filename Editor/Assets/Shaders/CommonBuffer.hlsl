@@ -12,8 +12,8 @@ cbuffer ViewUniformBuffer: register(b0)
 cbuffer ObjectUniformBuffer : register(b1)
 {
     matrix g_LocalToWorldMatrix;
-    matrix g_WorldToWorldMatrix;
-    matrix g_WorldToWorldTransposeMatrix;
+    matrix g_WorldToLocalMatrix;
+    matrix g_WorldToLocalTransposeMatrix;
 
     //PBR Properties
     float4 g_Albedo;

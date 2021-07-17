@@ -68,7 +68,8 @@ namespace Lemon
 		m_RHICommandList = RHICreateCommandList(this);
 		// Create RenderTargetTextures
 		m_SceneRenderTargets = CreateRef<SceneRenderTargets>(m_Viewport.Width, m_Viewport.Height);
-		m_SceneRenderTargets->Allocate(m_RHICommandList);
+		m_SceneRenderTargets->Allocate(m_RHICommandList, this);
+
 		// ReSize Renderer
 		this->OnResize(m_Viewport.Width, m_Viewport.Height);
 
@@ -78,12 +79,16 @@ namespace Lemon
 		m_SceneRenderStates->SetGlobalSampler(m_RHICommandList);
 		
 		m_SceneUniformBuffers = CreateRef<SceneUniformBuffers>();
-		
+		m_SceneUniformBuffers->Allocate();
+
 		// Init Global Render Resources
 		GlobalRenderResources::Init();
+
+		m_SceneShaderMap = CreateRef<SceneShaderMap>();
+		m_SceneShaderMap->Allocate();
+
 		// Init Others
 		InitGeometry();
-
 		
 		return true;
 	}
@@ -143,7 +148,8 @@ namespace Lemon
 		
 	}
 
-	void Renderer::DrawRenderer(Ref<RHICommandList> RHICmdList, Entity entity)
+	void Renderer::DrawRenderer(Ref<RHICommandList> RHICmdList, Entity entity, 
+		bool bPSOInit, GraphicsPipelineStateInitializer PSOInitializer, int textureOffset)
 	{
 		TransformComponent& transformComp = entity.GetComponent<TransformComponent>();
 		StaticMeshComponent& staticMeshComp = entity.GetComponent<StaticMeshComponent>();
@@ -168,26 +174,40 @@ namespace Lemon
 
 		// Set PSO
 		GraphicsPipelineStateInitializer PSOInit;
-		PSOInit.BoundShaderState.PixelShaderRHI = staticMeshComp.GetRenderMesh()->GetPixelShader();
-		PSOInit.BoundShaderState.VertexShaderRHI = staticMeshComp.GetRenderMesh()->GetVertexShader();
-		PSOInit.BoundShaderState.VertexDeclarationRHI = staticMeshComp.GetRenderMesh()->GetVertexDeclaration();
-		if(staticMeshComp.GetRenderMesh()->GetMaterial())
+		if (bPSOInit)
 		{
-			Ref<Material> mat = staticMeshComp.GetRenderMesh()->GetMaterial();
-			PSOInit.PrimitiveType = staticMeshComp.GetRenderMesh()->GetMaterial()->GetPrimitiveType();//EPrimitiveType::PT_TriangleList;
-			PSOInit.BlendState = staticMeshComp.GetRenderMesh()->GetMaterial()->GetBlendState();
-			PSOInit.RasterizerState = staticMeshComp.GetRenderMesh()->GetMaterial()->GetRasterizerState();
-			PSOInit.DepthStencilState = staticMeshComp.GetRenderMesh()->GetMaterial()->GetDepthStencilState();
-			//PBR Properties
-			parameters.Albedo = glm::vec4(mat->Albedo, 1.0f);
-			parameters.PBRParameters = glm::vec4(mat->Metallic, mat->Roughness, mat->AO, 1.0f);
+			PSOInit.BoundShaderState.PixelShaderRHI = PSOInitializer.BoundShaderState.PixelShaderRHI;
+			PSOInit.BoundShaderState.VertexShaderRHI = PSOInitializer.BoundShaderState.VertexShaderRHI;
+			PSOInit.BoundShaderState.VertexDeclarationRHI = PSOInitializer.BoundShaderState.VertexDeclarationRHI;
+			PSOInit.PrimitiveType = PSOInitializer.PrimitiveType;//EPrimitiveType::PT_TriangleList;
+			PSOInit.BlendState = PSOInitializer.BlendState;
+			PSOInit.RasterizerState = PSOInitializer.RasterizerState;
+			PSOInit.DepthStencilState = PSOInitializer.DepthStencilState;
 		}
 		else
 		{
-			parameters.Albedo = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);// default 
-			parameters.PBRParameters = glm::vec4(0.0f, 1.0f, 1.0f,1.0f);// default 
-			PSOInit.PrimitiveType = EPrimitiveType::PT_TriangleList;
+			PSOInit.BoundShaderState.PixelShaderRHI = staticMeshComp.GetRenderMesh()->GetPixelShader();
+			PSOInit.BoundShaderState.VertexShaderRHI = staticMeshComp.GetRenderMesh()->GetVertexShader();
+			PSOInit.BoundShaderState.VertexDeclarationRHI = staticMeshComp.GetRenderMesh()->GetVertexDeclaration();
+			if (staticMeshComp.GetRenderMesh()->GetMaterial())
+			{
+				Ref<Material> mat = staticMeshComp.GetRenderMesh()->GetMaterial();
+				PSOInit.PrimitiveType = staticMeshComp.GetRenderMesh()->GetMaterial()->GetPrimitiveType();//EPrimitiveType::PT_TriangleList;
+				PSOInit.BlendState = staticMeshComp.GetRenderMesh()->GetMaterial()->GetBlendState();
+				PSOInit.RasterizerState = staticMeshComp.GetRenderMesh()->GetMaterial()->GetRasterizerState();
+				PSOInit.DepthStencilState = staticMeshComp.GetRenderMesh()->GetMaterial()->GetDepthStencilState();
+				//PBR Properties
+				parameters.Albedo = glm::vec4(mat->Albedo, 1.0f);
+				parameters.PBRParameters = glm::vec4(mat->Metallic, mat->Roughness, mat->AO, 1.0f);
+			}
+			else
+			{
+				parameters.Albedo = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);// default 
+				parameters.PBRParameters = glm::vec4(0.0f, 1.0f, 1.0f, 1.0f);// default 
+				PSOInit.PrimitiveType = EPrimitiveType::PT_TriangleList;
+			}
 		}
+		
 
 		UniformBuffer->ObjectUniformBuffer->UpdateUniformBufferImmediate(parameters);
 		
@@ -207,7 +227,6 @@ namespace Lemon
 			RHICmdList->SetTexture(2, envComp.GetEnvSpecularIntegrateBRDF());
 		}
 		// Set PBR Textures
-		int textureOffset = 3;
 		if (staticMeshComp.GetRenderMesh()->GetMaterial())
 		{
 			for (int i = 0; i < staticMeshComp.GetRenderMesh()->GetMaterial()->GetTextures().size(); i++)
@@ -220,7 +239,7 @@ namespace Lemon
 		RHICmdList->DrawIndexPrimitive(0, 0, staticMeshComp.GetRenderMesh()->GetIndexCount() / 3);
 	}
 
-	void Renderer::DrawSky(Ref<RHICommandList> RHICmdList, Entity entity)
+	void Renderer::DrawSky(Ref<RHICommandList> RHICmdList, Entity entity, GraphicsPipelineStateInitializer PSOInitializer)
 	{
 		TransformComponent& transformComp = entity.GetComponent<TransformComponent>();
 		StaticMeshComponent& staticMeshComp = entity.GetComponent<StaticMeshComponent>();
@@ -245,9 +264,11 @@ namespace Lemon
 
 		// Set PSO
 		GraphicsPipelineStateInitializer PSOInit;
+
 		PSOInit.BoundShaderState.PixelShaderRHI = staticMeshComp.GetRenderMesh()->GetPixelShader();
 		PSOInit.BoundShaderState.VertexShaderRHI = staticMeshComp.GetRenderMesh()->GetVertexShader();
 		PSOInit.BoundShaderState.VertexDeclarationRHI = staticMeshComp.GetRenderMesh()->GetVertexDeclaration();
+		
 		if (staticMeshComp.GetRenderMesh()->GetMaterial())
 		{
 			Ref<Material> mat = staticMeshComp.GetRenderMesh()->GetMaterial();
@@ -264,6 +285,28 @@ namespace Lemon
 			parameters.Albedo = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);// default 
 			parameters.PBRParameters = glm::vec4(0.0f, 1.0f, 1.0f, 1.0f);// default 
 			PSOInit.PrimitiveType = EPrimitiveType::PT_TriangleList;
+		}
+
+		if (PSOInitializer.BoundShaderState.IsBound())
+		{
+			PSOInit.BoundShaderState.PixelShaderRHI = PSOInitializer.BoundShaderState.PixelShaderRHI;
+			PSOInit.BoundShaderState.VertexShaderRHI = PSOInitializer.BoundShaderState.VertexShaderRHI;
+			PSOInit.BoundShaderState.VertexDeclarationRHI = PSOInitializer.BoundShaderState.VertexDeclarationRHI;
+		}
+
+		if (PSOInitializer.DepthStencilState)
+		{
+			PSOInit.DepthStencilState = PSOInitializer.DepthStencilState;
+		}
+
+		if (PSOInitializer.RasterizerState)
+		{
+			PSOInit.RasterizerState = PSOInitializer.RasterizerState;
+		}
+
+		if (PSOInitializer.BlendState)
+		{
+			PSOInit.BlendState = PSOInitializer.BlendState;
 		}
 
 		UniformBuffer->ObjectUniformBuffer->UpdateUniformBufferImmediate(parameters);
@@ -303,7 +346,7 @@ namespace Lemon
 		m_Viewport.Width = (float)newWidth;
 		m_Viewport.Height = (float)newHeight;
 		
-		m_SceneRenderTargets->OnResize(newWidth, newHeight);
+		m_SceneRenderTargets->OnResize(newWidth, newHeight, this);
 
 		if(m_World->GetMainCamera())
 		{
@@ -351,7 +394,7 @@ namespace Lemon
 		}
 		else if (m_ShadingPath == EShadingPath::Deferred)
 		{
-
+			m_ShadingRenderer = CreateRef<DeferredShadingRenderer>(viewinfo);
 		}
 		
 		m_ShadingRenderer->Render(m_RHICommandList);

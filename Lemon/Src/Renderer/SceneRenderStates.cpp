@@ -9,7 +9,7 @@ namespace Lemon
     {
         AllocateRasterizerState();
         AllocateSamplerState();
-        
+        AllocateDepthStencilState();
     }
 
     void SceneRenderStates::AllocateRasterizerState()
@@ -33,6 +33,11 @@ namespace Lemon
 
     }
 
+    void SceneRenderStates::AllocateDepthStencilState()
+    {
+        LessEqualWriteDepthStencilState = TStaticDepthStencilState<true, CF_LessEqual>::CreateRHI();
+        EqualNoWriteDepthStencilState = TStaticDepthStencilState<false, CF_Equal>::CreateRHI();
+    }
 
     void SceneRenderStates::SetGlobalSampler(Ref<RHICommandList> CmdList)
     {

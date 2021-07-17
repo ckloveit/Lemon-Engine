@@ -6,6 +6,12 @@ namespace Lemon
 {
 	#define MAX_MESH_TEXTURE_COORDS 2
 
+	struct  DepthOnlyVertex
+	{
+		glm::vec3 Position;
+
+	};
+
 	struct StandardMeshVertex
 	{
 		glm::vec3 Position;

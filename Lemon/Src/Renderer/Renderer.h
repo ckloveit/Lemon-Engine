@@ -16,6 +16,9 @@
 #include "RenderCore/Geometry/Cube.h"
 #include "RenderCore/Geometry/Quad.h"
 #include "ForwardShadingRenderer.h"
+#include "DeferredShadingRenderer.h"
+#include "SceneShaderMap.h"
+
 
 #include "World/Entity.h"
 #include "World/Components/EnvironmentComponent.h"
@@ -36,6 +39,7 @@ namespace Lemon
 	class LEMON_API Renderer : public ISystem
 	{
 		friend class ForwardShadingRenderer;
+		friend class DeferredShadingRenderer;
 
 	public:
 		Renderer(Engine* engine);
@@ -58,12 +62,13 @@ namespace Lemon
 		void SetViewport(const Viewport& inViewport) { m_Viewport = inViewport; }
 		Viewport GetViewport() const { return m_Viewport;}
 
-
+		EShadingPath GetShadingPath() { return m_ShadingPath; }
 
 	public:
 		static Renderer* Get() { return s_Instance; }
-		static void DrawRenderer(Ref<RHICommandList> RHICmdList, Entity entity);
-		static void DrawSky(Ref<RHICommandList> RHICmdList, Entity entity);
+		static void DrawRenderer(Ref<RHICommandList> RHICmdList, Entity entity, 
+			bool bPSOInit, GraphicsPipelineStateInitializer PSOInitializer = {}, int textureOffset = 3);
+		static void DrawSky(Ref<RHICommandList> RHICmdList, Entity entity, GraphicsPipelineStateInitializer PSOInitializer = {});
 		//ConstantBuffer Update
 		static void UpdateViewUniformBuffer(Ref<RHICommandList> RHICmdList, Entity mainCameraEntity);
 		static void UpdateLightUniformBuffer(Ref<RHICommandList> RHICmdList, const std::vector<Entity>& lightEntitys);
@@ -95,6 +100,7 @@ namespace Lemon
 		Ref<SceneRenderTargets> m_SceneRenderTargets;
 		Ref<SceneUniformBuffers> m_SceneUniformBuffers;
 		Ref<SceneRenderStates> m_SceneRenderStates;
+		Ref<SceneShaderMap> m_SceneShaderMap;
 
 		// use for FullScreen
 		Ref<Quad> m_FullScreenQuad;
@@ -116,7 +122,7 @@ namespace Lemon
 
 		// Render Shading Path
 		Ref<SceneRenderer> m_ShadingRenderer = nullptr;
-		EShadingPath m_ShadingPath = EShadingPath::Forward;
+		EShadingPath m_ShadingPath = EShadingPath::Deferred;//EShadingPath::Forward ;//
 
 		// Static Instance
 		static Renderer* s_Instance;

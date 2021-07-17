@@ -228,6 +228,8 @@ namespace Lemon
 		Ref<RHIVertexDeclaration> VertexDeclarationRHI = nullptr;
 		Ref<RHIVertexShader> VertexShaderRHI = nullptr;
 		Ref<RHIPixelShader> PixelShaderRHI = nullptr;
+
+		bool IsBound() { return VertexDeclarationRHI != nullptr && VertexShaderRHI != nullptr && PixelShaderRHI != nullptr; }
 	};
 
 	//class RHIBoundShaderState : public RHIResource

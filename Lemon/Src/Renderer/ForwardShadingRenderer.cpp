@@ -48,7 +48,7 @@ namespace Lemon
 		{
 			if (Render->normalEntitys[i] && !Render->normalEntitys[i].IsGizmo() && Render->normalEntitys[i].HasComponent<StaticMeshComponent>())
 			{
-				Renderer::DrawRenderer(RHICmdList, Render->normalEntitys[i]);
+				Renderer::DrawRenderer(RHICmdList, Render->normalEntitys[i], false);
 			}
 		}
 
@@ -61,7 +61,7 @@ namespace Lemon
 		{
 			if (Render->gizmoDebugEntitys[i] && Render->gizmoDebugEntitys[i].IsGizmo() && Render->gizmoDebugEntitys[i].HasComponent<StaticMeshComponent>())
 			{
-				Renderer::DrawRenderer(RHICmdList, Render->gizmoDebugEntitys[i]);
+				Renderer::DrawRenderer(RHICmdList, Render->gizmoDebugEntitys[i], false);
 			}
 		}
 

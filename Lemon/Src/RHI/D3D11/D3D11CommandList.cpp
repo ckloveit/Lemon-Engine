@@ -48,6 +48,26 @@ namespace Lemon
 		}
 	}
 
+	void D3D11CommandList::RHIClearRenderTarget(std::vector<Ref<RHITexture2D>> colorTargets, glm::vec4 backgroundColor,
+		Ref<RHITexture2D> depthStencilTarget, float depthClear, float stencilClear)
+	{
+		for (int i = 0; i < colorTargets.size(); i++)
+		{
+			if (colorTargets[i])
+			{
+				m_D3D11RHI->GetDeviceContext()->ClearRenderTargetView(
+					static_cast<ID3D11RenderTargetView*>(colorTargets[i]->GetNativeRenderTargetView(0)),
+					glm::value_ptr(backgroundColor));
+			}
+		}
+	
+		if (depthStencilTarget)
+		{
+			m_D3D11RHI->GetDeviceContext()->ClearDepthStencilView(static_cast<ID3D11DepthStencilView*>(depthStencilTarget->GetNativeDepthStencilView()),
+				D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, depthClear, stencilClear);
+		}
+	}
+
 	void D3D11CommandList::SetRenderTarget(Ref<RHISwapChain> swapChain, float depthClear /*= 1.0f*/, float stencilClear /*= 0*/)
 	{
 		const void* rtvs[1] = { swapChain->GetRHIRenderTargetView() };
@@ -166,20 +186,24 @@ namespace Lemon
 		{
 			depthStencil = static_cast<ID3D11DepthStencilView*>(depthTarget->GetNativeDepthStencilView());
 		}
+
+		void* renderTargetViews[4];
+		renderTargetViews[0] = nullptr;
+		renderTargetViews[1] = nullptr;
+		renderTargetViews[2] = nullptr;
+		renderTargetViews[3] = nullptr;
 		
 		if (colorTarget)
 		{
-			void* renderTargetViews[1];
 			renderTargetViews[0] = static_cast<ID3D11RenderTargetView*>(colorTarget->GetNativeRenderTargetView(0));
-			
-			m_D3D11RHI->GetDeviceContext()->OMSetRenderTargets
-			(
-				1,
-				reinterpret_cast<ID3D11RenderTargetView *const*>(renderTargetViews),
-				static_cast<ID3D11DepthStencilView*>(depthStencil)
-			);
 		}
-		
+
+		m_D3D11RHI->GetDeviceContext()->OMSetRenderTargets
+		(
+			4,
+			reinterpret_cast<ID3D11RenderTargetView* const*>(renderTargetViews),
+			static_cast<ID3D11DepthStencilView*>(depthStencil)
+		);
 	}
 
 	void D3D11CommandList::SetRenderTarget(Ref<RHITextureCube> colorTargets, int colorTargetIndex, Ref<RHITexture2D> depthTarget)
@@ -195,7 +219,7 @@ namespace Lemon
 		{
 			void* renderTargetViews[1];
 			renderTargetViews[0] = static_cast<ID3D11RenderTargetView*>(colorTargets->GetNativeRenderTargetView(colorTargetIndex));
-
+			
 			m_D3D11RHI->GetDeviceContext()->OMSetRenderTargets
 			(
 				1,
@@ -204,6 +228,34 @@ namespace Lemon
 			);
 		}
 	}
+
+
+	void D3D11CommandList::SetRenderTarget(std::vector<Ref<RHITexture2D>> colorTargets, Ref<RHITexture2D> depthTarget /*= nullptr*/)
+	{
+		// render targets
+		void* depthStencil = nullptr;
+		if (depthTarget)
+		{
+			depthStencil = static_cast<ID3D11DepthStencilView*>(depthTarget->GetNativeDepthStencilView());
+		}
+
+		if (colorTargets.size())
+		{
+			void* renderTargetViews[4];
+			renderTargetViews[0] = static_cast<ID3D11RenderTargetView*>(colorTargets[0]->GetNativeRenderTargetView(0));
+			renderTargetViews[1] = static_cast<ID3D11RenderTargetView*>(colorTargets[1]->GetNativeRenderTargetView(0));
+			renderTargetViews[2] = static_cast<ID3D11RenderTargetView*>(colorTargets[2]->GetNativeRenderTargetView(0));
+			renderTargetViews[3] = static_cast<ID3D11RenderTargetView*>(colorTargets[3]->GetNativeRenderTargetView(0));
+
+			m_D3D11RHI->GetDeviceContext()->OMSetRenderTargets
+			(
+				colorTargets.size(),
+				reinterpret_cast<ID3D11RenderTargetView* const*>(renderTargetViews),
+				static_cast<ID3D11DepthStencilView*>(depthStencil)
+			);
+		}
+	}
+
 
 	void D3D11CommandList::SetViewport(const Viewport& viewport)
 	{
@@ -315,17 +367,19 @@ namespace Lemon
 
 	void D3D11CommandList::SetTexture(uint32_t slot, const Ref<RHITexture>& texture)
 	{
-		if(texture)
+		void* resource = nullptr;
+		if (texture)
 		{
-			void* resource = texture->GetNativeShaderResourceView();
-			const void* resourceArray[1] = { resource };
-			m_D3D11RHI->GetDeviceContext()->PSSetShaderResources
-			(
-               static_cast<UINT>(slot),
-               static_cast<UINT>(1),
-                reinterpret_cast<ID3D11ShaderResourceView * const*>(&resourceArray)
-            );
+			resource = texture->GetNativeShaderResourceView();
 		}
+
+		const void* resourceArray[1] = { resource };
+		m_D3D11RHI->GetDeviceContext()->PSSetShaderResources
+		(
+           static_cast<UINT>(slot),
+           static_cast<UINT>(1),
+            reinterpret_cast<ID3D11ShaderResourceView * const*>(&resourceArray)
+        );
 	}
 
 	void D3D11CommandList::SetMipTexture(Ref<RHITextureCube> targetTex, int mipIndex, int mipWidth, int mipHeight, std::vector<Ref<RHITexture2D>> mipTextures)

@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 #include "RHI/RHIResources.h"
 #include "RenderCore/RenderUtils.h"
+#include "Core/TSingleon.h"
 
 namespace Lemon
 {
@@ -75,13 +76,13 @@ namespace Lemon
     };
 
     
-    struct LEMON_API SceneUniformBuffers
+    struct LEMON_API SceneUniformBuffers : public TSingleton<SceneUniformBuffers>
     {
      public:
         SceneUniformBuffers();
         ~SceneUniformBuffers() = default;
 
-        static SceneUniformBuffers* Get() { return s_Instance; }
+        void Allocate();
 
         // UniformBuffers
         Ref<RHIUniformBuffer<ViewUniformParameters>> ViewUniformBuffer;
@@ -93,8 +94,6 @@ namespace Lemon
         Ref<RHIUniformBuffer<CustomDataFloat8UniformParameters>> CustomDataFloat8UniformBuffer;
         Ref<RHIUniformBuffer<CustomDataFloat16UniformParameters>> CustomDataFloat16UniformBuffer;
         
-    private:
-        static SceneUniformBuffers* s_Instance;
     };
 
 

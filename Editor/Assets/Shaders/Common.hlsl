@@ -17,5 +17,10 @@ struct VertexInput
 	float2 Texcoords[MAX_MESH_TEXTURE_COORDS] : ATTRIBUTE4;
 };
 
+struct DepthOnlyVertexInput
+{
+	float3 Position : ATTRIBUTE0;
+};
+
 
 #endif

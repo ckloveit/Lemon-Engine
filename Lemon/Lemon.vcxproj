@@ -144,6 +144,7 @@
     <ClInclude Include="Src\Core\ISystem.h" />
     <ClInclude Include="Src\Core\PlatformDetection.h" />
     <ClInclude Include="Src\Core\SystemManager.h" />
+    <ClInclude Include="Src\Core\TSingleon.h" />
     <ClInclude Include="Src\Core\Timer.h" />
     <ClInclude Include="Src\Input\Input.h" />
     <ClInclude Include="Src\Input\InputSystem.h" />
@@ -180,11 +181,13 @@
     <ClInclude Include="Src\RenderCore\RenderUtils.h" />
     <ClInclude Include="Src\RenderCore\VertexDeclarationStruct.h" />
     <ClInclude Include="Src\RenderCore\Viewport.h" />
+    <ClInclude Include="Src\Renderer\DeferredShadingRenderer.h" />
     <ClInclude Include="Src\Renderer\ForwardShadingRenderer.h" />
     <ClInclude Include="Src\Renderer\Renderer.h" />
     <ClInclude Include="Src\Renderer\SceneRenderStates.h" />
     <ClInclude Include="Src\Renderer\SceneRenderTargets.h" />
     <ClInclude Include="Src\Renderer\SceneRenderer.h" />
+    <ClInclude Include="Src\Renderer\SceneShaderMap.h" />
     <ClInclude Include="Src\Renderer\SceneUniformBuffers.h" />
     <ClInclude Include="Src\Resources\Importer\ImageImporter.h" />
     <ClInclude Include="Src\Resources\ResourceSystem.h" />
@@ -624,7 +627,6 @@
     </ClCompile>
     <ClCompile Include="Src\Log\Log.cpp" />
     <ClCompile Include="Src\Math\Math.cpp" />
-    <ClCompile Include="Src\Renderer\ForwardShadingRenderer.cpp" />
     <ClCompile Include="Src\RHI\D3D11\D3D11CommandList.cpp" />
     <ClCompile Include="Src\RHI\D3D11\D3D11DynamicRHI.cpp" />
     <ClCompile Include="Src\RHI\D3D11\D3D11IndexBuffer.cpp" />
@@ -650,10 +652,13 @@
     <ClCompile Include="Src\RenderCore\RenderCore.cpp" />
     <ClCompile Include="Src\RenderCore\RenderUtils.cpp" />
     <ClCompile Include="Src\RenderCore\Viewport.cpp" />
+    <ClCompile Include="Src\Renderer\DeferredShadingRenderer.cpp" />
+    <ClCompile Include="Src\Renderer\ForwardShadingRenderer.cpp" />
     <ClCompile Include="Src\Renderer\Renderer.cpp" />
     <ClCompile Include="Src\Renderer\SceneRenderStates.cpp" />
     <ClCompile Include="Src\Renderer\SceneRenderTargets.cpp" />
     <ClCompile Include="Src\Renderer\SceneRenderer.cpp" />
+    <ClCompile Include="Src\Renderer\SceneShaderMap.cpp" />
     <ClCompile Include="Src\Renderer\SceneUniformBuffers.cpp" />
     <ClCompile Include="Src\Resources\Importer\ImageImporter.cpp" />
     <ClCompile Include="Src\Resources\ResourceSystem.cpp" />

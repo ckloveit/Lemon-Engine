@@ -26,9 +26,12 @@ namespace Lemon
 			Ref<RHITexture2D> depthStencilTarget = nullptr, float depthClear = 1.0f, float stencilClear = 0) = 0;
 		virtual void RHIClearRenderTarget(Ref<RHITextureCube> renderTargets, int renderTargetIndex, glm::vec4 backgroundColor,
 			Ref<RHITexture2D> depthStencilTarget = nullptr, float depthClear = 1.0f, float stencilClear = 0) = 0;
+		virtual void RHIClearRenderTarget(std::vector<Ref<RHITexture2D>> colorTargets, glm::vec4 backgroundColor,
+			Ref<RHITexture2D> depthStencilTarget = nullptr, float depthClear = 1.0f, float stencilClear = 0) = 0;
 
 		virtual void SetRenderTarget(Ref<RHITexture2D> colorTarget, Ref<RHITexture2D> depthTarget = nullptr) = 0;
 		virtual void SetRenderTarget(Ref<RHITextureCube> colorTargets, int colorTargetIndex, Ref<RHITexture2D> depthTarget = nullptr) = 0;
+		virtual void SetRenderTarget(std::vector<Ref<RHITexture2D>> colorTargets, Ref<RHITexture2D> depthTarget = nullptr) = 0;
 
 		virtual void SetRenderTarget(Ref<RHISwapChain> swapChain, float depthClear = 1.0f, float stencilClear = 0) = 0;
 

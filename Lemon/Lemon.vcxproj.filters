@@ -105,6 +105,9 @@
     <ClInclude Include="Src\Core\SystemManager.h">
       <Filter>Src\Core</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Core\TSingleon.h">
+      <Filter>Src\Core</Filter>
+    </ClInclude>
     <ClInclude Include="Src\Core\Timer.h">
       <Filter>Src\Core</Filter>
     </ClInclude>
@@ -213,6 +216,9 @@
     <ClInclude Include="Src\RenderCore\Viewport.h">
       <Filter>Src\RenderCore</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Renderer\DeferredShadingRenderer.h">
+      <Filter>Src\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="Src\Renderer\ForwardShadingRenderer.h">
       <Filter>Src\Renderer</Filter>
     </ClInclude>
@@ -226,6 +232,9 @@
       <Filter>Src\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Src\Renderer\SceneRenderer.h">
+      <Filter>Src\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Renderer\SceneShaderMap.h">
       <Filter>Src\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Src\Renderer\SceneUniformBuffers.h">
@@ -1610,6 +1619,12 @@
     <ClCompile Include="Src\RenderCore\Viewport.cpp">
       <Filter>Src\RenderCore</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Renderer\DeferredShadingRenderer.cpp">
+      <Filter>Src\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Renderer\ForwardShadingRenderer.cpp">
+      <Filter>Src\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="Src\Renderer\Renderer.cpp">
       <Filter>Src\Renderer</Filter>
     </ClCompile>
@@ -1620,6 +1635,9 @@
       <Filter>Src\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="Src\Renderer\SceneRenderer.cpp">
+      <Filter>Src\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Renderer\SceneShaderMap.cpp">
       <Filter>Src\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="Src\Renderer\SceneUniformBuffers.cpp">
@@ -1663,9 +1681,6 @@
     </ClCompile>
     <ClCompile Include="ThirdParty\std_image\std_image.cpp">
       <Filter>ThirdParty\std_image</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Renderer\ForwardShadingRenderer.cpp">
-      <Filter>Src\Renderer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
