@@ -161,11 +161,22 @@ namespace Lemon
 		//PSOInit.RasterizerState = PSOInitializer.RasterizerState;
 		PSOInit.DepthStencilState = SceneRenderStates::Get()->EqualNoWriteDepthStencilState;
 
-		RHICmdList->SetTexture(0, SceneRenderTargets::Get()->m_GBufferPosition);
-		RHICmdList->SetTexture(1, SceneRenderTargets::Get()->m_GBufferAlbedo);
-		RHICmdList->SetTexture(2, SceneRenderTargets::Get()->m_GBufferNormal);
-		RHICmdList->SetTexture(3, SceneRenderTargets::Get()->m_GBufferMaterial);
-		int textureOffset = 4;
+		// IBL
+		int textureOffset = 3;
+		if (Renderer::Get()->m_World->GetMainEnvironment())
+		{
+			Entity envEntity = Renderer::Get()->m_World->GetMainEnvironment();
+			EnvironmentComponent& envComp = envEntity.GetComponent<EnvironmentComponent>();
+			RHICmdList->SetTexture(0, envComp.GetEnvDiffuseIrradiance());
+			RHICmdList->SetTexture(1, envComp.GetEnvSpecularPrefilter());
+			RHICmdList->SetTexture(2, envComp.GetEnvSpecularIntegrateBRDF());
+		}
+
+		RHICmdList->SetTexture(textureOffset + 0, SceneRenderTargets::Get()->m_GBufferPosition);
+		RHICmdList->SetTexture(textureOffset + 1, SceneRenderTargets::Get()->m_GBufferAlbedo);
+		RHICmdList->SetTexture(textureOffset + 2, SceneRenderTargets::Get()->m_GBufferNormal);
+		RHICmdList->SetTexture(textureOffset + 3, SceneRenderTargets::Get()->m_GBufferMaterial);
+		RHICmdList->SetTexture(textureOffset + 4, SceneRenderTargets::Get()->GetSceneDepthTexture());
 		FullScreenUniformParameters fullScreenParameter;
 		fullScreenParameter.LocalToWorldMatrix = glm::mat4();
 		for (int i = 0; i < Render->lightEntitys.size(); i++)
@@ -190,7 +201,6 @@ namespace Lemon
 			static std::shared_ptr<RHIVertexDeclaration> FullScreenVertexDeclaration = SceneShaderMap::Get()->m_GBufferLightingDeclaration;
 			
 			PixelShaderUtils::DrawFullScreenQuad(RHICmdList, FullScreenVertexDeclaration, FullScreenVertexShader, FullScreenPixelShader);
-
 		}
 
 	}

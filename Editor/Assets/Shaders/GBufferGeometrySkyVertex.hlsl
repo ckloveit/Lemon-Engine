@@ -22,7 +22,7 @@ VertexOutput MainVS(VertexInput Input)
 	//Output.Position = mul float4(Input.Position, 1.0f);
 	Output.Color = LocalPos; //Input.Color;
 	float4 Normal = float4(LocalPos.xyz, 1.0f);
-	Output.Normal = mul(g_WorldToWorldTransposeMatrix, Normal).xyz;
+	Output.Normal = mul(g_WorldToLocalTransposeMatrix, Normal).xyz;
 	Output.Direction = normalize(LocalPos.xyz);
 	return Output;
 }

@@ -25,11 +25,11 @@ namespace Lemon
 		{
 			m_GBufferPosition = RHICreateTexture2D(m_SizeX, m_SizeY, ERHIPixelFormat::RHI_PF_R16G16B16A16_Float, 1,
 				RHI_TexCreate_ShaderResource | RHI_TexCreate_RenderTargetable, createInfo);
-			m_GBufferNormal = RHICreateTexture2D(m_SizeX, m_SizeY, ERHIPixelFormat::RHI_PF_R8G8B8A8_Unorm, 1,
+			m_GBufferNormal = RHICreateTexture2D(m_SizeX, m_SizeY, ERHIPixelFormat::RHI_PF_R16G16B16A16_Float, 1,
 				RHI_TexCreate_ShaderResource | RHI_TexCreate_RenderTargetable, createInfo);
-			m_GBufferAlbedo = RHICreateTexture2D(m_SizeX, m_SizeY, ERHIPixelFormat::RHI_PF_R8G8B8A8_Unorm, 1,
+			m_GBufferAlbedo = RHICreateTexture2D(m_SizeX, m_SizeY, ERHIPixelFormat::RHI_PF_R16G16B16A16_Float, 1,
 				RHI_TexCreate_ShaderResource | RHI_TexCreate_RenderTargetable, createInfo);
-			m_GBufferMaterial = RHICreateTexture2D(m_SizeX, m_SizeY, ERHIPixelFormat::RHI_PF_R8G8B8A8_Unorm, 1,
+			m_GBufferMaterial = RHICreateTexture2D(m_SizeX, m_SizeY, ERHIPixelFormat::RHI_PF_R16G16B16A16_Float, 1,
 				RHI_TexCreate_ShaderResource | RHI_TexCreate_RenderTargetable, createInfo);
 		}
 
@@ -58,11 +58,11 @@ namespace Lemon
 		{
 			m_GBufferPosition = RHICreateTexture2D(m_SizeX, m_SizeY, ERHIPixelFormat::RHI_PF_R16G16B16A16_Float, 1,
 				RHI_TexCreate_ShaderResource | RHI_TexCreate_RenderTargetable, createInfo);
-			m_GBufferNormal = RHICreateTexture2D(m_SizeX, m_SizeY, ERHIPixelFormat::RHI_PF_R8G8B8A8_Unorm, 1,
+			m_GBufferNormal = RHICreateTexture2D(m_SizeX, m_SizeY, ERHIPixelFormat::RHI_PF_R16G16B16A16_Float, 1,
 				RHI_TexCreate_ShaderResource | RHI_TexCreate_RenderTargetable, createInfo);
-			m_GBufferAlbedo = RHICreateTexture2D(m_SizeX, m_SizeY, ERHIPixelFormat::RHI_PF_R8G8B8A8_Unorm, 1,
+			m_GBufferAlbedo = RHICreateTexture2D(m_SizeX, m_SizeY, ERHIPixelFormat::RHI_PF_R16G16B16A16_Float, 1,
 				RHI_TexCreate_ShaderResource | RHI_TexCreate_RenderTargetable, createInfo);
-			m_GBufferMaterial = RHICreateTexture2D(m_SizeX, m_SizeY, ERHIPixelFormat::RHI_PF_R8G8B8A8_Unorm, 1,
+			m_GBufferMaterial = RHICreateTexture2D(m_SizeX, m_SizeY, ERHIPixelFormat::RHI_PF_R16G16B16A16_Float, 1,
 				RHI_TexCreate_ShaderResource | RHI_TexCreate_RenderTargetable, createInfo);
 		}
 

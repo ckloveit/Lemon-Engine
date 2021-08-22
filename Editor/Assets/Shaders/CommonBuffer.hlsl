@@ -2,7 +2,9 @@
 cbuffer ViewUniformBuffer: register(b0)
 {
     matrix g_ViewMatrix;
+    matrix g_InverseViewMatrix;
     matrix g_ProjectionMatrix;
+    matrix g_InverseProjectionMatrix;
     matrix g_ViewProjectionMatrix;
     float4 g_CameraWorldPosition;
     float3 g_TestColor; 

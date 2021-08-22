@@ -450,12 +450,13 @@ namespace Lemon
 		CameraComponent& mainCameraComp = mainCameraEntity.GetComponent<CameraComponent>();
 		glm::mat4 cameraTransform = transformComp.GetTransform();
 		parameters.ViewMatrix = mainCameraComp.GetViewMatrix(); //glm::inverse(transformComp.GetTransform());
+		parameters.InverseViewMatrix = glm::inverse(parameters.ViewMatrix);
 		parameters.ProjectionMatrix = mainCameraComp.GetProjectionMatrix();
+		parameters.InverseProjectionMatrix = glm::inverse(parameters.ProjectionMatrix);
 		parameters.ViewProjectionMatrix = parameters.ProjectionMatrix * parameters.ViewMatrix;
 		parameters.CameraWorldPosition = glm::vec4(transformComp.Position, 1.0f);
 		//glm::vec4 debugPoint1 = parameters.ViewMatrix * glm::vec4(-0.5f, 0.5f, 1.0f, 1.0f);
 		//glm::vec4 debugPoint = parameters.ProjectionMatrix * debugPoint1;
-		
 		
 		parameters.TestColor = glm::vec3(preRColorValue,accTime,accTime);
 		UniformBuffer->ViewUniformBuffer->UpdateUniformBufferImmediate(parameters);

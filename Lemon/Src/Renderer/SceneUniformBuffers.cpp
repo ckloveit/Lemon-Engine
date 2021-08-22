@@ -24,7 +24,9 @@ namespace Lemon
         // Upload
         ViewUniformParameters viewParameters;
         viewParameters.ViewMatrix = glm::mat4();
+        viewParameters.InverseViewMatrix = glm::mat4();
         viewParameters.ProjectionMatrix = glm::mat4();
+        viewParameters.InverseProjectionMatrix = glm::mat4();
         viewParameters.ViewProjectionMatrix = glm::mat4();
         viewParameters.TestColor = glm::vec3(1, 0, 0);
         ViewUniformBuffer->UpdateUniformBufferImmediate(viewParameters);

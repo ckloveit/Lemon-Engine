@@ -14,7 +14,9 @@ namespace Lemon
     struct ViewUniformParameters
     {
         glm::mat4 ViewMatrix;
+        glm::mat4 InverseViewMatrix;
         glm::mat4 ProjectionMatrix;
+        glm::mat4 InverseProjectionMatrix;
         glm::mat4 ViewProjectionMatrix;
         glm::vec4 CameraWorldPosition;
         glm::vec4 AmbientColor;
